@@ -59,7 +59,7 @@ namespace SK_Strategygame.Scenes
             dm.Add(exitSprite);
             dm.Add(cursor);
             //Draw Cursor Last to have it on top
-            
+            Program.aw.Cursor = MouseCursor.Empty;
         }
 
         private void Sprite_ClickExit(object s, SpriteClickArgs k)
@@ -79,6 +79,15 @@ namespace SK_Strategygame.Scenes
         public override void Draw(GameWindow gw)
         {
             dm.Draw();
+            bool hoveringOnAButton = (
+                newGameSprite.isBeingHovered ||
+                optionsSprite.isBeingHovered ||
+                exitSprite.isBeingHovered
+            );
+            if (hoveringOnAButton)
+                cursor.SetCursor("Resources/Cursors/Cursor_Main_Hover.png");
+            else
+                cursor.SetCursor("Resources/Cursors/Cursor_Main.png");
         }
         public override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs key)
         {

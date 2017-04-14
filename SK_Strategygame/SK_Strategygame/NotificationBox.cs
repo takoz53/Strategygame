@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SK_Strategygame
@@ -27,23 +28,22 @@ namespace SK_Strategygame
             CancelTryAgainContinue,
         }
 
+        private string m;
+        private string c;
+        private types t;
+
+        private void dummyThread ()
+        {
+            MessageBox((IntPtr)0, m, c, (int)t);
+        }
+
         public void Notify(string m, string c, types type)
         {
-            if(type == types.OKOnly)
-                MessageBox((IntPtr)0, m, c, 0);
-            else if(type == types.OKCancel)
-                MessageBox((IntPtr)0, m, c, 1);
-            else if(type == types.AbortRetryIgnore)
-                MessageBox((IntPtr)0, m, c, 2);
-            else if (type == types.YesNoCancel)
-                MessageBox((IntPtr)0, m, c, 3);
-            else if (type == types.YesNo)
-                MessageBox((IntPtr)0, m, c, 4);
-            else if (type == types.RetryCancel)
-                MessageBox((IntPtr)0, m, c, 5);
-            else if (type == types.CancelTryAgainContinue)
-                MessageBox((IntPtr)0, m, c, 6);
-            //MessageBox((IntPtr)0, m, c, Convert.ToInt32(Enum.GetValues(types)));
+            this.m = m;
+            this.c = c;
+            t = type;
+            Thread a = new Thread(dummyThread);
+            a.Start();
         }
     }
 }
