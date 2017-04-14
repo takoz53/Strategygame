@@ -13,6 +13,7 @@ namespace SK_Strategygame.UI
         public Rectangle border;
         public Text text;
         public bListbox parent;
+        public int index;
 
         public bListboxEntry (bListbox parent, string text)
         {
@@ -27,6 +28,7 @@ namespace SK_Strategygame.UI
             border.y = parent.y;
             border.w = parent.w;
             border.h = text.height + 6;
+            border.y += (index * border.h);
             text.x = (parent.x + (parent.w / 2) - (text.width / 2));
             text.y = (parent.y + (parent.y / 2) - (text.height / 2));
             border.Draw(dm_parent);

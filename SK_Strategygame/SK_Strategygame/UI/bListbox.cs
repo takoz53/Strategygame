@@ -22,12 +22,26 @@ namespace SK_Strategygame.UI
 
         public bListbox ()
         {
-            
+            rectangle_background = new Rectangle(new Quad(20, 20, 300, 500), "fill", new DrawColor(255,255,255));
+            rectangle_border = new Rectangle(new Quad(20, 20, 300, 500), "line", new DrawColor(0,0,255));
+            selection_rectangle = new Rectangle(new Quad(0, 0, 1, 1), "fill", new DrawColor(0, 0, 0, 0));
+            entries = new List<bListboxEntry>();
+        }
+
+        public void Add (string entry)
+        {
+            bListboxEntry e = new bListboxEntry(this, entry);
+            e.index = entries.Count;
+            entries.Add(e);
         }
 
         public override void Draw(DrawManager parent)
         {
-            
+            rectangle_background.Draw(parent);
+            rectangle_border.Draw(parent);
+
+            foreach (bListboxEntry bleh in entries)
+                bleh.Draw(parent);
         }
 
         public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key) { }

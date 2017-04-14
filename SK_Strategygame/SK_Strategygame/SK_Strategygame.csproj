@@ -50,9 +50,12 @@
     <Compile Include="NotificationBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\LBTestScene.cs" />
     <Compile Include="Scenes\MainMenuScene.cs" />
     <Compile Include="UI\bButton.cs" />
     <Compile Include="UI\bCursor.cs" />
+    <Compile Include="UI\bListbox.cs" />
+    <Compile Include="UI\bListboxEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
