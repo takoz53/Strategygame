@@ -14,7 +14,7 @@ namespace SK_Strategygame.Scenes
 {
     class MainMenuScene : Scene
     {
-        public Sprite borderSprite, BackgroundSprite, CursorSprite;
+        public Sprite borderSprite, BackgroundSprite;
         public bCursor cursor;
         public DrawManager dm;
         public bButton newGameSprite, optionsSprite, exitSprite;
