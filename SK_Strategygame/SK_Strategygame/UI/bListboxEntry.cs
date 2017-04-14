@@ -24,7 +24,7 @@ namespace SK_Strategygame.UI
             py = parent.y;
             pw = (int)parent.w;
             ph = (int)parent.h;
-            this.text = new Text(text);
+            this.text = new Text(text, new System.Drawing.Font("Tahoma", 16), new DrawColor(0,0,0), new DrawColor(255,255,255));
             border = new Rectangle(new Quad(0, 0, 1, 1), new DrawColor(128, 128, 128));
         }
 
