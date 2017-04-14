@@ -15,15 +15,17 @@ namespace SK_Strategygame.Scenes
     class MainMenuScene : Scene
     {
         public Sprite borderSprite, BackgroundSprite, CursorSprite;
+        public bCursor cursor;
         public DrawManager dm;
         public bButton newGameSprite, optionsSprite, exitSprite;
-        NotificationBox nb;
+        public NotificationBox nb = new NotificationBox();
+
         public MainMenuScene()
         {
             // init code
             Console.WriteLine("Initializing MainMenuScene");
             dm = new DrawManager();
-            nb = new NotificationBox();
+            
             borderSprite = new Sprite("Resources/MainMenu/border.png");
             borderSprite.x = 1680 / 2 - borderSprite.width / 2;
             borderSprite.y = 180;
@@ -40,8 +42,8 @@ namespace SK_Strategygame.Scenes
             exitSprite.x = 1680 / 2 - exitSprite.width / 2;
             exitSprite.y = optionsSprite.y + optionsSprite.texture.Height + 50;
 
-            CursorSprite = new Sprite("Resources/Cursors/Cursor_Main.png");
-
+            //CursorSprite = new Sprite("Resources/Cursors/Cursor_Main.png");
+            cursor = new bCursor();
             newGameSprite.OnClick += Sprite_ClickNewGame;
             optionsSprite.OnClick += Sprite_ClickOptions;
             exitSprite.OnClick += Sprite_ClickExit;
@@ -55,8 +57,9 @@ namespace SK_Strategygame.Scenes
             dm.Add(newGameSprite);
             dm.Add(optionsSprite);
             dm.Add(exitSprite);
-            dm.Add(CursorSprite);
+            dm.Add(cursor);
             //Draw Cursor Last to have it on top
+            
         }
 
         private void Sprite_ClickExit(object s, SpriteClickArgs k)
@@ -75,8 +78,6 @@ namespace SK_Strategygame.Scenes
 
         public override void Draw(GameWindow gw)
         {
-            CursorSprite.x = AGFXLib.UserMouse.GetX();
-            CursorSprite.y = AGFXLib.UserMouse.GetY();
             dm.Draw();
         }
         public override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs key)
