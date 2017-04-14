@@ -10,13 +10,14 @@ namespace SK_Strategygame
 {
     class Program
     {
+        public static AlphaWindow aw;
+
         static void Main(string[] args)
         {
-            using (AlphaWindow aw = new AlphaWindow(1680, 1050))
-            {
-                aw.scene = new Scenes.MainMenuScene();
-                aw.Run(60);
-            }
+            aw = new AlphaWindow(1680, 1050);
+            aw.scene = new Scenes.MainMenuScene();
+            aw.Run(60);
+            
         }
     }
 }

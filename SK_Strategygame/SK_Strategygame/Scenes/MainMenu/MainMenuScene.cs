@@ -70,7 +70,7 @@ namespace SK_Strategygame.Scenes
         }
         private void Sprite_ClickNewGame(object s, SpriteClickArgs k)
         {
-            nb.Notify("Tasuketee, I'm being raped!!", "Being raped", NotificationBox.types.OKOnly);
+            Program.aw.scene = new SecondScene();
         }
 
         public override void Draw(GameWindow gw)
