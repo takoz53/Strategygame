@@ -10,6 +10,21 @@ namespace SK_Strategygame.UI
 {
     class bListbox : Drawable
     {
+        public Rectangle rectangle_border;
+        public Rectangle rectangle_background;
+        public Rectangle selection_rectangle;
+        public List<bListboxEntry> entries;
+        public int selectedIndex;
+        public float x;
+        public float y;
+        public float w;
+        public float h;
+
+        public bListbox ()
+        {
+            
+        }
+
         public override void Draw(DrawManager parent)
         {
             
