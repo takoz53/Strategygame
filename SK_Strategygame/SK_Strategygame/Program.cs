@@ -16,7 +16,6 @@ namespace SK_Strategygame
             aw = new AlphaWindow(1680, 1050);
             aw.scene = new Scenes.MainMenuScene();
             aw.Run(60);
-            
         }
     }
 }

@@ -13,10 +13,8 @@ namespace SK_Strategygame
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern int MessageBox(IntPtr h, string m, string c, int type);
 
-        public NotificationBox()
-        {
+        public bool active = false;
 
-        }
         public enum types
         {
             OKOnly,
@@ -34,7 +32,9 @@ namespace SK_Strategygame
 
         private void dummyThread ()
         {
+            active = true;
             MessageBox((IntPtr)0, m, c, (int)t);
+            active = false;
         }
 
         public void Notify(string m, string c, types type)
