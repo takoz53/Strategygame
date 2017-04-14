@@ -22,6 +22,10 @@ namespace SK_Strategygame.UI
 
         public bListbox ()
         {
+            x = 20;
+            y = 20;
+            w = 300;
+            h = 500;
             rectangle_background = new Rectangle(new Quad(20, 20, 300, 500), "fill", new DrawColor(255,255,255));
             rectangle_border = new Rectangle(new Quad(20, 20, 300, 500), "line", new DrawColor(0,0,255));
             selection_rectangle = new Rectangle(new Quad(0, 0, 1, 1), "fill", new DrawColor(0, 0, 0, 0));
