@@ -48,24 +48,28 @@ namespace SK_Strategygame.Scenes.MainMenu
             dm.Add(cursor);
         }
 
-        private void Click_HostButton(object s, SpriteClickArgs)
+        private void Click_HostButton(object s, SpriteClickArgs k)
         {
-
+            
         }
         public override void Draw(GameWindow gw)
         {
+            bool hoveringOnAButton = (
+            JoinButton.isBeingHovered ||
+            HostButton.isBeingHovered
+            );
+            if (hoveringOnAButton)
+                cursor.SetCursor("Resources/Cursors/Cursor_Main_Hover.png");
+            else
+                cursor.SetCursor("Resources/Cursors/Cursor_Main.png");
             dm.Draw();
         }
 
         public override void OnKeyDown(KeyboardKeyEventArgs key)
         {
-            if(key.Key == Key.Escape)
+            if (key.Key == Key.Escape)
             {
                 Program.aw.scene = new MainMenuScene();
-            }
-            if(key.Key == Key.H)
-            {
-
             }
         }
 
