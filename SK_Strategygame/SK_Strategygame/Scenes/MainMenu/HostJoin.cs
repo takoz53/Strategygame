@@ -66,18 +66,19 @@ namespace SK_Strategygame.Scenes.MainMenu
             {
                 Program.aw.scene = new MainMenuScene();
             }
-            if (key.Key == Key.H)
+            if (key.Key == Key.H) //Host Hotkey
             {
-                Program.aw.scene = new GameScene();
+                Program.aw.scene = new InGame.GameScene();
+            }
+            if (key.Key == Key.J) //Join Hotkey, goto GameScene because AGFXLib doesnt support ComboBox yet
+            {
+                Program.aw.scene = new InGame.GameScene();
             }
         }
 
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
-
         public override void OnMouseDown(MouseButtonEventArgs button) { }
-
         public override void OnMouseUp(MouseButtonEventArgs button) { }
-
         public override void Update() { }
     }
 }

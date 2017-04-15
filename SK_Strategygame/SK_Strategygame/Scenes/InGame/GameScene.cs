@@ -12,39 +12,31 @@ namespace SK_Strategygame.Scenes.InGame
 {
     class GameScene : Scene
     {
+        Sprite testsprite, testspriteforest;
+        DrawManager dm;
         public GameScene()
         {
-
+            dm = new DrawManager();
+            testsprite = new Sprite("C:/Users/Berkan/Documents/GitHub/Strategygame/SK_Strategygame/SK_Strategygame/Resources/InGame/Fields/infertile/Deserts/test.png");
+            testspriteforest = new Sprite("Resources/InGame/Fields/fertile/Forests/largetest.png");
+            testspriteforest.x = testsprite.width + 1;
+            dm.Add(testsprite);
+            dm.Add(testspriteforest);
         }
 
         public override void Draw(GameWindow gw)
         {
-
+            dm.Draw();
         }
 
         public override void OnKeyDown(KeyboardKeyEventArgs key)
         {
-            throw new NotImplementedException();
+
         }
 
-        public override void OnKeyUp(KeyboardKeyEventArgs key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void OnMouseDown(MouseButtonEventArgs button)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void OnMouseUp(MouseButtonEventArgs button)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            throw new NotImplementedException();
-        }
+        public override void OnKeyUp(KeyboardKeyEventArgs key) { }
+        public override void OnMouseDown(MouseButtonEventArgs button) { }
+        public override void OnMouseUp(MouseButtonEventArgs button) { }
+        public override void Update() { }
     }
 }
