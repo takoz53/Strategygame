@@ -33,7 +33,7 @@ namespace SK_Strategygame.Scenes.MainMenu
             JoinButton.y = HostButton.y + HostButton.texture.Height + 100;
 
             HostButton.OnClick += Click_HostButton;
-
+            JoinButton.OnClick += Click_JoinButton;
             cursor = new bCursor();
             dm = new DrawManager();
             dm.Add(BackgroundSprite);
@@ -43,9 +43,13 @@ namespace SK_Strategygame.Scenes.MainMenu
             dm.Add(cursor);
         }
 
+        private void Click_JoinButton(object s, SpriteClickArgs k)
+        {
+            Program.aw.scene = new InGame.GameScene();
+        }
         private void Click_HostButton(object s, SpriteClickArgs k)
         {
-            
+            Program.aw.scene = new InGame.GameScene();
         }
         public override void Draw(GameWindow gw)
         {
