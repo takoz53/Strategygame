@@ -29,7 +29,20 @@ namespace SK_Strategygame
 
         public void Notify(string m, string c, types type)
         {
-            MessageBox((IntPtr)0, m, c, (int)type);
+            if(type == types.OKOnly)
+                MessageBox((IntPtr)0, m, c, 0);
+            else if(type == types.OKCancel)
+                MessageBox((IntPtr)0, m, c, 1);
+            else if(type == types.AbortRetryIgnore)
+                MessageBox((IntPtr)0, m, c, 2);
+            else if (type == types.YesNoCancel)
+                MessageBox((IntPtr)0, m, c, 3);
+            else if (type == types.YesNo)
+                MessageBox((IntPtr)0, m, c, 4);
+            else if (type == types.RetryCancel)
+                MessageBox((IntPtr)0, m, c, 5);
+            else if (type == types.CancelTryAgainContinue)
+                MessageBox((IntPtr)0, m, c, 6);
             //MessageBox((IntPtr)0, m, c, Convert.ToInt32(Enum.GetValues(types)));
         }
     }
