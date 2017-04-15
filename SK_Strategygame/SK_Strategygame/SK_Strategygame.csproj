@@ -51,7 +51,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\LBTestScene.cs" />
-    <Compile Include="Scenes\MainMenuScene.cs" />
+    <Compile Include="Scenes\MainMenu\HostJoin.cs" />
+    <Compile Include="Scenes\MainMenu\MainMenuScene.cs" />
+    <Compile Include="Scenes\MainMenu\OptionsScene.cs" />
     <Compile Include="UI\bButton.cs" />
     <Compile Include="UI\bCursor.cs" />
     <Compile Include="UI\bListbox.cs" />
@@ -127,7 +129,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
+    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
       <Project>{67ae03c9-dcea-4e9b-86aa-9a30516e210f}</Project>
       <Name>AGFXLib</Name>
     </ProjectReference>

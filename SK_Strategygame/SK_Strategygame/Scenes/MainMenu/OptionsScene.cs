@@ -7,24 +7,17 @@ using AGFXLib.Scenes;
 using OpenTK;
 using OpenTK.Input;
 using AGFXLib.Drawables;
-using SK_Strategygame.UI;
 
-namespace SK_Strategygame.Scenes
+namespace SK_Strategygame.Scenes.MainMenu
 {
-    class LBTestScene : Scene
+    class OptionsScene : Scene
     {
-        public DrawManager dm = new DrawManager();
-        public bListbox listbox_01 = new bListbox();
-        public LBTestScene ()
-        {
-            listbox_01 = new bListbox();
-            listbox_01.Add("Teach");
-            listbox_01.Add("Kill Yourself");
-            listbox_01.Add("More testing");
-            listbox_01.Add("A lot of entries. Wow so cool hehe.");
-            dm.Add(listbox_01);
-        }
+        DrawManager dm;
 
+        public OptionsScene()
+        {
+
+        }
         public override void Draw(GameWindow gw)
         {
             dm.Draw();
