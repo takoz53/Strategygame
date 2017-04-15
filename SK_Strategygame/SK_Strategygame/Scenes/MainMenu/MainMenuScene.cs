@@ -10,6 +10,8 @@ using AGFXLib.Scenes;
 using AGFXLib.Drawables;
 using SK_Strategygame.UI;
 using System.Runtime.InteropServices;
+using SK_Strategygame.Scenes.MainMenu;
+
 namespace SK_Strategygame.Scenes
 {
     class MainMenuScene : Scene
@@ -17,7 +19,7 @@ namespace SK_Strategygame.Scenes
         public Sprite borderSprite, BackgroundSprite;
         public bCursor cursor;
         public DrawManager dm;
-        public bButton newGameSprite, optionsSprite, exitSprite;
+        public bButton newGameButton, optionsButton, exitButton;
         public NotificationBox nb = new NotificationBox();
 
         public MainMenuScene()
@@ -30,23 +32,23 @@ namespace SK_Strategygame.Scenes
             borderSprite.x = 1680 / 2 - borderSprite.width / 2;
             borderSprite.y = 180;
 
-            newGameSprite = new bButton("Resources/MainMenu/nohover/newgame.png", "Resources/MainMenu/hover/newgame.png");
-            newGameSprite.x = 1680 / 2 - newGameSprite.width / 2;
-            newGameSprite.y = 230;
+            newGameButton = new bButton("Resources/MainMenu/nohover/newgame.png", "Resources/MainMenu/hover/newgame.png");
+            newGameButton.x = 1680 / 2 - newGameButton.width / 2;
+            newGameButton.y = 230;
 
-            optionsSprite = new bButton("Resources/MainMenu/nohover/options.png", "Resources/MainMenu/hover/options.png");
-            optionsSprite.x = 1680 / 2 - optionsSprite.width / 2;
-            optionsSprite.y = newGameSprite.y + newGameSprite.texture.Height + 50;
+            optionsButton = new bButton("Resources/MainMenu/nohover/options.png", "Resources/MainMenu/hover/options.png");
+            optionsButton.x = 1680 / 2 - optionsButton.width / 2;
+            optionsButton.y = newGameButton.y + newGameButton.texture.Height + 50;
 
-            exitSprite = new bButton("Resources/MainMenu/nohover/exit.png", "Resources/MainMenu/hover/exit.png");
-            exitSprite.x = 1680 / 2 - exitSprite.width / 2;
-            exitSprite.y = optionsSprite.y + optionsSprite.texture.Height + 50;
+            exitButton = new bButton("Resources/MainMenu/nohover/exit.png", "Resources/MainMenu/hover/exit.png");
+            exitButton.x = 1680 / 2 - exitButton.width / 2;
+            exitButton.y = optionsButton.y + optionsButton.texture.Height + 50;
 
             //CursorSprite = new Sprite("Resources/Cursors/Cursor_Main.png");
             cursor = new bCursor();
-            newGameSprite.OnClick += Sprite_ClickNewGame;
-            optionsSprite.OnClick += Sprite_ClickOptions;
-            exitSprite.OnClick += Sprite_ClickExit;
+            newGameButton.OnClick += Sprite_ClickNewGame;
+            optionsButton.OnClick += Sprite_ClickOptions;
+            exitButton.OnClick += Sprite_ClickExit;
             BackgroundSprite = new Sprite("Resources/MainMenu/background.png");
             BackgroundSprite.width = 1680;
             BackgroundSprite.height = 1050;
@@ -54,9 +56,9 @@ namespace SK_Strategygame.Scenes
             //Layer System
             dm.Add(BackgroundSprite);
             dm.Add(borderSprite);
-            dm.Add(newGameSprite);
-            dm.Add(optionsSprite);
-            dm.Add(exitSprite);
+            dm.Add(newGameButton);
+            dm.Add(optionsButton);
+            dm.Add(exitButton);
             dm.Add(cursor);
             //Draw Cursor Last to have it on top
             Program.aw.Cursor = MouseCursor.Empty;
@@ -73,16 +75,16 @@ namespace SK_Strategygame.Scenes
         }
         private void Sprite_ClickNewGame(object s, SpriteClickArgs k)
         {
-            nb.Notify("Tasuketee, I'm being raped!!", "Being raped", NotificationBox.types.OKOnly);
+            Program.aw.scene = new HostJoin();
         }
 
         public override void Draw(GameWindow gw)
         {
             dm.Draw();
             bool hoveringOnAButton = (
-                newGameSprite.isBeingHovered ||
-                optionsSprite.isBeingHovered ||
-                exitSprite.isBeingHovered
+                newGameButton.isBeingHovered ||
+                optionsButton.isBeingHovered ||
+                exitButton.isBeingHovered
             );
             if (hoveringOnAButton)
                 cursor.SetCursor("Resources/Cursors/Cursor_Main_Hover.png");

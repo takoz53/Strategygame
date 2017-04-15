@@ -12,7 +12,6 @@ namespace SK_Strategygame
     {
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern int MessageBox(IntPtr h, string m, string c, int type);
-
         public bool active = false;
 
         public enum types
