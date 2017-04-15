@@ -1,16 +1,11 @@
 ﻿Each City with a TeamColor has:
-City_Small_No_Defense
-City_Small_Has_Defense
-City_Medium_No_Defense
-City_Medium_Has_Defense
-City_Large_No_Defense
-City_Large_Has_Defense
+City_Small (No Def Tower)
+City_Medium (1 Def Tower)
+City_Large (2 Def Towers)
 --------------------------------------
 Each City needs for each TeamColor:
-City_Size_FieldType_DefenseAvailable
+City_Size_FieldType
 
-=> City_Small_Forest_No_Defense
-=> City_Small_Forest_Has_Defense
-=> City_Medium_Mountain_No_Defense
-=> City_Medium_Mountain_Has_Defense
+=> City_Small_Forest
+=> City_Small_Pasture
 

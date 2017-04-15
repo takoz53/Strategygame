@@ -1,0 +1,6 @@
+﻿Choose between 3 Random Pictures
+Desert_1
+Desert_2
+Desert_3
+All the same..
+Increases gain of Money

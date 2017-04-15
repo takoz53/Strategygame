@@ -5,4 +5,4 @@ Mountain_Medium (Has a middle amount of Goods)
 Mountain_Large (Has a large amount of Goods)
 Mountain_ExtraLarge (Has a lot of Goods)
 
-A Mountain can be occuppied by a Team. If occupied, Team will get the Goodies per round.
+A Mountain can be occuppied by a Team. If occupied, Team will get Stone per round.
