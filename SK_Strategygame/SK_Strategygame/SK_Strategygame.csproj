@@ -56,6 +56,7 @@
     <Compile Include="UI\bCursor.cs" />
     <Compile Include="UI\bListbox.cs" />
     <Compile Include="UI\bListboxEntry.cs" />
+    <Compile Include="UI\bScrollbar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

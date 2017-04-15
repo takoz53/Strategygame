@@ -14,6 +14,7 @@ namespace SK_Strategygame.UI
         public Rectangle rectangle_background;
         public Rectangle selection_rectangle;
         public List<bListboxEntry> entries;
+        public bScrollbar scrollbar;
         public int selectedIndex;
         public float x;
         public float y;
@@ -30,6 +31,7 @@ namespace SK_Strategygame.UI
             rectangle_border = new Rectangle(new Quad(20, 20, 300, 500), "line", new DrawColor(0,0,255));
             selection_rectangle = new Rectangle(new Quad(0, 0, 1, 1), "fill", new DrawColor(0, 0, 0, 0));
             entries = new List<bListboxEntry>();
+            scrollbar = new bScrollbar((int)x+(int)w-16, (int)y, 16, (int)h);
         }
 
         public void Add (string entry)
@@ -46,6 +48,7 @@ namespace SK_Strategygame.UI
 
             foreach (bListboxEntry bleh in entries)
                 bleh.Draw(parent);
+            scrollbar.Draw(parent);
         }
 
         public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key) { }

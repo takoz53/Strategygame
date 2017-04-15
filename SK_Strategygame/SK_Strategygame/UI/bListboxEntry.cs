@@ -24,19 +24,18 @@ namespace SK_Strategygame.UI
             py = parent.y;
             pw = (int)parent.w;
             ph = (int)parent.h;
-            this.text = new Text(text, new System.Drawing.Font("Tahoma", 16), new DrawColor(0,0,0), new DrawColor(255,255,255));
+            this.text = new Text(text, new System.Drawing.Font(new System.Drawing.FontFamily("Tahoma"), 14), new DrawColor(0,0,0,255));
             border = new Rectangle(new Quad(0, 0, 1, 1), new DrawColor(128, 128, 128));
         }
 
         public override void Draw(DrawManager dm_parent)
         {
             border.x = px;
-            Console.WriteLine("Parent x is @ " + px);
             border.y = py;
-            border.w = pw;
+            border.w = pw - 16;
             border.h = text.height + 6;
             border.y += (index * border.h);
-            text.x = (px + (pw / 2) - (text.width / 2));
+            text.x = (px + (border.w / 2) - (text.width / 2));
             text.y = (border.y + (border.h / 2) - (text.height / 2));
             border.Draw(dm_parent);
             text.Draw(dm_parent);
