@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AGFXLib.Scenes;
+﻿using AGFXLib.Scenes;
 using AGFXLib.Drawables;
 using OpenTK;
 using OpenTK.Input;
@@ -70,6 +65,10 @@ namespace SK_Strategygame.Scenes.MainMenu
             if (key.Key == Key.Escape)
             {
                 Program.aw.scene = new MainMenuScene();
+            }
+            if (key.Key == Key.H)
+            {
+                Program.aw.scene = new GameScene();
             }
         }
 

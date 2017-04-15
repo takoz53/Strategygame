@@ -1,15 +1,8 @@
-﻿
-using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using OpenTK;
 using AGFXLib.Scenes;
 using AGFXLib.Drawables;
 using SK_Strategygame.UI;
-using System.Runtime.InteropServices;
 using SK_Strategygame.Scenes.MainMenu;
 
 namespace SK_Strategygame.Scenes

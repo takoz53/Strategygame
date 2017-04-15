@@ -71,11 +71,24 @@
     <Folder Include="Resources\InGame\Fields\Cities\TeamGreen\" />
     <Folder Include="Resources\InGame\Fields\Cities\TeamRed\" />
     <Folder Include="Resources\InGame\Fields\Cities\TeamYellow\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamBlue\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamGreen\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamRed\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamYellow\" />
     <Folder Include="Resources\InGame\UIBottom\Buttons\" />
+    <Folder Include="Scenes\InGame\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cursors\Cursor_Attack.png">
@@ -100,9 +113,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\InGame\Fields\Cities\About Cities.txt" />
-    <Content Include="Resources\InGame\Fields\Forests\About Forests.txt" />
-    <Content Include="Resources\InGame\Fields\Mountains\About Mountains.txt" />
-    <Content Include="Resources\InGame\Fields\Water\About Water.txt" />
+    <Content Include="Resources\InGame\Fields\fertile\Forests\About Forests.txt" />
+    <Content Include="Resources\InGame\Fields\fertile\Pasture\About Pasture.txt" />
+    <Content Include="Resources\InGame\Fields\infertile\Deserts\About Deserts.txt" />
+    <Content Include="Resources\InGame\Fields\infertile\Mountains\About Mountains.txt" />
+    <Content Include="Resources\InGame\Fields\inpassable\Water\About Water.txt" />
     <Content Include="Resources\MainMenu\border.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
