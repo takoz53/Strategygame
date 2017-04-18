@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>SK_Strategygame</RootNamespace>
     <AssemblyName>SK_Strategygame</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -162,7 +163,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
+    <ProjectReference Include="..\..\..\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
       <Project>{67ae03c9-dcea-4e9b-86aa-9a30516e210f}</Project>
       <Name>AGFXLib</Name>
     </ProjectReference>

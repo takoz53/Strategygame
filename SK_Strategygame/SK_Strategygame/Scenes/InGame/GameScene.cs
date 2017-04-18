@@ -17,7 +17,7 @@ namespace SK_Strategygame.Scenes.InGame
         public GameScene()
         {
             dm = new DrawManager();
-            testsprite = new Sprite("C:/Users/Berkan/Documents/GitHub/Strategygame/SK_Strategygame/SK_Strategygame/Resources/InGame/Fields/infertile/Deserts/test.png");
+            testsprite = new Sprite("Resources/InGame/Fields/infertile/Deserts/test.png");
             testspriteforest = new Sprite("Resources/InGame/Fields/fertile/Forests/largetest.png");
             testspriteforest.x = testsprite.width + 1;
             dm.Add(testsprite);
