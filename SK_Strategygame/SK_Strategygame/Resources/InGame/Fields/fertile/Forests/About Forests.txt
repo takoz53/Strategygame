@@ -5,4 +5,4 @@ Forest_Medium (Has a middle amount of Goods)
 Forest_Large (Has a large amount of Goods)
 Forest_ExtraLarge (Has a lot of Goods)
 
-A Forest can be occuppied by a Team. If occupied, Team will get the Goodies per round.
+A Forest can be occuppied by a Team. If occupied, Team will get Wood per round.

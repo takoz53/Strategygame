@@ -1,0 +1,8 @@
+﻿Pasture will be created between 5 Random Pasture:
+Pasture_Tiny (Has almost no Goods)
+Pasture_Small (Has a tiny amount of Goods)
+Pasture_Medium (Has a middle amount of Goods)
+Pasture_Large (Has a large amount of Goods)
+Pasture_ExtraLarge (Has a lot of Goods)
+
+A Pasture can be occuppied by a Team. If occupied, Team will get Food per round.

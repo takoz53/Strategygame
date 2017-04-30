@@ -10,7 +10,7 @@ namespace SK_Strategygame.UI
 {
     class bListboxEntry : Drawable
     {
-        public Rectangle border;
+        public Rect border;
         public Text text;
         public int index;
         public float px;
@@ -25,7 +25,7 @@ namespace SK_Strategygame.UI
             pw = (int)parent.w;
             ph = (int)parent.h;
             this.text = new Text(text, new System.Drawing.Font(new System.Drawing.FontFamily("Tahoma"), 14), new DrawColor(0,0,0,255));
-            border = new Rectangle(new Quad(0, 0, 1, 1), new DrawColor(128, 128, 128));
+            border = new Rect(new Quad(0, 0, 1, 1), new DrawColor(128, 128, 128));
         }
 
         public override void Draw(DrawManager dm_parent)
@@ -33,10 +33,10 @@ namespace SK_Strategygame.UI
             border.x = px;
             border.y = py;
             border.w = pw - 16;
-            border.h = text.height + 6;
+            border.h = text.h + 6;
             border.y += (index * border.h);
-            text.x = (px + (border.w / 2) - (text.width / 2));
-            text.y = (border.y + (border.h / 2) - (text.height / 2));
+            text.x = (px + (border.w / 2) - (text.w / 2));
+            text.y = (border.y + (border.h / 2) - (text.h / 2));
             border.Draw(dm_parent);
             text.Draw(dm_parent);
         }

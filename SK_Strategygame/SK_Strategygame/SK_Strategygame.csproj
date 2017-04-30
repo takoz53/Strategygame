@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>SK_Strategygame</RootNamespace>
     <AssemblyName>SK_Strategygame</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,8 +51,11 @@
     <Compile Include="NotificationBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\InGame\GameScene.cs" />
     <Compile Include="Scenes\LBTestScene.cs" />
-    <Compile Include="Scenes\MainMenuScene.cs" />
+    <Compile Include="Scenes\MainMenu\HostJoin.cs" />
+    <Compile Include="Scenes\MainMenu\MainMenuScene.cs" />
+    <Compile Include="Scenes\MainMenu\OptionsScene.cs" />
     <Compile Include="UI\bButton.cs" />
     <Compile Include="UI\bCursor.cs" />
     <Compile Include="UI\bListbox.cs" />
@@ -69,10 +73,22 @@
     <Folder Include="Resources\InGame\Fields\Cities\TeamGreen\" />
     <Folder Include="Resources\InGame\Fields\Cities\TeamRed\" />
     <Folder Include="Resources\InGame\Fields\Cities\TeamYellow\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamBlue\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamGreen\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamRed\" />
-    <Folder Include="Resources\InGame\Fields\Forests\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\fertile\Pasture\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Deserts\TeamYellow\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamBlue\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamGreen\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamRed\" />
+    <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamYellow\" />
     <Folder Include="Resources\InGame\UIBottom\Buttons\" />
   </ItemGroup>
   <ItemGroup>
@@ -98,9 +114,17 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\InGame\Fields\Cities\About Cities.txt" />
-    <Content Include="Resources\InGame\Fields\Forests\About Forests.txt" />
-    <Content Include="Resources\InGame\Fields\Mountains\About Mountains.txt" />
-    <Content Include="Resources\InGame\Fields\Water\About Water.txt" />
+    <Content Include="Resources\InGame\Fields\fertile\Forests\About Forests.txt" />
+    <Content Include="Resources\InGame\Fields\fertile\Forests\largetest.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\fertile\Pasture\About Pasture.txt" />
+    <Content Include="Resources\InGame\Fields\infertile\Deserts\About Deserts.txt" />
+    <Content Include="Resources\InGame\Fields\infertile\Deserts\test.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\infertile\Mountains\About Mountains.txt" />
+    <Content Include="Resources\InGame\Fields\inpassable\Water\About Water.txt" />
     <Content Include="Resources\MainMenu\border.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -110,6 +134,12 @@
     <Content Include="Resources\MainMenu\background.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\MainMenu\hover\host.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\MainMenu\hover\join.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\MainMenu\hover\newgame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -117,6 +147,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\MainMenu\nohover\exit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\MainMenu\nohover\host.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\MainMenu\nohover\join.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\MainMenu\nohover\newgame.png">

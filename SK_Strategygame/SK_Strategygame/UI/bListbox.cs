@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AGFXLib.Drawables;
+﻿using AGFXLib.Drawables;
 using OpenTK.Input;
+using System.Collections.Generic;
 
 namespace SK_Strategygame.UI
 {
     class bListbox : Drawable
     {
-        public Rectangle rectangle_border;
-        public Rectangle rectangle_background;
-        public Rectangle selection_rectangle;
+        public Rect rectangle_border;
+        public Rect rectangle_background;
+        public Rect selection_rectangle;
         public List<bListboxEntry> entries;
         public bScrollbar scrollbar;
         public int selectedIndex;
@@ -27,9 +23,9 @@ namespace SK_Strategygame.UI
             y = 20;
             w = 300;
             h = 500;
-            rectangle_background = new Rectangle(new Quad(20, 20, 300, 500), "fill", new DrawColor(255,255,255));
-            rectangle_border = new Rectangle(new Quad(20, 20, 300, 500), "line", new DrawColor(0,0,255));
-            selection_rectangle = new Rectangle(new Quad(0, 0, 1, 1), "fill", new DrawColor(0, 0, 0, 0));
+            rectangle_background = new Rect(new Quad(20, 20, 300, 500), "fill", new DrawColor(255,255,255));
+            rectangle_border = new Rect(new Quad(20, 20, 300, 500), "line", new DrawColor(0,0,255));
+            selection_rectangle = new Rect(new Quad(0, 0, 1, 1), "fill", new DrawColor(0, 0, 0, 0));
             entries = new List<bListboxEntry>();
             scrollbar = new bScrollbar((int)x+(int)w-16, (int)y, 16, (int)h);
         }

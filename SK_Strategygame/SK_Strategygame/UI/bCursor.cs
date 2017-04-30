@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AGFXLib;
 using AGFXLib.Drawables;
 using OpenTK.Input;
-using AGFXLib;
 
 namespace SK_Strategygame.UI
 {
@@ -20,7 +15,7 @@ namespace SK_Strategygame.UI
 
         public void SetCursor (string path)
         {
-            cursorSprite.SetTexture(path);
+            cursorSprite.setTexture(path);
         }
 
         public override void Draw(DrawManager parent)

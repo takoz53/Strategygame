@@ -10,9 +10,9 @@ namespace SK_Strategygame.UI
 {
     class bScrollbar : Drawable
     {
-        public Rectangle scrollbar_fg;
-        public Rectangle scrollbar_bg;
-        public Rectangle scrollwheel;
+        public Rect scrollbar_fg;
+        public Rect scrollbar_bg;
+        public Rect scrollwheel;
         public float x;
         public float y;
 
@@ -20,9 +20,9 @@ namespace SK_Strategygame.UI
         {
             this.x = (float)x;
             this.y = (float)y;
-            scrollbar_bg = new Rectangle(new Quad(x, y, width, height), "fill", new DrawColor(255, 255, 255));
-            scrollbar_fg = new Rectangle(new Quad(x, y, width, height), "line", new DrawColor(255, 0, 0));
-            scrollwheel = new Rectangle(new Quad(x, y, width, 100), "fill", new DrawColor(128, 128, 128));
+            scrollbar_bg = new Rect(new Quad(x, y, width, height), "fill", new DrawColor(255, 255, 255));
+            scrollbar_fg = new Rect(new Quad(x, y, width, height), "line", new DrawColor(255, 0, 0));
+            scrollwheel = new Rect(new Quad(x, y, width, 100), "fill", new DrawColor(128, 128, 128));
 
         }
 

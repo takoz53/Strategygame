@@ -20,6 +20,8 @@ namespace SK_Strategygame.Scenes
             listbox_01 = new bListbox();
             listbox_01.Add("Teach");
             listbox_01.Add("Kill Yourself");
+            listbox_01.Add("More testing");
+            listbox_01.Add("A lot of entries. Wow so cool hehe.");
             dm.Add(listbox_01);
         }
 
