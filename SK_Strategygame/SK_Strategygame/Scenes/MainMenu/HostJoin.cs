@@ -19,13 +19,15 @@ namespace SK_Strategygame.Scenes.MainMenu
         public bButton hostButton, joinButton;
         public HostJoin ()
         {
+            //Create Objects
             dm = new DrawManager();
-
             BackgroundSprite = new Sprite("Resources/MainMenu/background.png");
             borderSprite = new Sprite("Resources/MainMenu/border.png");
             hostButton = new bButton("Resources/MainMenu/nohover/host.png", "Resources/MainMenu/hover/host.png");
             joinButton = new bButton("Resources/MainMenu/nohover/join.png", "Resources/MainMenu/hover/join.png");
+            cursor = new bCursor();
 
+            //Set Positions and W / H
             BackgroundSprite.w = 1680;
             BackgroundSprite.h = 1050;
             borderSprite.x = 1680 / 2 - borderSprite.w / 2;
@@ -35,11 +37,11 @@ namespace SK_Strategygame.Scenes.MainMenu
             joinButton.x = 1680 / 2 - hostButton.w / 2;
             joinButton.y = hostButton.y + hostButton.h + 100;
 
+            //Set OnClicks
             joinButton.OnClick += Click_JoinButton;
             hostButton.OnClick += Click_HostButton;
 
-
-            cursor = new bCursor();
+            //Add to Layers
             dm.Add(BackgroundSprite);
             dm.Add(borderSprite);
             dm.Add(joinButton);
@@ -65,6 +67,19 @@ namespace SK_Strategygame.Scenes.MainMenu
 
         public override void OnKeyDown(KeyboardKeyEventArgs key)
         {
+            if(key.Key == Key.H)
+            {
+                Program.aw.scene = new InGame.GameScene();
+            }
+            if(key.Key == Key.J)
+            {
+                Program.aw.scene = new InGame.GameScene();
+            }
+            if(key.Key == Key.Escape)
+            {
+                Program.aw.scene = new MainMenuScene();
+            }
+
             dm.OnKeyDown(key);
         }
 

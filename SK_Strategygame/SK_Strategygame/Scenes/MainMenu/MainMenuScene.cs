@@ -37,7 +37,6 @@ namespace SK_Strategygame.Scenes
             exitButton.x = 1680 / 2 - exitButton.w / 2;
             exitButton.y = optionsButton.y + optionsButton.h + 50;
 
-            //CursorSprite = new Sprite("Resources/Cursors/Cursor_Main.png");
             cursor = new bCursor();
             newGameButton.OnClick += Click_ButtonNewGame;
             optionsButton.OnClick += Click_ButtonOptions;
@@ -87,6 +86,18 @@ namespace SK_Strategygame.Scenes
         }
         public override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs key)
         {
+            if(key.Key == OpenTK.Input.Key.N)
+            {
+                Program.aw.scene = new HostJoin();
+            }
+            if(key.Key == OpenTK.Input.Key.O)
+            {
+                Program.aw.scene = new OptionsScene();
+            }
+            if(key.Key == OpenTK.Input.Key.Escape)
+            {
+                Environment.Exit(0);
+            }
             dm.OnKeyDown(key);
         }
         public override void OnKeyUp(OpenTK.Input.KeyboardKeyEventArgs key)
