@@ -1,49 +1,78 @@
-﻿using System;
+﻿using AGFXLib.Drawables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AGFXLib.Drawables;
 using OpenTK.Input;
+using AGFXLib;
 
 namespace SK_Strategygame.UI
 {
-    class bListboxEntry : Drawable
+    class bListboxEntry : Clickable
     {
-        public Rect border;
-        public Text text;
-        public int index;
-        public float px;
-        public float py;
-        public int pw;
-        public int ph;
+        public Rect highlight_box;
+        public Text title_text;
 
-        public bListboxEntry (bListbox parent, string text)
+        public bListboxEntry (string title)
         {
-            px = parent.x;
-            py = parent.y;
-            pw = (int)parent.w;
-            ph = (int)parent.h;
-            this.text = new Text(text, new System.Drawing.Font(new System.Drawing.FontFamily("Tahoma"), 14), new DrawColor(0,0,0,255));
-            border = new Rect(new Quad(0, 0, 1, 1), new DrawColor(128, 128, 128));
+            highlight_box = new Rect(new Quad(1,2,3,4), "fill", new DrawColor(0, 0, 0, 20));
+            title_text = new Text(title,Text.defaultFont,new DrawColor(0,0,0));
+            
         }
 
-        public override void Draw(DrawManager dm_parent)
+        public void SetQuad (Quad q)
         {
-            border.x = px;
-            border.y = py;
-            border.w = pw - 16;
-            border.h = text.h + 6;
-            border.y += (index * border.h);
-            text.x = (px + (border.w / 2) - (text.w / 2));
-            text.y = (border.y + (border.h / 2) - (text.h / 2));
-            border.Draw(dm_parent);
-            text.Draw(dm_parent);
+            highlight_box.x = q.x;
+            highlight_box.y = q.y;
+            highlight_box.w = q.w;
+            highlight_box.h = q.h;
+            title_text.x = q.x + q.w / 2 - title_text.w / 2;
+            title_text.y = q.y + q.h / 2 - title_text.h / 2;
+            matrix = new Matrix(new Vertex2[]
+            {
+                new Vertex2(q.x,q.y),
+                new Vertex2(q.x+q.w,q.y),
+                new Vertex2(q.x+q.w,q.y+q.h),
+                new Vertex2(q.x,q.y+q.h)
+            });
         }
 
-        public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key) { }
-        public override void OnKeyUp(DrawManager parent, KeyboardKeyEventArgs key) { }
-        public override void OnMouseDown(DrawManager parent, MouseButtonEventArgs button) { }
-        public override void OnMouseUp(DrawManager parent, MouseButtonEventArgs button) { }
+        public override void Draw(DrawManager parent)
+        {
+            base.Draw(parent);
+            highlight_box.Draw(parent);
+            if (highlight_box.matrix.TestCollision(new Vertex2(UserMouse.GetX(),UserMouse.GetY()))) {
+                highlight_box.color.a += 4;
+                if (highlight_box.color.a > 80)
+                    highlight_box.color.a = 80;
+            } else
+            {
+                highlight_box.color.a -= 4;
+                if (highlight_box.color.a < 20)
+                    highlight_box.color.a = 20;
+            }
+            title_text.Draw(parent);
+        }
+
+        public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key)
+        {
+            base.OnKeyDown(parent, key);
+        }
+
+        public override void OnKeyUp(DrawManager parent, KeyboardKeyEventArgs key)
+        {
+            base.OnKeyUp(parent, key);
+        }
+
+        public override void OnMouseDown(DrawManager parent, MouseButtonEventArgs button)
+        {
+            base.OnMouseDown(parent, button);
+        }
+
+        public override void OnMouseUp(DrawManager parent, MouseButtonEventArgs button)
+        {
+            base.OnMouseUp(parent, button);
+        }
     }
 }
