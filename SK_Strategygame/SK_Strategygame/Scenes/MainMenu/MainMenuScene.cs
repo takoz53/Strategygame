@@ -22,29 +22,29 @@ namespace SK_Strategygame.Scenes
             dm = new DrawManager();
             
             borderSprite = new Sprite("Resources/MainMenu/border.png");
-            borderSprite.x = 1680 / 2 - borderSprite.width / 2;
+            borderSprite.x = 1680 / 2 - borderSprite.w / 2;
             borderSprite.y = 180;
 
             newGameButton = new bButton("Resources/MainMenu/nohover/newgame.png", "Resources/MainMenu/hover/newgame.png");
-            newGameButton.x = 1680 / 2 - newGameButton.width / 2;
+            newGameButton.x = 1680 / 2 - newGameButton.w / 2;
             newGameButton.y = 230;
 
             optionsButton = new bButton("Resources/MainMenu/nohover/options.png", "Resources/MainMenu/hover/options.png");
-            optionsButton.x = 1680 / 2 - optionsButton.width / 2;
-            optionsButton.y = newGameButton.y + newGameButton.texture.Height + 50;
+            optionsButton.x = 1680 / 2 - optionsButton.w / 2;
+            optionsButton.y = newGameButton.y + newGameButton.h + 50;
 
             exitButton = new bButton("Resources/MainMenu/nohover/exit.png", "Resources/MainMenu/hover/exit.png");
-            exitButton.x = 1680 / 2 - exitButton.width / 2;
-            exitButton.y = optionsButton.y + optionsButton.texture.Height + 50;
+            exitButton.x = 1680 / 2 - exitButton.w / 2;
+            exitButton.y = optionsButton.y + optionsButton.h + 50;
 
             //CursorSprite = new Sprite("Resources/Cursors/Cursor_Main.png");
             cursor = new bCursor();
-            newGameButton.OnClick += Sprite_ClickNewGame;
-            optionsButton.OnClick += Sprite_ClickOptions;
-            exitButton.OnClick += Sprite_ClickExit;
+            newGameButton.OnClick += Click_ButtonNewGame;
+            optionsButton.OnClick += Click_ButtonOptions;
+            exitButton.OnClick += Click_ButtonExit;
             BackgroundSprite = new Sprite("Resources/MainMenu/background.png");
-            BackgroundSprite.width = 1680;
-            BackgroundSprite.height = 1050;
+            BackgroundSprite.w = 1680;
+            BackgroundSprite.h = 1050;
 
             //Layer System
             dm.Add(BackgroundSprite);
@@ -57,16 +57,17 @@ namespace SK_Strategygame.Scenes
             Program.aw.Cursor = MouseCursor.Empty;
         }
 
-        private void Sprite_ClickExit(object s, SpriteClickArgs k)
+        private void Click_ButtonExit(object s, MouseArgs k)
         {
             Environment.Exit(0);
         }
 
-        private void Sprite_ClickOptions(object s, SpriteClickArgs k)
+        private void Click_ButtonOptions(object s, MouseArgs k)
         {
             nb.Notify("Options doesn't have a functionality yet", "Coming soon...", NotificationBox.types.OKOnly);
         }
-        private void Sprite_ClickNewGame(object s, SpriteClickArgs k)
+
+        private void Click_ButtonNewGame(object s, MouseArgs k)
         {
             Program.aw.scene = new HostJoin();
         }
@@ -75,9 +76,9 @@ namespace SK_Strategygame.Scenes
         {
             dm.Draw();
             bool hoveringOnAButton = (
-                newGameButton.isBeingHovered ||
-                optionsButton.isBeingHovered ||
-                exitButton.isBeingHovered
+                newGameButton.isHovered() ||
+                optionsButton.isHovered() ||
+                exitButton.isHovered()
             );
             if (hoveringOnAButton)
                 cursor.SetCursor("Resources/Cursors/Cursor_Main_Hover.png");

@@ -15,7 +15,7 @@ namespace SK_Strategygame.UI
 
         public void SetCursor (string path)
         {
-            cursorSprite.SetTexture(path);
+            cursorSprite.setTexture(path);
         }
 
         public override void Draw(DrawManager parent)
