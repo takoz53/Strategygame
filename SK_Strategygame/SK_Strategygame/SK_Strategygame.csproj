@@ -92,6 +92,9 @@
     <Folder Include="Resources\InGame\UIBottom\Buttons\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\testBackButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Cursors\Cursor_Attack.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -159,6 +162,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\MainMenu\nohover\options.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\testBackButtonHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

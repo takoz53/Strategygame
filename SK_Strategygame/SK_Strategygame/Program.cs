@@ -13,7 +13,7 @@ namespace SK_Strategygame
         public static AlphaWindow aw;
         static void Main(string[] args)
         {
-            aw = new AlphaWindow(800,600);
+            aw = new AlphaWindow(1680,1050);
             aw.scene = new Scenes.LBTestScene();
             aw.Run(60);
         }

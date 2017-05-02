@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Input;
+using SK_Strategygame.UI;
 
 namespace SK_Strategygame.Scenes.InGame
 {
@@ -14,14 +15,17 @@ namespace SK_Strategygame.Scenes.InGame
     {
         Sprite testsprite, testspriteforest;
         DrawManager dm;
+        bCursor cursor;
         public GameScene()
         {
             dm = new DrawManager();
             testsprite = new Sprite("Resources/InGame/Fields/infertile/Deserts/test.png");
             testspriteforest = new Sprite("Resources/InGame/Fields/fertile/Forests/largetest.png");
-            testspriteforest.x = testsprite.w + 1;
+            cursor = new bCursor();
+            testspriteforest.x = testsprite.w;
             dm.Add(testsprite);
             dm.Add(testspriteforest);
+            dm.Add(cursor);
         }
 
         public override void Draw(GameWindow gw)
