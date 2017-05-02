@@ -8,11 +8,14 @@ using AGFXLib.Drawables;
 using OpenTK;
 using OpenTK.Input;
 using SK_Strategygame.UI;
+using System.Threading;
 
 namespace SK_Strategygame.Scenes.MainMenu
 {
     class HostJoin : Scene
     {
+        int counter = 0;
+        public Text t;
         public DrawManager dm;
         public bCursor cursor;
         public Sprite BackgroundSprite, borderSprite, testBackButton;
@@ -21,6 +24,7 @@ namespace SK_Strategygame.Scenes.MainMenu
         {
             //Create Objects
             dm = new DrawManager();
+            t = new Text(Convert.ToString(counter));
             BackgroundSprite = new Sprite("Resources/MainMenu/background.png");
             borderSprite = new Sprite("Resources/MainMenu/border.png");
             testBackButton = new bButton("Resources/testBackButton.png", "Resources/testBackButtonHover.png");
@@ -43,7 +47,6 @@ namespace SK_Strategygame.Scenes.MainMenu
             joinButton.OnClick += Click_JoinButton;
             hostButton.OnClick += Click_HostButton;
             testBackButton.OnClick += Click_testBackButton;
-
             //Add to Layers
             dm.Add(BackgroundSprite);
             dm.Add(borderSprite);
@@ -51,8 +54,21 @@ namespace SK_Strategygame.Scenes.MainMenu
             dm.Add(joinButton);
             dm.Add(hostButton);
             dm.Add(cursor);
+            dm.Add(t);
+            count();
         }
-
+        private void counter1()
+        {
+            while(true)
+            {
+                counter++;
+            }
+        }
+        private void count()
+        {
+            Thread t = new Thread(counter1);
+            t.Start();
+        }
         private void Click_testBackButton(object sender, MouseArgs m)
         {
             Program.aw.scene = new MainMenuScene();
