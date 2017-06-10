@@ -55,7 +55,6 @@ namespace SK_Strategygame.Scenes.MainMenu
             dm.Add(hostButton);
             dm.Add(cursor);
             dm.Add(t);
-            count();
         }
         private void counter1()
         {

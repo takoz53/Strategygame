@@ -8,26 +8,22 @@ using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Input;
 using SK_Strategygame.UI;
+using SK_Strategygame.Gameplay.Field_Creation;
 
 namespace SK_Strategygame.Scenes.InGame
 {
     class GameScene : Scene
     {
-        Sprite testsprite, testspriteforest;
         DrawManager dm;
         bCursor cursor;
         public GameScene()
         {
-            dm = new DrawManager();
-            testsprite = new Sprite("Resources/InGame/Fields/infertile/Deserts/test.png");
-            testspriteforest = new Sprite("Resources/InGame/Fields/fertile/Forests/largetest.png");
-            cursor = new bCursor();
-            testspriteforest.x = testsprite.w;
-            dm.Add(testsprite);
-            dm.Add(testspriteforest);
-            dm.Add(cursor);
+                PlayField pf = new Gameplay.Field_Creation.PlayField(3);
+                dm = new DrawManager();
+                cursor = new bCursor();
+                dm.Add(cursor);
+            
         }
-
         public override void Draw(GameWindow gw)
         {
             dm.Draw();
