@@ -21,7 +21,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             dm = new DrawManager();
          for(int i = 0; i < playfieldsize; i++)
             {
-                switch (r.Next(0,1))
+                switch (r.Next(0,5))
                 {
                     default:
                         break;
@@ -37,6 +37,34 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                         x.x = i * x.w;
                         x.y = i * x.h;
                         fields.Add(x);
+                        break;
+
+                    case 2:
+                        Field q = new Field_Creation.Field("Resources/InGame/FieldsCities/Stadt.png");
+                        q.x = i * q.w;
+                        q.y = i * q.h;
+                        fields.Add(q);
+                        break;
+
+                    case 3:
+                        Field w = new Field_Creation.Field("Resources/InGame/Fields/fertile/Pasture/Pasture.png");
+                        w.x = i * w.w;
+                        w.y = i * w.h;
+                        fields.Add(w);
+                        break;
+
+                    case 4:
+                        Field e= new Field_Creation.Field("Resources/InGame/Fields/infertile/Mountains/Mountains.png");
+                        e.x = i * e.w;
+                        e.y = i * e.h;
+                        fields.Add(e);
+                        break;
+
+                    case 5:
+                        Field r = new Field_Creation.Field("Resources/InGame/Fields/inpassable/Water/Wasser.png");
+                        r.x = i * r.w;
+                        r.y = i * r.h;
+                        fields.Add(r);
                         break;
                 }
             }

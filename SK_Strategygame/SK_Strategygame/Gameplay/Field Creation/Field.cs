@@ -12,7 +12,6 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class Field : Sprite
     {
-        Sprite testsprite, oesrag, iosdar;
         public Field(string path) : base(path)
         {
         }

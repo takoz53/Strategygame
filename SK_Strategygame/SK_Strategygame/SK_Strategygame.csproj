@@ -94,6 +94,10 @@
     <Folder Include="Resources\InGame\UIBottom\Buttons\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\InGame\Fields\Cities\Stadt.png" />
+    <Content Include="Resources\InGame\Fields\fertile\Pasture\Pasture.png" />
+    <Content Include="Resources\InGame\Fields\infertile\Mountains\Mountains.png" />
+    <Content Include="Resources\InGame\Fields\inpassable\Water\Wasser.png" />
     <Content Include="Resources\testBackButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
