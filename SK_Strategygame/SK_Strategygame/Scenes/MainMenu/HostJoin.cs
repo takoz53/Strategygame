@@ -18,26 +18,21 @@ namespace SK_Strategygame.Scenes.MainMenu
         public Text t;
         public DrawManager dm;
         public bCursor cursor;
-        public Sprite BackgroundSprite, borderSprite, testBackButton;
+        public Sprite BackgroundSprite, borderSprite;
         public bButton hostButton, joinButton;
         public HostJoin ()
         {
             //Create Objects
             dm = new DrawManager();
             t = new Text(Convert.ToString(counter));
-            BackgroundSprite = new Sprite("Resources/MainMenu/background.png", 0, 0);
-            borderSprite = new Sprite("Resources/MainMenu/border.png", 0, 0);
-            testBackButton = new bButton("Resources/testBackButton.png", "Resources/testBackButtonHover.png");
+            BackgroundSprite = new Sprite("Resources/MainMenu/background.png", 1680, 1050);
+            borderSprite = new Sprite("Resources/MainMenu/border.png", 0, 180);
             hostButton = new bButton("Resources/MainMenu/nohover/host.png", "Resources/MainMenu/hover/host.png");
             joinButton = new bButton("Resources/MainMenu/nohover/join.png", "Resources/MainMenu/hover/join.png");
             cursor = new bCursor();
 
             //Set Positions and W / H
-            BackgroundSprite.w = 1680;
-            BackgroundSprite.h = 1050;
             borderSprite.x = 1680 / 2 - borderSprite.w / 2;
-            borderSprite.y = 180;
-            testBackButton.y = 850;
             hostButton.x = 1680 / 2 - hostButton.w / 2;
             hostButton.y = 300;
             joinButton.x = 1680 / 2 - hostButton.w / 2;
@@ -46,11 +41,9 @@ namespace SK_Strategygame.Scenes.MainMenu
             //Set OnClicks
             joinButton.OnClick += Click_JoinButton;
             hostButton.OnClick += Click_HostButton;
-            testBackButton.OnClick += Click_testBackButton;
             //Add to Layers
             dm.Add(BackgroundSprite);
             dm.Add(borderSprite);
-            dm.Add(testBackButton);
             dm.Add(joinButton);
             dm.Add(hostButton);
             dm.Add(cursor);
@@ -86,8 +79,7 @@ namespace SK_Strategygame.Scenes.MainMenu
         {
             bool hoveringOnAButton = (
                 hostButton.isHovered() ||
-                joinButton.isHovered() ||
-                testBackButton.isHovered()
+                joinButton.isHovered()
                 );
             if (hoveringOnAButton)
                 cursor.SetCursor("Resources/Cursors/Cursor_Main_Hover.png");

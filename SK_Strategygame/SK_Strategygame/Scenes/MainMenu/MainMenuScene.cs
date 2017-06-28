@@ -38,12 +38,14 @@ namespace SK_Strategygame.Scenes
             exitButton.y = optionsButton.y + optionsButton.h + 50;
 
             cursor = new bCursor();
+
+            BackgroundSprite = new Sprite("Resources/MainMenu/background.png", 0, 0);
+            BackgroundSprite.w = 1680;
+            BackgroundSprite.h = 1050;
+
             newGameButton.OnClick += Click_ButtonNewGame;
             optionsButton.OnClick += Click_ButtonOptions;
             exitButton.OnClick += Click_ButtonExit;
-            BackgroundSprite = new Sprite("Resources/MainMenu/background.png" ,0, 0);
-            BackgroundSprite.w = 1680;
-            BackgroundSprite.h = 1050;
 
             //Layer System
             dm.Add(BackgroundSprite);

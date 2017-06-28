@@ -23,6 +23,7 @@ namespace SK_Strategygame.UI
         {
             nHoverPath = path;
             HoverPath = hoverPath;
+            
         }
 
         public override void Draw(DrawManager parent)

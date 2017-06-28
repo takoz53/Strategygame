@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gameplay\Field Creation\City.cs" />
-    <Compile Include="Gameplay\Field Creation\Class1.cs" />
+    <Compile Include="Gameplay\Field Creation\Coordinate.cs" />
     <Compile Include="Gameplay\Field Creation\Field.cs" />
     <Compile Include="Gameplay\Field Creation\Forest.cs" />
     <Compile Include="Gameplay\Field Creation\PlayField.cs" />

@@ -9,7 +9,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
     class Coordinate
     {
         private int x;
-        private int y; 
+        private int y;
 
         public Coordinate(int x, int y)
         {

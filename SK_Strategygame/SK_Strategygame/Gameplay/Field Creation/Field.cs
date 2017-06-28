@@ -24,6 +24,11 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             this.id = id; 
         }
 
+        public Coordinate getCoordinate()
+        {
+            return coordinate;
+        }
+
   
     }
 }
