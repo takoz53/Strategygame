@@ -14,8 +14,6 @@ namespace SK_Strategygame.Scenes.MainMenu
 {
     class HostJoin : Scene
     {
-        int counter = 0;
-        public Text t;
         public DrawManager dm;
         public bCursor cursor;
         public Sprite BackgroundSprite, borderSprite;
