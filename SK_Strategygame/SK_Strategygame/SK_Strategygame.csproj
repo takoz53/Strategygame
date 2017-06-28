@@ -50,10 +50,13 @@
   <ItemGroup>
     <Compile Include="Gameplay\Field Creation\City.cs" />
     <Compile Include="Gameplay\Field Creation\Coordinate.cs" />
+    <Compile Include="Gameplay\Field Creation\Desert.cs" />
     <Compile Include="Gameplay\Field Creation\Field.cs" />
     <Compile Include="Gameplay\Field Creation\Forest.cs" />
+    <Compile Include="Gameplay\Field Creation\Mountain.cs" />
     <Compile Include="Gameplay\Field Creation\Pasture.cs" />
     <Compile Include="Gameplay\Field Creation\PlayField.cs" />
+    <Compile Include="Gameplay\Field Creation\Sea.cs" />
     <Compile Include="Gameplay\Field Creation\Warrior.cs" />
     <Compile Include="NotificationBox.cs" />
     <Compile Include="Program.cs" />
@@ -100,9 +103,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\InGame\Fields\Cities\Stadt.png" />
-    <Content Include="Resources\InGame\Fields\fertile\Pasture\Pasture.png" />
-    <Content Include="Resources\InGame\Fields\infertile\Mountains\Mountains.png" />
-    <Content Include="Resources\InGame\Fields\inpassable\Sea\Wasser.png" />
+    <Content Include="Resources\InGame\Fields\fertile\Pasture\Pasture.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\infertile\Mountains\Mountains.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\inpassable\Sea\Wasser.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\testBackButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
