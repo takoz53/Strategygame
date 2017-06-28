@@ -1,6 +1,12 @@
-﻿namespace SK_Strategygame.Gameplay.Field_Creation
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SK_Strategygame.Gameplay.Field_Creation
 {
-    internal class Warrior
+    class Warrior
     {
     }
 }

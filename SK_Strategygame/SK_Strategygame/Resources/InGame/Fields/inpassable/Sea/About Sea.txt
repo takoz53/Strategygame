@@ -1,5 +1,5 @@
 ﻿These fields can't be occupied by others. Soldiers can't walk over this path.
 There will be about 3 Pictures with Water for variety:
-Water_Blue
-Water_LightBlue
-Water_DarkBlue
+Sea_Blue
+Sea_LightBlue
+Sea_DarkBlue
