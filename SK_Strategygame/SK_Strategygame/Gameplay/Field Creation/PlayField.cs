@@ -14,7 +14,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         public List<Field> fields = new List<Field>();
         Random r = new Random();
         DrawManager dm;
-        string forestlink = "Resources/InGame/Fields/fertile/Forests/largetest.png";
+        string forestlink = "Resources/InGame/Fields/fertile/Forests/forest_small.png";
         string desertlink = "Resources/InGame/Fields/infertile/Deserts/test.png";
         string pasturelink = "Resources/InGame/Fields/fertile/Pasture/pasture.png";
         string mountainlink = "Resources/InGame/Fields/infertile/Deserts/test.png";

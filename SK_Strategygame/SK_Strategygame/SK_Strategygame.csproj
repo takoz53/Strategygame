@@ -103,6 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\InGame\Fields\Cities\Stadt.png" />
+    <Content Include="Resources\InGame\Fields\fertile\Forests\forest_small.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\InGame\Fields\fertile\Pasture\Pasture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -138,9 +141,6 @@
     </Content>
     <Content Include="Resources\InGame\Fields\Cities\About Cities.txt" />
     <Content Include="Resources\InGame\Fields\fertile\Forests\About Forests.txt" />
-    <Content Include="Resources\InGame\Fields\fertile\Forests\largetest.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\InGame\Fields\fertile\Pasture\About Pasture.txt" />
     <Content Include="Resources\InGame\Fields\infertile\Deserts\About Deserts.txt" />
     <Content Include="Resources\InGame\Fields\infertile\Deserts\test.png">
