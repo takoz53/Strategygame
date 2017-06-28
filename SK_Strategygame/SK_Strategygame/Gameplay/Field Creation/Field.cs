@@ -17,7 +17,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         private Coordinate coordinate;
         private List<Warrior> warriors;
 
-        public Field(String path, Coordinate coordinate, String id): base(path, coordinate.getX()*200, coordinate.getY()*200)
+        public Field(String path, Coordinate coordinate, String id): base(path, coordinate.getX()*250, coordinate.getY()*250)
         {
             this.coordinate = coordinate;
             this.id = id; 
@@ -27,7 +27,5 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         {
             return coordinate;
         }
-
-  
     }
 }

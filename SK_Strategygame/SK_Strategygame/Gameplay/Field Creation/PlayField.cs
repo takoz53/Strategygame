@@ -18,8 +18,8 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 
         public PlayField(int playfieldsize)
         {
-            String link1 = "Resources/InGame/Fields/fertile/Forests/largetest.png";
-            String link2 = "Resources/InGame/Fields/infertile/Deserts/test.png";
+            string forest = "Resources/InGame/Fields/fertile/Forests/largetest.png";
+            string desert = "Resources/InGame/Fields/infertile/Deserts/test.png";
             dm = new DrawManager();
 
             for (int x = 0;  x < playfieldsize; x++)
@@ -28,15 +28,26 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                 {
                     double fieldTypeRandom = r.NextDouble();
 
-                    if(fieldTypeRandom < 0.16)
+                    if(fieldTypeRandom < 0.31) //30% Chance for Forests
                     {
-                        fields.Add(new City(randomCityNameGenerator(), link2, new Coordinate(x, y), (x + "" + y)));
+                        fields.Add(new Forest(forest, new Coordinate(x, y), (x + "" + y)));
                     }
-                    if(fieldTypeRandom >= 0.16)
+                    if(fieldTypeRandom > 0.30 && fieldTypeRandom < 0.41) //10% Chance for Deserts
                     {
-                        fields.Add(new Forest(link1, new Coordinate(x, y), (x + "" + y)));
+                        fields.Add(new Desert(desert, new Coordinate(x, y), (x + "" + y)));
                     }
-                    
+                    if(fieldTypeRandom >= 0.41 && fieldTypeRandom < 0.71) //30% Chance for Pasture
+                    {
+                        fields.Add(new Pasture(desert, new Coordinate(x, y), (x + "" + y)));
+                    }
+                    if(fieldTypeRandom >= 0.71 && fieldTypeRandom < 0.96) //25% Chance for Mountains
+                    {
+                        fields.Add(new Mountain(desert, new Coordinate(x, y), (x + "" + y)));
+                    }
+                    if(fieldTypeRandom >= 0.96 && fieldTypeRandom <= 1) //5% Chance for Sea
+                    {
+                        fields.Add(new Pasture(desert, new Coordinate(x, y), (x + "" + y))); 
+                    }
                 }
             }
         }
