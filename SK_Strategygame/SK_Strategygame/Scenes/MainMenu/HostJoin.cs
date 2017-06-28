@@ -25,8 +25,8 @@ namespace SK_Strategygame.Scenes.MainMenu
             //Create Objects
             dm = new DrawManager();
             t = new Text(Convert.ToString(counter));
-            BackgroundSprite = new Sprite("Resources/MainMenu/background.png");
-            borderSprite = new Sprite("Resources/MainMenu/border.png");
+            BackgroundSprite = new Sprite("Resources/MainMenu/background.png", 0, 0);
+            borderSprite = new Sprite("Resources/MainMenu/border.png", 0, 0);
             testBackButton = new bButton("Resources/testBackButton.png", "Resources/testBackButtonHover.png");
             hostButton = new bButton("Resources/MainMenu/nohover/host.png", "Resources/MainMenu/hover/host.png");
             joinButton = new bButton("Resources/MainMenu/nohover/join.png", "Resources/MainMenu/hover/join.png");

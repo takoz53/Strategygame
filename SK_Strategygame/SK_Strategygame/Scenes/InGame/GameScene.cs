@@ -16,12 +16,30 @@ namespace SK_Strategygame.Scenes.InGame
     {
         DrawManager dm;
         bCursor cursor;
+        Sprite joinButton;
+        List<Field> gameField;
+        int gameFieldWidth;
+        int gameFieldHeight;
+
         public GameScene()
         {
-                PlayField pf = new Gameplay.Field_Creation.PlayField(3);
-                dm = new DrawManager();
-                cursor = new bCursor();
-                dm.Add(cursor);
+            dm = new DrawManager();
+            PlayField pf = new Gameplay.Field_Creation.PlayField(3);
+            gameField = pf.getPlayField();
+
+            gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 200;
+            gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 200;
+
+
+            foreach (Field f in gameField)
+            {
+                dm.Add(f);
+            }
+            cursor = new bCursor();
+            dm.Add(joinButton);
+
+            dm.Add(cursor);
+
             
         }
         public override void Draw(GameWindow gw)

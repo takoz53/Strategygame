@@ -48,8 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gameplay\Field Creation\City.cs" />
+    <Compile Include="Gameplay\Field Creation\Class1.cs" />
     <Compile Include="Gameplay\Field Creation\Field.cs" />
+    <Compile Include="Gameplay\Field Creation\Forest.cs" />
     <Compile Include="Gameplay\Field Creation\PlayField.cs" />
+    <Compile Include="Gameplay\Field Creation\Warrior.cs" />
     <Compile Include="NotificationBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

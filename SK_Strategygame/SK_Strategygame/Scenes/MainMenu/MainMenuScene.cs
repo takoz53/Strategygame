@@ -21,7 +21,7 @@ namespace SK_Strategygame.Scenes
             Console.WriteLine("Initializing MainMenuScene");
             dm = new DrawManager();
             
-            borderSprite = new Sprite("Resources/MainMenu/border.png");
+            borderSprite = new Sprite("Resources/MainMenu/border.png", 0,0);
             borderSprite.x = 1680 / 2 - borderSprite.w / 2;
             borderSprite.y = 180;
 
@@ -41,7 +41,7 @@ namespace SK_Strategygame.Scenes
             newGameButton.OnClick += Click_ButtonNewGame;
             optionsButton.OnClick += Click_ButtonOptions;
             exitButton.OnClick += Click_ButtonExit;
-            BackgroundSprite = new Sprite("Resources/MainMenu/background.png");
+            BackgroundSprite = new Sprite("Resources/MainMenu/background.png" ,0, 0);
             BackgroundSprite.w = 1680;
             BackgroundSprite.h = 1050;
 

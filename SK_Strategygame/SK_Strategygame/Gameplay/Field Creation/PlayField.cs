@@ -18,29 +18,42 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 
         public PlayField(int playfieldsize)
         {
+            String link1 = "Resources/InGame/Fields/fertile/Forests/largetest.png";
+            String link2 = "Resources/InGame/Fields/infertile/Deserts/test.png";
             dm = new DrawManager();
-         for(int i = 0; i < playfieldsize; i++)
+
+            for (int x = 0;  x < playfieldsize; x++)
             {
-                switch (r.Next(0,1))
+                for(int y = 0; y < playfieldsize; y++)
                 {
-                    default:
-                        break;
+                    double fieldTypeRandom = r.NextDouble();
 
-                    case 0:
-                            Field f = new Field("Resources/InGame/Fields/fertile/Forests/largetest.png");
-                            f.x = i * f.w;
-                            f.y = i * f.h;
-                        fields.Add(f);
-                        break;
-
-                    case 1: Field x = new Field_Creation.Field("Resources/InGame/Fields/infertile/Deserts/test.png");
-                        x.x = i * x.w;
-                        x.y = i * x.h;
-                        fields.Add(x);
-                        break;
+                    if(fieldTypeRandom < 0.16)
+                    {
+                        fields.Add(new City(randomCityNameGenerator(), link2, new Coordinate(x, y), (x + "" + y)));
+                    }
+                    if(fieldTypeRandom >= 0.16)
+                    {
+                        fields.Add(new Forest(link1, new Coordinate(x, y), (x + "" + y)));
+                    }
+                    
                 }
             }
         }
+
+        public List<Field> getPlayField()
+        {
+            return fields;
+        }
+
+        public String randomCityNameGenerator()
+        {
+            List<String> name1 = new List<String> { "Big", "Black", "Yellow", "Holy", "Windy", "Saint"};
+            List<String> name2 = new List<String> { "Castle", "Rock", "Maria", "Stone" };
+            return name1[r.Next(name1.Count)] + " " + name2[r.Next(name2.Count)];
+
+        }
+
 
         public override void Draw(DrawManager parent)
         {

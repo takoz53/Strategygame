@@ -13,13 +13,13 @@ namespace SK_Strategygame.UI
         public string HoverPath;
         public bool hoverSprite = false;
 
-        public bButton(string path) : base(path)
+        public bButton(string path) : base(path, 0, 0)
         {
             nHoverPath = path;
             HoverPath = path;
         }
 
-        public bButton(string path, string hoverPath) : base(path)
+        public bButton(string path, string hoverPath) : base(path, 0, 0)
         {
             nHoverPath = path;
             HoverPath = hoverPath;

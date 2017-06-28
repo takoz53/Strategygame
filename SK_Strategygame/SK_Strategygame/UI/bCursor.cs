@@ -10,7 +10,7 @@ namespace SK_Strategygame.UI
 
         public bCursor ()
         {
-            cursorSprite = new Sprite("Resources/Cursors/Cursor_Main.png");
+            cursorSprite = new Sprite("Resources/Cursors/Cursor_Main.png", 0, 0);
         }
 
         public void SetCursor (string path)
