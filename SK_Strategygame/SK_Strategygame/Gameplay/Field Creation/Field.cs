@@ -13,7 +13,6 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class Field : Sprite
     {
-        private Sprite image;
         private String id;
         private Coordinate coordinate;
         private List<Warrior> warriors;

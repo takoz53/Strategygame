@@ -52,6 +52,7 @@
     <Compile Include="Gameplay\Field Creation\Coordinate.cs" />
     <Compile Include="Gameplay\Field Creation\Field.cs" />
     <Compile Include="Gameplay\Field Creation\Forest.cs" />
+    <Compile Include="Gameplay\Field Creation\Pasture.cs" />
     <Compile Include="Gameplay\Field Creation\PlayField.cs" />
     <Compile Include="Gameplay\Field Creation\Warrior.cs" />
     <Compile Include="NotificationBox.cs" />
@@ -101,7 +102,7 @@
     <Content Include="Resources\InGame\Fields\Cities\Stadt.png" />
     <Content Include="Resources\InGame\Fields\fertile\Pasture\Pasture.png" />
     <Content Include="Resources\InGame\Fields\infertile\Mountains\Mountains.png" />
-    <Content Include="Resources\InGame\Fields\inpassable\Water\Wasser.png" />
+    <Content Include="Resources\InGame\Fields\inpassable\Sea\Wasser.png" />
     <Content Include="Resources\testBackButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -137,7 +138,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\InGame\Fields\infertile\Mountains\About Mountains.txt" />
-    <Content Include="Resources\InGame\Fields\inpassable\Water\About Water.txt" />
+    <Content Include="Resources\InGame\Fields\inpassable\Sea\About Sea.txt" />
     <Content Include="Resources\MainMenu\border.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

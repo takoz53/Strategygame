@@ -18,11 +18,11 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             woodAmount = rd.Next(10, 100) * forestSize;
         }
 
-        public Boolean collectWood(int amount)
+        public Boolean harvestWood(int amount) //Function to harvest Wood
         {
             if(woodAmount > amount)
             {
-                woodAmount = woodAmount - amount;
+                woodAmount -= amount;
                 return true;
             }
             else
@@ -31,8 +31,6 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             }
 
         }
-
-
     }
 }
 

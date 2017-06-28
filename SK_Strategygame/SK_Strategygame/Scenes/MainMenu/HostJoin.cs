@@ -24,14 +24,15 @@ namespace SK_Strategygame.Scenes.MainMenu
         {
             //Create Objects
             dm = new DrawManager();
-            t = new Text(Convert.ToString(counter));
-            BackgroundSprite = new Sprite("Resources/MainMenu/background.png", 1680, 1050);
+            BackgroundSprite = new Sprite("Resources/MainMenu/background.png", 0, 0);
             borderSprite = new Sprite("Resources/MainMenu/border.png", 0, 180);
             hostButton = new bButton("Resources/MainMenu/nohover/host.png", "Resources/MainMenu/hover/host.png");
             joinButton = new bButton("Resources/MainMenu/nohover/join.png", "Resources/MainMenu/hover/join.png");
             cursor = new bCursor();
 
             //Set Positions and W / H
+            BackgroundSprite.w = 1680;
+            BackgroundSprite.h = 1050;
             borderSprite.x = 1680 / 2 - borderSprite.w / 2;
             hostButton.x = 1680 / 2 - hostButton.w / 2;
             hostButton.y = 300;
@@ -47,20 +48,8 @@ namespace SK_Strategygame.Scenes.MainMenu
             dm.Add(joinButton);
             dm.Add(hostButton);
             dm.Add(cursor);
-            dm.Add(t);
         }
-        private void counter1()
-        {
-            while(true)
-            {
-                counter++;
-            }
-        }
-        private void count()
-        {
-            Thread t = new Thread(counter1);
-            t.Start();
-        }
+
         private void Click_testBackButton(object sender, MouseArgs m)
         {
             Program.aw.scene = new MainMenuScene();
