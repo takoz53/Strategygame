@@ -26,8 +26,8 @@ namespace SK_Strategygame.Scenes.InGame
             PlayField pf = new Gameplay.Field_Creation.PlayField(10);
             gameField = pf.getPlayField();
 
-            gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 200;
-            gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 200;
+            gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 250;
+            gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 250;
 
 
             foreach (Field f in gameField)
@@ -48,7 +48,10 @@ namespace SK_Strategygame.Scenes.InGame
 
         public override void OnKeyDown(KeyboardKeyEventArgs key)
         {
-
+            if (key.Key == OpenTK.Input.Key.Escape)
+            {
+                Environment.Exit(0);
+            }
         }
 
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
