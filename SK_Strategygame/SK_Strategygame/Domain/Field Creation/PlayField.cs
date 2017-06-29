@@ -16,7 +16,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         DrawManager dm;
         string forestlink = "Resources/InGame/Fields/fertile/Forests/forest_small.png";
         string desertlink = "Resources/InGame/Fields/infertile/Deserts/test.png";
-        string pasturelink = "Resources/InGame/Fields/fertile/Pasture/pasture.png";
+        string pasturelink = "Resources/InGame/Fields/fertile/Pasture/pasture_small.png";
         string mountainlink = "Resources/InGame/Fields/infertile/Deserts/test.png";
         string sealink = "Resources/InGame/Fields/inpassable/Sea/Wasser.png";
 
