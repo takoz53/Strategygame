@@ -34,7 +34,6 @@ namespace SK_Strategygame.UI
                 if (hoverSprite == false)
                 {
                     setTexture(HoverPath);
-                    Console.WriteLine("Texture changed to hover (path: \"" + HoverPath + "\"");
                 }
                 hoverSprite = true;
             } else
@@ -42,7 +41,6 @@ namespace SK_Strategygame.UI
                 if (hoverSprite)
                 {
                     setTexture(nHoverPath);
-                    Console.WriteLine("Texture changed to normal (path: \"" + nHoverPath + "\"");
                 }
                 hoverSprite = false;
 

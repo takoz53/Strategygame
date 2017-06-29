@@ -23,7 +23,7 @@ namespace SK_Strategygame.Scenes.InGame
         public GameScene()
         {
             dm = new DrawManager();
-            PlayField pf = new Gameplay.Field_Creation.PlayField(3);
+            PlayField pf = new Gameplay.Field_Creation.PlayField(10);
             gameField = pf.getPlayField();
 
             gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 200;
