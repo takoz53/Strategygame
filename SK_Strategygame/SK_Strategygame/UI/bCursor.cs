@@ -23,6 +23,7 @@ namespace SK_Strategygame.UI
             cursorSprite.x = UserMouse.GetX();
             cursorSprite.y = UserMouse.GetY();
             cursorSprite.Draw(parent);
+            
         }
 
         public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key) { }

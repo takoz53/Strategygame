@@ -58,6 +58,7 @@
     <Compile Include="Domain\Field Creation\PlayField.cs" />
     <Compile Include="Domain\Field Creation\Sea.cs" />
     <Compile Include="Domain\Field Creation\Warrior.cs" />
+    <Compile Include="Domain\Player\Playfigure.cs" />
     <Compile Include="NotificationBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,6 +103,8 @@
     <Folder Include="Resources\InGame\UIBottom\Buttons\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Domain\Player\Playfigure_sold.png" />
+    <Content Include="Domain\Player\Playfigure_test.png" />
     <Content Include="Resources\InGame\Fields\Cities\Stadt.png" />
     <Content Include="Resources\InGame\Fields\fertile\Forests\forest_large.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

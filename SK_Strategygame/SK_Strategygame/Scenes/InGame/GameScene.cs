@@ -19,9 +19,10 @@ namespace SK_Strategygame.Scenes.InGame
         List<Field> gameField;
         int gameFieldWidth;
         int gameFieldHeight;
-
+        
         public GameScene()
         {
+            
             dm = new DrawManager();
             PlayField pf = new Gameplay.Field_Creation.PlayField(10);
             gameField = pf.getPlayField();
