@@ -10,6 +10,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class PlayField : Drawable
     {
+        
         //Declaration and saving fuck
         public List<Field> fields = new List<Field>();
         Random r = new Random();
