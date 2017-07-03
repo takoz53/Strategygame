@@ -9,51 +9,20 @@ using OpenTK.Input;
 
 namespace SK_Strategygame.Domain.Player
 {
-    class Playfigure: Drawable
+    class Playfigure: Sprite
     {
-        public Sprite player;
+        private String id;
 
-        //In dieser Klasse soll ein Objekt erstellt werden, den man auf dem Spielfeld, durch Drag-and-Drop bewegen kann
-        public Playfigure (bool false_for_commander, int x, int y)
+        public Playfigure ( int x, int y, String id)
         {
-            //Welche Spielfigure?
-            if (false_for_commander == false)
-            {
-                player = new Sprite("Domain/Player/Playfigure_test.png", 25, 25);
-                player.x = x;
-                player.y = y;
-            }
-            else
-            {
-                player = new Sprite("Domain/Player/Playfigure_sold.png", 250, 250);
-                player.x = x;
-                player.y = y;
-            }
-        }
-        public override void Draw(DrawManager parent)
-        {
+            this.x = x;
+            this.y = y;
+            this.id = id;
         }
 
-        public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key)
+        public Coordinate getCoordinate()
         {
-        }
-
-        public override void OnKeyUp(DrawManager parent, KeyboardKeyEventArgs key)
-        {
-        }
-
-        public override void OnMouseDown(DrawManager parent, MouseButtonEventArgs button)
-        {
-
-            //Durch das anclicken des Sprites wird die Spielfigure etwas größer und kann bewegt sich mit dem Cursor
-            player.x = UserMouse.GetX();
-            player.y = UserMouse.GetY();
-            player.w += 5;
-            player.h += 5;
-        }
-
-        public override void OnMouseUp(DrawManager parent, MouseButtonEventArgs button)
-        {
+            return coordinate;
         }
     }
 }

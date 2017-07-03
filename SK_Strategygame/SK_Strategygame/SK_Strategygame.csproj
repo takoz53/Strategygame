@@ -103,7 +103,9 @@
     <Folder Include="Resources\InGame\UIBottom\Buttons\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Domain\Player\Playfigure_sold.png" />
+    <Content Include="Domain\Player\Playfigure_sold.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Domain\Player\Playfigure_test.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
