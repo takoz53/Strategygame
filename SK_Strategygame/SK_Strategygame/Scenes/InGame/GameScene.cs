@@ -18,28 +18,40 @@ namespace SK_Strategygame.Scenes.InGame
         DrawManager dm;
         bCursor cursor;
         List<Field> gameField;
+        List<Playfigure> playerlist = new List<Playfigure>();
         int gameFieldWidth;
         int gameFieldHeight;
+        int gamePlayers = 1;
+
         public GameScene()
         {
             //Hier werden die Spielfelder und die Spielfiguren erstellt
-
             dm = new DrawManager();
             PlayField pf = new Gameplay.Field_Creation.PlayField(10);
-            Playfigure player = new Playfigure(false, 25, 25);
             gameField = pf.getPlayField();
 
             //Berechnung der Breite und der höhe des Spielbretts
             gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 250;
             gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 250;
 
+            for (int i = 0; i <= gamePlayers; i++)
+            {
+                //Coordinaten werden später so verändert, so das sie auf ihrer Stadt platziert sind
+                playerlist.Add(new Playfigure(25, 25));
+
+            }
+
+
             //die layers des Spielbretts und die bereitstellung zum zeichnen
             foreach (Field f in gameField)
             {
                 dm.Add(f);
             }
+            foreach (Playfigure g in playerlist)
+            {
+                dm.Add(g);
+            }
 
-            dm.Add(player);
 
             cursor = new bCursor();
 
