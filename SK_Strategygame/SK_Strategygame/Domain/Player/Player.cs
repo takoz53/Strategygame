@@ -13,6 +13,7 @@ namespace SK_Strategygame.Domain.Player
     {
         private String id;
         private Coordinate coordinate;
+        private int x, y;
         public Player(string path, Coordinate coordinate, String id) : base(path, coordinate.getX() * 250, coordinate.getY() * 250)
         {
             this.coordinate = coordinate;
@@ -24,7 +25,7 @@ namespace SK_Strategygame.Domain.Player
             return coordinate;
         }
 
-        public void move(Coordinate coordinate)
+        public void move(Coordinate coordinate, float x, float y)
         {
             this.coordinate = coordinate;
         }

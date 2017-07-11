@@ -49,6 +49,7 @@ namespace SK_Strategygame.Scenes.InGame
 
             
         }
+
         public override void Draw(GameWindow gw)
         {
             dm.Draw();
@@ -65,8 +66,10 @@ namespace SK_Strategygame.Scenes.InGame
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
         public override void OnMouseDown(MouseButtonEventArgs button)
         {
-            user[0].move(new Coordinate(UserMouse.getX(), UserMouse.getY()));
+            float mouseposX = UserMouse.getX();
+            //user[0].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[0].setLocationX(mouseposX), user[0].setLocationY(UserMouse.getY()));
             Console.WriteLine("Holding mouse down");
+            Console.WriteLine(user[0].getCoordinate().getX() + "" + user[0].getCoordinate().getY()); 
         }
         public override void OnMouseUp(MouseButtonEventArgs button) { }
         public override void Update() { }
