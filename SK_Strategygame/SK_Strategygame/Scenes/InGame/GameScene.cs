@@ -23,8 +23,6 @@ namespace SK_Strategygame.Scenes.InGame
         float gameFieldHeight;
         public GameScene()
         {
-            //Hier werden die Spielfelder und die Spielfiguren erstellt
-
             dm = new DrawManager();
             PlayField pf = new Gameplay.Field_Creation.PlayField(10);
             Users users = new Users(3);
@@ -32,11 +30,11 @@ namespace SK_Strategygame.Scenes.InGame
 
             gameField = pf.getPlayField();
             usersList = users.getPlayers();
-            //Berechnung der Breite und der höhe des Spielbretts
+
             gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 250;
             gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 250;
 
-            //die layers des Spielbretts und die bereitstellung zum zeichnen
+
             foreach (Field f in gameField)
             {
                 dm.Add(f);
