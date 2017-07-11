@@ -20,8 +20,8 @@ namespace SK_Strategygame.UI
 
         public override void Draw(DrawManager parent)
         {
-            cursorSprite.x = UserMouse.GetX();
-            cursorSprite.y = UserMouse.GetY();
+            cursorSprite.x = UserMouse.getX();
+            cursorSprite.y = UserMouse.getY();
             cursorSprite.Draw(parent);
         }
 

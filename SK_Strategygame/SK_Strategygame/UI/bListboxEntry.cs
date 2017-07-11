@@ -42,7 +42,7 @@ namespace SK_Strategygame.UI
         {
             base.Draw(parent);
             highlight_box.Draw(parent);
-            if (highlight_box.matrix.TestCollision(new Vertex2(UserMouse.GetX(),UserMouse.GetY()))) {
+            if (highlight_box.matrix.TestCollision(new Vertex2(UserMouse.getX(),UserMouse.getY()))) {
                 highlight_box.color.a += 4;
                 if (highlight_box.color.a > 80)
                     highlight_box.color.a = 80;

@@ -8,23 +8,33 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class Coordinate
     {
-        private int x;
-        private int y;
+        private float x;
+        private float y;
 
-        public Coordinate(int x, int y)
+        public Coordinate(float x, float y)
         {
             this.x = x;
             this.y = y;
        }
 
-        public int getX()
+        public float getX()
         {
             return x;
         }
 
-        public int getY()
+        public float getY()
         {
             return y;
+        }
+
+        public void setX(float x)
+        {
+            this.x = x;
+        }
+        
+        public void setY(float y)
+        {
+            this.y = y;
         }
 
     }

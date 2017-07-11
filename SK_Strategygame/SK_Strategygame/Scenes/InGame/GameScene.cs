@@ -18,17 +18,20 @@ namespace SK_Strategygame.Scenes.InGame
         DrawManager dm;
         bCursor cursor;
         List<Field> gameField;
-        int gameFieldWidth;
-        int gameFieldHeight;
+        List<Player> usersList;
+        float gameFieldWidth;
+        float gameFieldHeight;
         public GameScene()
         {
             //Hier werden die Spielfelder und die Spielfiguren erstellt
 
             dm = new DrawManager();
             PlayField pf = new Gameplay.Field_Creation.PlayField(10);
-            Playfigure player = new Playfigure(false, 25, 25);
-            gameField = pf.getPlayField();
+            Users users = new Users(3);
+            cursor = new bCursor();
 
+            gameField = pf.getPlayField();
+            usersList = users.getPlayers();
             //Berechnung der Breite und der höhe des Spielbretts
             gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 250;
             gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 250;
@@ -38,10 +41,10 @@ namespace SK_Strategygame.Scenes.InGame
             {
                 dm.Add(f);
             }
-
-            dm.Add(player);
-
-            cursor = new bCursor();
+            foreach (Player p in usersList)
+            {
+                dm.Add(p);
+            }
 
             dm.Add(cursor);
 
@@ -49,7 +52,6 @@ namespace SK_Strategygame.Scenes.InGame
         }
         public override void Draw(GameWindow gw)
         {
-            //Lern englisch
             dm.Draw();
         }
 
@@ -62,7 +64,10 @@ namespace SK_Strategygame.Scenes.InGame
         }
 
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
-        public override void OnMouseDown(MouseButtonEventArgs button) { }
+        public override void OnMouseDown(MouseButtonEventArgs button)
+        {
+            usersList[1].move();
+        }
         public override void OnMouseUp(MouseButtonEventArgs button) { }
         public override void Update() { }
     }

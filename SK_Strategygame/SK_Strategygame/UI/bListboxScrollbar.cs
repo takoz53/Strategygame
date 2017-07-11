@@ -56,7 +56,7 @@ namespace SK_Strategygame.UI
         {
             if (isGrabbed)
             {
-                float dy = UserMouse.GetY() - (float)anchor.y;
+                float dy = UserMouse.getY() - (float)anchor.y;
                 if (dy < 0)
                     dy = 0;
                 if (dy > maxScroll)
@@ -82,10 +82,10 @@ namespace SK_Strategygame.UI
 
         public override void OnMouseDown(DrawManager parent, MouseButtonEventArgs button)
         {
-            if (scrollbar_rect.matrix.TestCollision(new Vertex2(UserMouse.GetX(), UserMouse.GetY())))
+            if (scrollbar_rect.matrix.TestCollision(new Vertex2(UserMouse.getX(), UserMouse.getY())))
             {
                 
-                anchor = new Vertex2(UserMouse.GetX(), UserMouse.GetY() - (scrollbar_rect.y - outline_rect.y));
+                anchor = new Vertex2(UserMouse.getX(), UserMouse.getY() - (scrollbar_rect.y - outline_rect.y));
                 isGrabbed = true;
             }
         }

@@ -11,10 +11,11 @@ namespace SK_Strategygame.Gameplay.Field_Creation
     class PlayField : Drawable
     {
         
-        //Declaration and saving fuck
+        //Declarations
         public List<Field> fields = new List<Field>();
         Random r = new Random();
         DrawManager dm;
+        public int playfieldsize;
         string forestlink = "Resources/InGame/Fields/fertile/Forests/forest_small.png";
         string desertlink = "Resources/InGame/Fields/infertile/Deserts/test.png";
         string pasturelink = "Resources/InGame/Fields/fertile/Pasture/pasture_small.png";
@@ -24,6 +25,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         public PlayField(int playfieldsize)
         {
             dm = new DrawManager();
+            this.playfieldsize = playfieldsize;
             for (int x = 0;  x < playfieldsize; x++)
             {
                 for(int y = 0; y < playfieldsize; y++)
