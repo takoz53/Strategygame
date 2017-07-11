@@ -49,7 +49,7 @@ namespace SK_Strategygame.Domain.Player
 
         public override void OnMouseDown(DrawManager parent, MouseButtonEventArgs button)
         {
-            userList[1].move();
+
         }
 
         public override void OnMouseUp(DrawManager parent, MouseButtonEventArgs button)

@@ -24,13 +24,9 @@ namespace SK_Strategygame.Domain.Player
             return coordinate;
         }
 
-        public void move()
+        public void move(Coordinate coordinate)
         {
-            //if(UserMouse.getX() == coordinate.getX() * 250 && UserMouse.getY() == coordinate.getY() * 250) //Too precised, won't work.
-            //{
-                coordinate.setX(UserMouse.getX());
-                coordinate.setY(UserMouse.getY());
-            //}
+            this.coordinate = coordinate;
         }
     }
 }

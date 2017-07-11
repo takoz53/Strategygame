@@ -10,6 +10,7 @@ using OpenTK.Input;
 using SK_Strategygame.UI;
 using SK_Strategygame.Gameplay.Field_Creation;
 using SK_Strategygame.Domain.Player;
+using AGFXLib;
 
 namespace SK_Strategygame.Scenes.InGame
 {
@@ -18,7 +19,7 @@ namespace SK_Strategygame.Scenes.InGame
         DrawManager dm;
         bCursor cursor;
         List<Field> gameField;
-        List<Player> usersList;
+        List<Player> user;
         float gameFieldWidth;
         float gameFieldHeight;
         public GameScene()
@@ -29,7 +30,7 @@ namespace SK_Strategygame.Scenes.InGame
             cursor = new bCursor();
 
             gameField = pf.getPlayField();
-            usersList = users.getPlayers();
+            user = users.getPlayers();
 
             gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 250;
             gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 250;
@@ -39,7 +40,7 @@ namespace SK_Strategygame.Scenes.InGame
             {
                 dm.Add(f);
             }
-            foreach (Player p in usersList)
+            foreach (Player p in user)
             {
                 dm.Add(p);
             }
@@ -64,7 +65,8 @@ namespace SK_Strategygame.Scenes.InGame
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
         public override void OnMouseDown(MouseButtonEventArgs button)
         {
-            usersList[1].move();
+            user[0].move(new Coordinate(UserMouse.getX(), UserMouse.getY()));
+            Console.WriteLine("Holding mouse down");
         }
         public override void OnMouseUp(MouseButtonEventArgs button) { }
         public override void Update() { }
