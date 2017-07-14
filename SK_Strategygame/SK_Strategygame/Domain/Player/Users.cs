@@ -21,8 +21,8 @@ namespace SK_Strategygame.Domain.Player
             dm = new DrawManager();
             for (int i = 0; i < users; i++)
             {
-                randomPositionX = r.Next(5);
-                randomPositionY = r.Next(5);
+                randomPositionX = r.Next(1);
+                randomPositionY = r.Next(1);
                 userList.Add(new Player("Resources/InGame/Player/Playfigure_sold.png", new Coordinate(randomPositionX,randomPositionY), (randomPositionX + "" + randomPositionY)));
             }
         }
@@ -39,7 +39,7 @@ namespace SK_Strategygame.Domain.Player
 
         public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key)
         {
-
+            
         }
 
         public override void OnKeyUp(DrawManager parent, KeyboardKeyEventArgs key)

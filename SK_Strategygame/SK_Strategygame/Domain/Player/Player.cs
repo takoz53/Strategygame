@@ -29,5 +29,15 @@ namespace SK_Strategygame.Domain.Player
         {
             this.coordinate = coordinate;
         }
+
+        public int setLocationX(float x)
+        {
+            return this.x;
+        }
+
+        public int setLocationY(float x)
+        {
+            return this.y;
+        }
     }
 }
