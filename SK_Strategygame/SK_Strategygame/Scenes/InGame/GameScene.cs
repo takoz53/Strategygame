@@ -54,8 +54,8 @@ namespace SK_Strategygame.Scenes.InGame
         private void handleDragUser(int index)
         {
             user[index].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[index].setLocationX(UserMouse.getX() - 20), user[index].setLocationY(UserMouse.getY() - 20));
-            user[index].x = UserMouse.getX();
-            user[index].y = UserMouse.getY();
+            user[index].x = UserMouse.getX()-10;
+            user[index].y = UserMouse.getY()-10;
         }
         private void handleDrag()
         {
