@@ -15,7 +15,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         {
             this.x = x;
             this.y = y;
-       }
+        }
 
         public float getX()
         {

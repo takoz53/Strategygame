@@ -22,6 +22,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
              if(basarlimit == 0)
               {
                Kann nicht mehr kaufen, verkaufen für 1xRunde
+               basarlimit = 2;
               }
             }
             */
