@@ -13,14 +13,6 @@ using SK_Strategygame.Gameplay.Field_Creation;
 using SK_Strategygame.Domain.Player;
 using AGFXLib;
 
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SK_Strategygame.Scenes.InGame
 {
     class GameScene : Scene
@@ -31,12 +23,13 @@ namespace SK_Strategygame.Scenes.InGame
         List<Player> user;
         float gameFieldWidth;
         float gameFieldHeight;
-        bool isBeingHold;
+        bool isBeingHeld;
+        Thread dragThread;
         public GameScene()
         {
             dm = new DrawManager();
             PlayField pf = new Gameplay.Field_Creation.PlayField(10);
-            Users users = new Users(3);
+            Users users = new Users(1);
             cursor = new bCursor();
 
             gameField = pf.getPlayField();
@@ -44,7 +37,7 @@ namespace SK_Strategygame.Scenes.InGame
 
             gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 250;
             gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 250;
-
+            
 
             foreach (Field f in gameField)
             {
@@ -55,40 +48,20 @@ namespace SK_Strategygame.Scenes.InGame
                 dm.Add(p);
             }
 
-            dm.Add(cursor);   
+            dm.Add(cursor);
         }
 
-        //public void handleDrag()
-        //{
-        //    float mouseposX = UserMouse.getX();
-        //    float mouseposY = UserMouse.getY();
-        //    user[0].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[0].setLocationX(mouseposX), user[0].setLocationY(UserMouse.getY()));
-        //    user[0].x = mouseposX;
-        //    user[0].y = mouseposY;
-        //}
-
-        //private Point firstPoint = new Point();
-        //public void handleDrag(Player user)
-        //{
-        //    user.OnMouseDown += (ss, ee) =>
-        //     {
-        //         if (ee.Button == System.Windows.Forms.MouseButtons.Left)
-        //         {
-        //             firstPoint = Control.MousePosition;
-        //         }
-        //     };
-
-        //    this.MouseMove += (ss, ee) =>
-        //    {
-        //        if (ee.Button == System.Windows.Forms.MouseButtons.Left)
-        //        {
-        //            Point temp = Control.MousePosition; // -- Create a temp point
-        //            Point res = new Point(firstPoint.X - temp.X, firstPoint.Y - temp.Y);
-        //            this.Location = new Point(this.Location.X - res.X, this.Location.Y - res.Y);
-        //            firstPoint = temp; // -- upgrade first point
-        //        }
-        //    };
-        //}
+        public void handleDrag()
+        {
+            while (isBeingHeld == true)
+            {
+                float mouseposX = UserMouse.getX();
+                float mouseposY = UserMouse.getY();
+                user[0].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[0].setLocationX(mouseposX), user[0].setLocationY(UserMouse.getY()));
+                user[0].x = mouseposX;
+                user[0].y = mouseposY;
+            }
+        }
 
         public override void Draw(GameWindow gw)
         {
@@ -106,24 +79,14 @@ namespace SK_Strategygame.Scenes.InGame
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
         public override void OnMouseDown(MouseButtonEventArgs button)
         {
-            //isBeingHold = true;
-            float mouseposX = UserMouse.getX();
-            float mouseposY = UserMouse.getY();
-            Console.WriteLine("Holding mouse down");
-            Console.WriteLine(user[0].getCoordinate().getX() + "/" + user[0].getCoordinate().getY());
-            //while (isBeingHold == true)
-            //{
-                //Thread drag = new Thread(handleDrag(user[0]);
-                
-                user[0].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[0].setLocationX(mouseposX), user[0].setLocationY(UserMouse.getY()));
-                user[0].x = mouseposX;
-                user[0].y = mouseposY;
-            //}
-
+            dragThread = new Thread(handleDrag);
+            dragThread.Start();
+            isBeingHeld = true;
         }
         public override void OnMouseUp(MouseButtonEventArgs button)
         {
-            isBeingHold = false;
+            isBeingHeld = false;
+            dragThread.Interrupt();
         }
         public override void Update() { }
     }
