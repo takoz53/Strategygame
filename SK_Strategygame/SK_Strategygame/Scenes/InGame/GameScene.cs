@@ -29,7 +29,7 @@ namespace SK_Strategygame.Scenes.InGame
         {
             dm = new DrawManager();
             PlayField pf = new Gameplay.Field_Creation.PlayField(10);
-            Users users = new Users(1);
+            Users users = new Users(4);
             cursor = new bCursor();
 
             gameField = pf.getPlayField();
@@ -51,15 +51,25 @@ namespace SK_Strategygame.Scenes.InGame
             dm.Add(cursor);
         }
 
-        public void handleDrag()
+        private void handleDragUser(int index)
         {
-            while (isBeingHeld == true)
+            user[index].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[index].setLocationX(UserMouse.getX() - 20), user[index].setLocationY(UserMouse.getY() - 20));
+            user[index].x = UserMouse.getX();
+            user[index].y = UserMouse.getY();
+        }
+        private void handleDrag()
+        {
+            while (isBeingHeld)
             {
-                float mouseposX = UserMouse.getX();
-                float mouseposY = UserMouse.getY();
-                user[0].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[0].setLocationX(mouseposX), user[0].setLocationY(UserMouse.getY()));
-                user[0].x = mouseposX;
-                user[0].y = mouseposY;
+                if (user[0].isHovered())
+                    handleDragUser(0);
+                else if (user[1].isHovered())
+                    handleDragUser(1);
+                else if (user[2].isHovered())
+                    handleDragUser(2);
+                else if (user[3].isHovered())
+                    handleDragUser(3);
+                else { /*Do Nothing, non of them were clicked*/}
             }
         }
 
