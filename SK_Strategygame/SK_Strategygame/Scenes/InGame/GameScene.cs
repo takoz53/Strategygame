@@ -23,15 +23,16 @@ namespace SK_Strategygame.Scenes.InGame
         List<Player> user;
         float gameFieldWidth;
         float gameFieldHeight;
+        public static int pfSize;
         bool isBeingHeld;
         Thread dragThread;
         public GameScene()
         {
             dm = new DrawManager();
-            PlayField pf = new Gameplay.Field_Creation.PlayField(10);
+            PlayField pf = new Gameplay.Field_Creation.PlayField(5);
+            pfSize = pf.getSize();
             Users users = new Users(4);
             cursor = new bCursor();
-
             gameField = pf.getPlayField();
             user = users.getPlayers();
 
@@ -54,22 +55,26 @@ namespace SK_Strategygame.Scenes.InGame
         private void handleDragUser(int index)
         {
             user[index].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[index].setLocationX(UserMouse.getX() - 20), user[index].setLocationY(UserMouse.getY() - 20));
-            user[index].x = UserMouse.getX();
-            user[index].y = UserMouse.getY();
+            user[index].x = UserMouse.getX() - 10; // -10 because of delay
+            user[index].y = UserMouse.getY() - 10; // from the picture
         }
         private void handleDrag()
         {
             while (isBeingHeld)
             {
-                if (user[0].isHovered())
-                    handleDragUser(0);
-                else if (user[1].isHovered())
-                    handleDragUser(1);
-                else if (user[2].isHovered())
-                    handleDragUser(2);
-                else if (user[3].isHovered())
-                    handleDragUser(3);
-                else { /*Do Nothing, non of them were clicked*/}
+                try
+                {
+                    if (user[0].isHovered())
+                        handleDragUser(0);
+                    else if (user[1].isHovered())
+                        handleDragUser(1);
+                    else if (user[2].isHovered())
+                        handleDragUser(2);
+                    else if (user[3].isHovered())
+                        handleDragUser(3);
+                    else { /*Do Nothing, non of them were clicked*/}
+                }
+                catch{ }
             }
         }
 
@@ -81,9 +86,7 @@ namespace SK_Strategygame.Scenes.InGame
         public override void OnKeyDown(KeyboardKeyEventArgs key)
         {
             if (key.Key == OpenTK.Input.Key.Escape)
-            {
                 Environment.Exit(0);
-            }
         }
 
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
