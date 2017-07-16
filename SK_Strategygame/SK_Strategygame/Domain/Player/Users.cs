@@ -10,7 +10,7 @@ using SK_Strategygame.Scenes.InGame;
 
 namespace SK_Strategygame.Domain.Player
 {
-    class Users : Drawable
+    class Users : Drawable // this isn't a drawable...., tis fine. I don't have the time to be cleaning up / optimizing when it's so late for you.
     {
         List<Player> userList = new List<Player>();
         DrawManager dm;

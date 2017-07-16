@@ -17,7 +17,7 @@ namespace SK_Strategygame.Scenes.InGame
 {
     class GameScene : Scene
     {
-        DrawManager dm;
+        DrawManager dm; // Don't mind me, just looking around :3
         bCursor cursor;
         List<Field> gameField;
         List<Player> user;
@@ -28,20 +28,24 @@ namespace SK_Strategygame.Scenes.InGame
         bool Drag;
         float startX;
         float startY;
+        float scrollX = 0;
+        float scrollY = 0;
+
+        private const int TileSize = 250;
+
         Thread dragThread;
         public GameScene()
         {
             dm = new DrawManager();
-            PlayField pf = new Gameplay.Field_Creation.PlayField(5);
+            PlayField pf = new Gameplay.Field_Creation.PlayField(10);
             pfSize = pf.getSize();
             Users users = new Users(4);
             cursor = new bCursor();
             gameField = pf.getPlayField();
             user = users.getPlayers();
 
-            gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * 250;
-            gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * 250;
-            
+            gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * TileSize;
+            gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * TileSize;
 
             foreach (Field f in gameField)
             {
@@ -62,6 +66,7 @@ namespace SK_Strategygame.Scenes.InGame
             user[index].x = UserMouse.getX() - 10; // -10 because of delay
             user[index].y = UserMouse.getY() - 10; // from the picture
         }
+
         private void handleDrag()
         {
             int player = 4;
@@ -105,7 +110,11 @@ namespace SK_Strategygame.Scenes.InGame
                     }
 
 
-                    if ((startX + user[player].w + user[player].w - 23 >= user[player].x && startY + user[player].h + user[player].h - 23 >= user[player].y) || (startX - user[player].w + 23/*links und oben*/<= user[player].x && startY - user[player].h + 23 <= user[player].y))
+                    if ( // if player X + its width + it's width again... - 23 (???) >= the player's x
+                        // and the y+2h-23 >= y
+                        (startX + user[player].w + user[player].w - 23 >= user[player].x && startY + user[player].h + user[player].h - 23 >= user[player].y) // readable.
+                        || (startX - user[player].w + 23/*links und oben*/<= user[player].x && startY - user[player].h + 23 <= user[player].y)
+                        )
                     {
                         if (startX + user[player].w - 23/*<--Breite des commanders*/>= user[player].x && startY + user[player].h - 23/*<--Höhe des commanders*/>= user[player].y)
                         {
