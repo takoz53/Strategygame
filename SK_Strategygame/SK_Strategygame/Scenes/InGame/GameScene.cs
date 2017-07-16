@@ -25,6 +25,9 @@ namespace SK_Strategygame.Scenes.InGame
         float gameFieldHeight;
         public static int pfSize;
         bool isBeingHeld;
+        bool Drag;
+        float startX;
+        float startY;
         Thread dragThread;
         public GameScene()
         {
@@ -55,29 +58,90 @@ namespace SK_Strategygame.Scenes.InGame
         private void handleDragUser(int index)
         {
             user[index].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[index].setLocationX(UserMouse.getX() - 20), user[index].setLocationY(UserMouse.getY() - 20));
-<<<<<<< HEAD
-            user[index].x = UserMouse.getX()-10;
-            user[index].y = UserMouse.getY()-10;
-=======
+
             user[index].x = UserMouse.getX() - 10; // -10 because of delay
             user[index].y = UserMouse.getY() - 10; // from the picture
->>>>>>> 055edaeb8bdcc9e0372877e6cfaf276ecd2001e5
         }
         private void handleDrag()
         {
+            int player = 4;
+            Drag = false;
+
             while (isBeingHeld)
             {
                 try
                 {
-                    if (user[0].isHovered())
-                        handleDragUser(0);
-                    else if (user[1].isHovered())
-                        handleDragUser(1);
-                    else if (user[2].isHovered())
-                        handleDragUser(2);
-                    else if (user[3].isHovered())
-                        handleDragUser(3);
-                    else { /*Do Nothing, non of them were clicked*/}
+                    if (Drag == false)
+                    {
+                        if (user[0].isHovered())
+                        {
+                            player = 0;
+                            startX = user[player].x;
+                            startY = user[player].y;
+                        }
+                        else if (user[1].isHovered())
+                        {
+                            player = 1;
+                            startX = user[player].x;
+                            startY = user[player].y;
+                        }
+                        else if (user[2].isHovered())
+                        {
+                            player = 2;
+                            startX = user[player].x;
+                            startY = user[player].y;
+                        }
+                        else if (user[3].isHovered())
+                        {
+                            player = 3;
+                            startX = user[player].x;
+                            startY = user[player].y;
+                        }
+                        else { /*Do Nothing, non of them were clicked*/}
+                    }
+                    else
+                    {
+                        handleDragUser(player);
+                    }
+
+
+                    if ((startX + user[player].w + user[player].w - 23 >= user[player].x && startY + user[player].h + user[player].h - 23 >= user[player].y) || (startX - user[player].w + 23/*links und oben*/<= user[player].x && startY - user[player].h + 23 <= user[player].y))
+                    {
+                        if (startX + user[player].w - 23/*<--Breite des commanders*/>= user[player].x && startY + user[player].h - 23/*<--Höhe des commanders*/>= user[player].y)
+                        {
+                            switch (player)
+                            {
+                                case 0:
+                                    Drag = true;
+                                    handleDragUser(player);
+                                    break;
+                                case 1:
+                                    Drag = true;
+                                    handleDragUser(player);
+                                    break;
+                                case 2:
+                                    Drag = true;
+                                    handleDragUser(player);
+                                    break;
+                                case 3:
+                                    Drag = true;
+                                    handleDragUser(player);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            dragThread.Interrupt(); //oder player = 4
+                        }
+                    }
+                    else
+                    {
+                        dragThread.Interrupt(); //oder player = 4
+                    }
+                    
+                    
                 }
                 catch{ }
             }
@@ -104,6 +168,7 @@ namespace SK_Strategygame.Scenes.InGame
         public override void OnMouseUp(MouseButtonEventArgs button)
         {
             isBeingHeld = false;
+            Drag = false;
             dragThread.Interrupt();
         }
         public override void Update() { }
