@@ -17,7 +17,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             stoneAmount = rd.Next(10, 100) * mountainSize;
         }
 
-        public Boolean harvestFood(int amount) //Function to harvest Food
+        public Boolean harvestStone(int amount) //Function to harvest Food
         {
             if (stoneAmount > amount)
             {

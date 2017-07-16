@@ -61,6 +61,10 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             return fields;
         }
 
+        public int getSize()
+        {
+            return playfieldsize;
+        }
         public String randomCityNameGenerator()
         {
             List<String> name1 = new List<String> { "Big", "Black", "Yellow", "Holy", "Windy", "Saint"};
