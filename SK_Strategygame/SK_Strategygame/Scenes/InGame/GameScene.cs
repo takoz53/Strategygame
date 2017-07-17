@@ -17,8 +17,7 @@ namespace SK_Strategygame.Scenes.InGame
 {
     class GameScene : Scene
     {
-        DrawManager dm;
-        DrawManager cursor_dm;
+        DrawManager dm, cursor_dm, gameInterface_dm;
         bCursor cursor;
         List<Field> gameField;
         List<Player> user;
@@ -47,7 +46,10 @@ namespace SK_Strategygame.Scenes.InGame
             cursor_dm = new DrawManager();
             cursor_dm.w = Program.ScreenHeight;
             cursor_dm.h = Program.ScreenHeight;
-            PlayField pf = new Gameplay.Field_Creation.PlayField(40);
+            gameInterface_dm = new DrawManager();
+            gameInterface_dm.w = Program.ScreenWidth;
+            gameInterface_dm.h = Program.ScreenHeight;
+            PlayField pf = new Gameplay.Field_Creation.PlayField(10);
             pfSize = pf.getSize();
             Users users = new Users(4);
             cursor = new bCursor();
