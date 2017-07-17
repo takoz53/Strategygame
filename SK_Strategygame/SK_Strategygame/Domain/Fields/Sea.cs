@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/*
 namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class Sea : Field
@@ -13,4 +14,4 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             //Inpassable
         }
     }
-}
+}*/

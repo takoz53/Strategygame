@@ -16,7 +16,7 @@ namespace SK_Strategygame
         public static DateTime ProgramStartTime;
         public static DateTime CTimer;
         public static int FramesPassed = 0;
-
+        public static Random rd = new Random();
         public static void CalculateFPS () // call this in draw function and it will print fps in console.
         {
             double dt = DateTime.Now.Subtract(CTimer).TotalSeconds;
