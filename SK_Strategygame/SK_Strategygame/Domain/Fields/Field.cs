@@ -15,12 +15,18 @@ namespace SK_Strategygame.Gameplay.Field_Creation
     {
         private String id;
         private Coordinate coordinate;
+        private int availableMoney;
         private List<Warrior> warriors;
 
         public Field(string path, Coordinate coordinate, String id): base(path, coordinate.getX()*250, coordinate.getY()*250)
         {
             this.coordinate = coordinate;
             this.id = id; 
+        }
+
+        public int getAvailableMoney()
+        {
+            return availableMoney;
         }
 
         public Coordinate getCoordinate()

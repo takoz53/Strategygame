@@ -36,8 +36,8 @@ namespace SK_Strategygame.Scenes.InGame
         int TurnID = 1;
 
         private const int TileSize = 250;
-        private const int ScrollingEdgeSize = 50; // x pixels at the edge of each side.
-        private const float ScrollSpeedPerFrame = 10; // in pixels.
+        private const int ScrollingEdgeSize = 50;       // x pixels at the edge of each side.
+        private const float ScrollSpeedPerFrame = 10;   // in pixels.
 
         public GameScene()
         {
@@ -128,7 +128,7 @@ namespace SK_Strategygame.Scenes.InGame
             }
             if (userIDHeld >= 0)
             {
-                DisableScrolling = true; // Disable´camera movement while moving player.
+                DisableScrolling = true; // Disable camera movement while moving player.
 
                 int PlayerTileXOriginal = (int)Math.Floor(PlayerOriginX / 250); // Rounds down always 0.5 = 0
                 int PlayerTileYOriginal = (int)Math.Floor(PlayerOriginY / 250); // This calculates current Tile Position of player.

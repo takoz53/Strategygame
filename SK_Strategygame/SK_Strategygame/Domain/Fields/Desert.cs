@@ -8,50 +8,69 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class Desert : Field
     {
-        int basarlimit = 2; // 1xKaufen, 1xVerkaufen || 2x Kaufen || 2xVerkaufen pro Runde
-        bool ready = true;
+        int bazaarlimit = 2; // 1xKaufen, 1xVerkaufen || 2x Kaufen || 2xVerkaufen pro Runde
+        NotificationBox nb = new NotificationBox();
         public Desert(string path, Coordinate coordinate, string id) : base(path, coordinate, id)
         {
 
         }
 
-        public void decreaseBasarlimit()
+        public enum products
         {
-            if (basarlimit == 2 || basarlimit == 1)
+            Wood,
+            Stone,
+            Food
+        }
+        public void decreaseBazaarlimit()
+        {
+            if (bazaarlimit > 0)
+                bazaarlimit -= 1;
+            else
             {
-                basarlimit -= 1;
-                //Kann nicht mehr kaufen, verkaufen für 1xRunde
+                //Wait for Next round => Bazaarlimit = 2;
+            }
+        }
+
+        public void buy(int amount, products product)
+        {
+            if(bazaarlimit > 0)
+            {
+                if (product == products.Food) //100 Money for 100 Food
+                {
+                    if (getAvailableMoney() >= 100)
+                    {
+
+                    }
+                    else
+                        nb.NotifyFood();
+                }
+                else if (product == products.Stone) //Harder to get Stones => 100 Money for 50 Stones
+                {
+                    if (getAvailableMoney() >= 100)
+                    {
+                        //Stoneamount += 50;
+                        //AvailableMoney -= 100;
+                    }
+                    else
+                        nb.NotifyStone();
+                }
+                else if (product == products.Wood) //100 Money for 100 Wood
+                {
+                    if (getAvailableMoney() >= 100)
+                    {
+                        //Woodamount += 100;
+                        //AvailableMoney -= 100;
+                    }
+                    else
+                        nb.NotifyWood();
+                }
+                decreaseBazaarlimit();
             }
             else
             {
-                ready = false;
+                nb.Notify("You must wait a round to be able to buy new Resources!", "Cooldown for one Round", NotificationBox.types.OKOnly);
             }
-        }
 
-        public void readyBasarlimit()
-        {
-            basarlimit = 2;
-            ready = true;
-        }
-
-        public int preis (int amount, string product)
-        {
-            
-            switch(product)
-            {
-                case "Holz":
-                    //GesammtPreis = amount*Preis
-                    return 0;//GesammtPreis
-
-                case "Stein":
-                    return 0;
-
-                case "Nahrung":
-                    return 0;
-
-                default:
-                    return 0;
-            }
         }
     }
 }

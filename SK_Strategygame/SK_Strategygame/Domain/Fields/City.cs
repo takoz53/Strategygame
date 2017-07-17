@@ -8,8 +8,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class City : Field
     {
-        int wallPoints;
-        int availableWood, availableMoney, availableStones, availableFood, availableSoldiers;
+        int wallPoints = 0, upgradeLevel = 0, availableWood, availableMoney, availableStones, availableFood, availableSoldiers;
         bool barrackBuilt=false;
         String cityname;
         NotificationBox nb = new NotificationBox();
@@ -20,32 +19,52 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             wallPoints = 0;
         }
 
-        public void upgradeWall(int upgradeAmount)
+        public void upgradeWall()
         {
-            wallPoints = wallPoints + upgradeAmount;
+            
+            if(upgradeLevel == 5)
+            {
+                nb.Notify("The wall is totally upgraded!", "Upgraded to last level!", NotificationBox.types.OKOnly);
+            }
+            else
+            {
+                if (availableStones >= 100)
+                {
+                    availableStones -= 100;
+                    wallPoints = wallPoints + 50;
+                    upgradeLevel++;
+                }
+                else
+                    nb.NotifyStone();
+            }
         }
 
         public void buildBarracks()
         {
-            if(availableMoney >= 100 && availableWood >= 300)
+            if (availableMoney >= 100 && availableWood >= 300)
             {
                 availableMoney -= 100;
                 availableWood -= 300;
                 barrackBuilt = true;
             }
             else
-            {
-                nb.Notify("You don't have enough wood!", "Not enough wood!", NotificationBox.types.OKOnly);
-            }
+                nb.NotifyWood();
         }
 
-        public void moreSoldiers(int amountofSoldiers)
+        public void createSoldiers(int amount)
         {
             if(barrackBuilt)
             {
-                if(availableMoney >= 25*amountofSoldiers)//price for one soldier
+                if(availableMoney >= 25 * amount && availableFood >= 50 * amount && availableWood >= 75 * amount) //50 Food & 25 Money & 75 Wood
                 {
-                    availableSoldiers += amountofSoldiers;
+                    availableSoldiers += amount;
+                    availableMoney -= 25 * amount;
+                    availableWood -= 75 * amount;
+                    availableFood -= 25 * amount;
+                }
+                else
+                {
+                    nb.Notify("You don't have enough Resources!", "Not enough Resources!", NotificationBox.types.OKOnly);
                 }
             }
         }
