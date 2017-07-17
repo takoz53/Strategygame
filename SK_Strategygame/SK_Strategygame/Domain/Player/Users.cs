@@ -26,7 +26,7 @@ namespace SK_Strategygame.Domain.Player
                 {
                     if(i == 0)
                     {
-                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
+                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3))); // gg
                         randomPositionY = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
                     }
                     else if(i == 1)

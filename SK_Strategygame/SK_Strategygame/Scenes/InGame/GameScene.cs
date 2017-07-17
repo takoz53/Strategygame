@@ -18,34 +18,42 @@ namespace SK_Strategygame.Scenes.InGame
     class GameScene : Scene
     {
         DrawManager dm; // Don't mind me, just looking around :3
+        DrawManager cursor_dm;
         bCursor cursor;
         List<Field> gameField;
         List<Player> user;
-        float gameFieldWidth;
-        float gameFieldHeight;
         public static int pfSize;
         bool isBeingHeld;
-        bool Drag;
-        float startX;
-        float startY;
+        bool preprocessingComplete = false; // For assignment and calculations.
+        float MouseOriginX = 0; // Record the position of the mouse when the click starts.
+        float MouseOriginY = 0;
+        float PlayerOriginX = 0; // Gotta keep track of this for offsets.
+        float PlayerOriginY = 0;
         float scrollX = 0;
         float scrollY = 0;
+        int userIDHeld = -1;
+        bool DisableScrolling = false;
+        int TurnID = 1;
 
         private const int TileSize = 250;
+        private const int ScrollingEdgeSize = 50; // 10 pixels at the edge of each side.
+        private const float ScrollSpeedPerFrame = 4; // in pixels.
+        // That's why I'm making consts, so you can change it whenever. Of course!~
 
-        Thread dragThread;
         public GameScene()
         {
             dm = new DrawManager();
-            PlayField pf = new Gameplay.Field_Creation.PlayField(10);
+            dm.w = Program.ScreenWidth;
+            dm.h = Program.ScreenHeight;
+            cursor_dm = new DrawManager();
+            cursor_dm.w = Program.ScreenHeight;
+            cursor_dm.h = Program.ScreenHeight;
+            PlayField pf = new Gameplay.Field_Creation.PlayField(10); // I was like: Where?
             pfSize = pf.getSize();
             Users users = new Users(4);
             cursor = new bCursor();
             gameField = pf.getPlayField();
             user = users.getPlayers();
-
-            gameFieldWidth = (gameField[gameField.Count - 1].getCoordinate().getX() + 1) * TileSize;
-            gameFieldHeight = (gameField[gameField.Count - 1].getCoordinate().getY() + 1) * TileSize;
 
             foreach (Field f in gameField)
             {
@@ -56,129 +64,199 @@ namespace SK_Strategygame.Scenes.InGame
                 dm.Add(p);
             }
 
-            dm.Add(cursor);
+            cursor_dm.Add(cursor);
         }
 
-        private void handleDragUser(int index)
+        private int CalculateUserTurn ()
         {
-            user[index].move(new Coordinate(UserMouse.getX(), UserMouse.getY()), user[index].setLocationX(UserMouse.getX() - 20), user[index].setLocationY(UserMouse.getY() - 20));
-
-            user[index].x = UserMouse.getX() - 10; // -10 because of delay
-            user[index].y = UserMouse.getY() - 10; // from the picture
+            return ((TurnID-1) % user.Count) + 1;
         }
 
-        private void handleDrag()
+        private float ClampScreenX (float x)
         {
-            int player = 4;
-            Drag = false;
+            if (x <= 0) return 0;
+            return Math.Min(GetTilemapWidth() - Program.ScreenWidth, x);
+        }
 
-            while (isBeingHeld)
+        private float ClampScreenY (float y)
+        {
+            if (y <= 0) return 0;
+            return Math.Min(GetTilemapHeight() - Program.ScreenHeight, y);
+        }
+
+        private void FocusOnUser ()
+        {
+            int WhichUser = CalculateUserTurn();
+            float UserX = user[WhichUser-1].x;
+            float UserY = user[WhichUser-1].y;
+            float _scrollX = UserX - (Program.ScreenWidth / 2);
+            float _scrollY = UserY - (Program.ScreenHeight / 2);
+            float clampX = ClampScreenX(_scrollX);
+            float clampY = ClampScreenY(_scrollY);
+            scrollX = clampX;
+            scrollY = clampY;
+            dm.x = (-clampX);
+            dm.y = (-clampY);
+        }
+
+        private void UserDragProcessor ()
+        {
+            if (!preprocessingComplete)
             {
-                try
+                int index = 0; // Cuz you guys use an array.
+                userIDHeld = -1;
+                foreach (Player p in user)
                 {
-                    if (Drag == false)
-                    {
-                        if (user[0].isHovered())
-                        {
-                            player = 0;
-                            startX = user[player].x;
-                            startY = user[player].y;
-                        }
-                        else if (user[1].isHovered())
-                        {
-                            player = 1;
-                            startX = user[player].x;
-                            startY = user[player].y;
-                        }
-                        else if (user[2].isHovered())
-                        {
-                            player = 2;
-                            startX = user[player].x;
-                            startY = user[player].y;
-                        }
-                        else if (user[3].isHovered())
-                        {
-                            player = 3;
-                            startX = user[player].x;
-                            startY = user[player].y;
-                        }
-                        else { /*Do Nothing, non of them were clicked*/}
-                    }
-                    else
-                    {
-                        handleDragUser(player);
-                    }
+                    // Collision processing with mouse to make sure whether or not the user intends to drag the player.
+                    // We use the simple formula of a.x>=b.x && a.x<=b.x+b.w etc. to figure this out.
+                    bool CheckX = ((MouseOriginX >= p.x) && (MouseOriginX <= p.x+p.w));
+                    bool CheckY = ((MouseOriginY >= p.y) && (MouseOriginY <= p.y + p.h));
+                    bool IsColliding = (CheckX && CheckY); // oh right. That one guy did some weird shit. So I wanted to make it clear how to do this xD.
 
-
-                    if ( // if player X + its width + it's width again... - 23 (???) >= the player's x
-                        // and the y+2h-23 >= y
-                        (startX + user[player].w + user[player].w - 23 >= user[player].x && startY + user[player].h + user[player].h - 23 >= user[player].y) // readable.
-                        || (startX - user[player].w + 23/*links und oben*/<= user[player].x && startY - user[player].h + 23 <= user[player].y)
-                        )
+                    if (IsColliding)
                     {
-                        if (startX + user[player].w - 23/*<--Breite des commanders*/>= user[player].x && startY + user[player].h - 23/*<--Höhe des commanders*/>= user[player].y)
+                        if (index == CalculateUserTurn() - 1) // index of 0.
                         {
-                            switch (player)
-                            {
-                                case 0:
-                                    Drag = true;
-                                    handleDragUser(player);
-                                    break;
-                                case 1:
-                                    Drag = true;
-                                    handleDragUser(player);
-                                    break;
-                                case 2:
-                                    Drag = true;
-                                    handleDragUser(player);
-                                    break;
-                                case 3:
-                                    Drag = true;
-                                    handleDragUser(player);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            dragThread.Interrupt(); //oder player = 4
+                            Console.WriteLine("User " + index + " being held!"); // I've been practicing ruby lately xD
+                            userIDHeld = index;
+                            PlayerOriginX = p.x;
+                            PlayerOriginY = p.y;
+                            break;
                         }
                     }
-                    else
-                    {
-                        dragThread.Interrupt(); //oder player = 4
-                    }
-                    
-                    
+                    index++;
                 }
-                catch{ }
+                preprocessingComplete = true;
+            }
+            // I don't know anymore. xD moving on.
+            // Same, doped on medication right now.
+            if (userIDHeld >= 0)
+            {
+                // the world is so fuzzy right now to me.
+                // OKAY, SO we keep track of the dude that's grabbed so we can make adjustments on This dude.
+                // AHA! Just figured out how to do scrolling. \o/ Gotta make use of the draw manager's x and y.
+                // ^ <- if I forget.
+                DisableScrolling = true; // Disable it while moving player??? This way no annoyances.
+                // Also, why are you using mouse to move a player?
+                // Turns?
+
+                int PlayerTileXOriginal = (int)Math.Floor(PlayerOriginX / 250); // Rounds down always 0.5 = 0
+                int PlayerTileYOriginal = (int)Math.Floor(PlayerOriginY / 250); // This calculates current Tile Position of player.
+
+                int MinX = PlayerTileXOriginal * 250 - 250; // You can move left and right.
+                int MaxX = PlayerTileXOriginal * 250 + 250; // OH okay! :D
+                int MinY = PlayerTileYOriginal * 250 - 250;
+                int MaxY = PlayerTileYOriginal * 250 + 250;
+                // I always mess that up xD
+
+                float PlayerOffsetX = (UserMouse.getX()+scrollX-MouseOriginX); // This is how far the user intends to move. Hmm... tile snapping?
+                float PlayerOffsetY = (UserMouse.getY()+scrollY-MouseOriginY); // tanks
+                // Mouse X is absolute position on the screen, when you scroll, our calculations also need to scroll.
+                int DestinationX = (int)(PlayerOriginX + PlayerOffsetX);
+                int DestinationY = (int)(PlayerOriginY + PlayerOffsetY); // Hmmm.... I'm using destinations and a grid snap atm.
+                int DestinationTileX = (int)Math.Floor(DestinationX / 250f);
+                // It means we're doing it based on Tile X and Tile Y, not absolute mouse position.
+                // So you can be on tile 1, or tile 2. Not 230x or 480x.
+                // Oh right :D yeah, sure. That's what I be doing
+
+                int DestinationTileY = (int)Math.Floor(DestinationY / 250f);
+
+                if ((DestinationTileY-PlayerTileYOriginal != 0 && DestinationTileX-PlayerTileXOriginal != 0) 
+                    || Math.Abs(DestinationTileY-PlayerTileYOriginal) > 1
+                    || Math.Abs(DestinationTileX-PlayerTileXOriginal) > 1) // No diagonal movement.
+                {
+                    // Invalid move. Ignore!
+                    user[userIDHeld].x = PlayerOriginX;
+                    user[userIDHeld].y = PlayerOriginY;
+                } else // So if only one value changes, it allows.
+                {
+                    float NewPlayerX = PlayerOriginX + PlayerOffsetX;
+                    float NewPlayerY = PlayerOriginY + PlayerOffsetY;
+
+                    user[userIDHeld].x = NewPlayerX;
+                    user[userIDHeld].y = NewPlayerY;
+                }
+            }
+        }
+
+        private float GetTilemapWidth ()
+        {
+            return ((gameField[gameField.Count - 1].getCoordinate().getX() + 1) * TileSize);
+        }
+
+        private float GetTilemapHeight ()
+        {
+            return ((gameField[gameField.Count - 1].getCoordinate().getY() + 1) * TileSize);
+        }
+
+        private void ScrollingProcessor ()
+        {
+            float MouseX = UserMouse.getX();
+            float MouseY = UserMouse.getY();
+            bool CheckA = (MouseX >= 0 && MouseX <= ScrollingEdgeSize); // Left
+            bool CheckB = (MouseY >= 0 && MouseY <= ScrollingEdgeSize); // Top
+            bool CheckC = (MouseX >= Program.ScreenWidth - ScrollingEdgeSize); // Right
+            bool CheckD = (MouseY >= Program.ScreenHeight - ScrollingEdgeSize); // Bottom
+
+            if (CheckA && scrollX > 0)
+                scrollX = Math.Max(0,scrollX-ScrollSpeedPerFrame); // So you do go into negatives with scroll.
+
+            if (CheckB && scrollY > 0) // gg :3
+                scrollY = Math.Max(0, scrollY - ScrollSpeedPerFrame);
+
+            if (CheckC && scrollX < GetTilemapWidth() - Program.ScreenWidth)
+                scrollX = Math.Min(GetTilemapWidth() - Program.ScreenWidth, scrollX + ScrollSpeedPerFrame);
+
+            if (CheckD && scrollY < GetTilemapHeight() - Program.ScreenHeight)
+                scrollY = Math.Min(GetTilemapHeight() - Program.ScreenHeight, scrollY + ScrollSpeedPerFrame);
+
+            if (CheckA || CheckB || CheckC || CheckD)
+            {
+                dm.x = -scrollX;
+                dm.y = -scrollY;
             }
         }
 
         public override void Draw(GameWindow gw)
         {
+            Program.CalculateFPS();
+            if (!DisableScrolling)
+            {
+                ScrollingProcessor();
+            }
             dm.Draw();
+            cursor_dm.Draw();
+            if (isBeingHeld)
+            {
+                UserDragProcessor();
+                DisableScrolling = true;
+            } else
+            {
+                DisableScrolling = false;
+            }
+            
         }
 
         public override void OnKeyDown(KeyboardKeyEventArgs key)
         {
+            if (key.Key == OpenTK.Input.Key.Space)
+                FocusOnUser();
             if (key.Key == OpenTK.Input.Key.Escape)
                 Environment.Exit(0);
         }
 
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
-        public override void OnMouseDown(MouseButtonEventArgs button)
+        public override void OnMouseDown(MouseButtonEventArgs button) // lmao.
         {
-            dragThread = new Thread(handleDrag);
-            dragThread.Start();
             isBeingHeld = true;
+            MouseOriginX = UserMouse.getX()+scrollX;
+            MouseOriginY = UserMouse.getY()+scrollY;
         }
         public override void OnMouseUp(MouseButtonEventArgs button)
         {
+            TurnID++;
             isBeingHeld = false;
-            Drag = false;
-            dragThread.Interrupt();
+            preprocessingComplete = false;
         }
         public override void Update() { }
     }

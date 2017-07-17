@@ -50,7 +50,8 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                     }
                     if(fieldTypeRandom >= 0.96 && fieldTypeRandom <= 1) //5% Chance for Sea
                     {
-                        fields.Add(new Pasture(sealink, new Coordinate(x, y), (x + "" + y))); 
+                        fields.Add(new Pasture(sealink, new Coordinate(x, y), (x + "" + y))); // alright :3
+                        // I'll figure something out \o/
                     }
                 }
             }
