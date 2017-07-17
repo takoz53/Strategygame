@@ -74,7 +74,7 @@ namespace SK_Strategygame.Domain.Player
                         randomPositionY = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
                     }
                 }
-                userList.Add(new Player("Resources/InGame/Player/Playfigure_sold.png", new Coordinate(randomPositionX,randomPositionY), (randomPositionX + "" + randomPositionY)));
+                userList.Add(new Player("Resources/InGame/Player/Playfigure_sold.png", new Coordinate(randomPositionX,randomPositionY), (randomPositionX + "" + randomPositionY), 100, 100, 100, 100));
             }
         }
 

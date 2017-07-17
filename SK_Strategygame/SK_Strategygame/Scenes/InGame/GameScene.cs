@@ -141,8 +141,8 @@ namespace SK_Strategygame.Scenes.InGame
                 float PlayerOffsetX = (UserMouse.getX()+scrollX-MouseOriginX);
                 float PlayerOffsetY = (UserMouse.getY()+scrollY-MouseOriginY);
                 
-                int DestinationX = (int)(PlayerOriginX + PlayerOffsetX);
-                int DestinationY = (int)(PlayerOriginY + PlayerOffsetY);
+                int DestinationX = (int)(PlayerOriginX + PlayerOffsetX + user[0].w);
+                int DestinationY = (int)(PlayerOriginY + PlayerOffsetY + user[0].h);
                 int DestinationTileX = (int)Math.Floor(DestinationX / 250f);
 
                 int DestinationTileY = (int)Math.Floor(DestinationY / 250f);
