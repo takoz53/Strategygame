@@ -23,13 +23,18 @@ namespace SK_Strategygame.UI
         {
             nHoverPath = path;
             HoverPath = hoverPath;
-            
+        }
+
+        public bButton(string path, string hoverPath, float x, float y) : base(path, 0, 0)
+        {
+            nHoverPath = path;
+            HoverPath = hoverPath;
         }
 
         public override void Draw(DrawManager parent)
         {
             base.Draw(parent);
-            if (isHovered())
+            if (isHovered(parent))
             {
                 if (hoverSprite == false)
                 {
@@ -43,7 +48,6 @@ namespace SK_Strategygame.UI
                     setTexture(nHoverPath);
                 }
                 hoverSprite = false;
-
             }
         }
     }

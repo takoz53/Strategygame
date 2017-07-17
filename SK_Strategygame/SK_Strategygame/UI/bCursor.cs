@@ -7,6 +7,7 @@ namespace SK_Strategygame.UI
     class bCursor : Drawable
     {
         public Sprite cursorSprite;
+        public string lastSprite = "";
         public enum cursortype
         {
             attack,
@@ -43,7 +44,9 @@ namespace SK_Strategygame.UI
 
         private void SetCursor (string path)
         {
-            cursorSprite.setTexture(path);
+            if (path != lastSprite)
+                cursorSprite.setTexture(path);
+            lastSprite = path;
         }
 
         public override void Draw(DrawManager parent)

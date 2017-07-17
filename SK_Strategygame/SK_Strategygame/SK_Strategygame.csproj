@@ -49,14 +49,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Fields\City.cs" />
-    <Compile Include="Domain\Fields\Coordinate.cs" />
     <Compile Include="Domain\Fields\Desert.cs" />
     <Compile Include="Domain\Fields\Field.cs" />
+    <Compile Include="Domain\Fields\FieldType.cs" />
     <Compile Include="Domain\Fields\Forest.cs" />
     <Compile Include="Domain\Fields\Mountain.cs" />
     <Compile Include="Domain\Fields\Pasture.cs" />
     <Compile Include="Domain\Fields\PlayField.cs" />
     <Compile Include="Domain\Fields\Sea.cs" />
+    <Compile Include="Domain\Fields\Sizes.cs" />
     <Compile Include="Domain\Fields\Warrior.cs" />
     <Compile Include="Domain\Player\Player.cs" />
     <Compile Include="Domain\Player\Users.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="UI\bListbox.cs" />
     <Compile Include="UI\bListboxEntry.cs" />
     <Compile Include="UI\bListboxScrollbar.cs" />
+    <Compile Include="UI\ButtonType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -101,9 +103,53 @@
     <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamGreen\" />
     <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamRed\" />
     <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamYellow\" />
-    <Folder Include="Resources\InGame\UIBottom\Buttons\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\InGame\Fields\fertile\Pasture\pasture_large.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\fertile\Pasture\pasture_medium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\infertile\Deserts\desert_small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\infertile\Mountains\mountain_large.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\infertile\Mountains\mountain_medium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\infertile\Mountains\mountain_small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\inpassable\Sea\water_large.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\inpassable\Sea\water_medium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\inpassable\Sea\water_small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Highlights\highlight_move.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Highlights\highlight_position.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Player\player_blue.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Player\player_brown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Player\player_red.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Player\player_yellow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\InGame\Player\Playfigure_sold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -120,11 +166,118 @@
     <Content Include="Resources\InGame\Fields\fertile\Pasture\pasture_small.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\InGame\Fields\infertile\Mountains\Mountains.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_accessBazaar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\InGame\Fields\inpassable\Sea\Wasser.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_accessBazaar_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyFood.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyFood_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyFood_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyStones.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyStones_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyStones_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyWood.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyWood_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_buyWood_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_conquerField.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_conquerField_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_createCity.png" />
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_createCity_hover.png" />
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_exitBazaar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_exitBazaar_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestFood.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestFood_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestGold.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestGold_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestStones.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestStones_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestWood.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestWood_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_nextround.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_nextround_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_nextround_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\button-test.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestFood_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestGold_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestStones_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_harvestWood_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\container.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\UIContainer.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TeamHighlight\team_blue.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TeamHighlight\team_brown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TeamHighlight\team_red.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TeamHighlight\team_yellow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\testBackButton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -154,11 +307,10 @@
     <Content Include="Resources\InGame\Fields\fertile\Forests\About Forests.txt" />
     <Content Include="Resources\InGame\Fields\fertile\Pasture\About Pasture.txt" />
     <Content Include="Resources\InGame\Fields\infertile\Deserts\About Deserts.txt" />
-    <Content Include="Resources\InGame\Fields\infertile\Deserts\test.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\InGame\Fields\infertile\Mountains\About Mountains.txt" />
-    <Content Include="Resources\InGame\Fields\inpassable\Sea\About Sea.txt" />
+    <Content Include="Resources\InGame\Fields\inpassable\Sea\About Sea.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\MainMenu\border.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -200,7 +352,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
+    <ProjectReference Include="..\..\..\BerkanGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
       <Project>{67ae03c9-dcea-4e9b-86aa-9a30516e210f}</Project>
       <Name>AGFXLib</Name>
     </ProjectReference>

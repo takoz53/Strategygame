@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/*
 namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class Desert : Field
@@ -71,6 +71,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                 nb.Notify("You must wait a round to be able to buy new Resources!", "Cooldown for one round", NotificationBox.types.OKOnly);
             }
 
-        }*/
+        }
     }
 }
+*/

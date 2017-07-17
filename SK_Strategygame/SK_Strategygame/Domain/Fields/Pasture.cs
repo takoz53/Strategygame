@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using SK_Strategygame.Domain.Fields;
+/*
 namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class Pasture : Field
@@ -11,11 +12,13 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         int foodAmount;
         int pastureSize;
 
-        public Pasture(string path, Coordinate coordinate, string id) : base(path, coordinate, id)
+        public Pasture(string xpath, Coordinate coordinate, string id, string path) : base(xpath, coordinate, id)
         {
             Random rd = new Random();
-            pastureSize = rd.Next(1, 3);
+            pastureSize = rd.Next(1, 1);
             foodAmount = rd.Next(10, 100) * pastureSize;
+            string filename = "pasture" + ((FieldSize)pastureSize).ToString() + ".png";
+            setTexture(path + filename);
         }
 
         public Boolean harvestFood(int amount) //Function to harvest Food
@@ -40,3 +43,4 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         }
     }
 }
+*/

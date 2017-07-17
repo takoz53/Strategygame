@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OpenTK.Input;
 using SK_Strategygame.Gameplay.Field_Creation;
 using SK_Strategygame.Scenes.InGame;
+using AGFXLib;
 
 namespace SK_Strategygame.Domain.Player
 {
@@ -15,6 +16,40 @@ namespace SK_Strategygame.Domain.Player
         List<Player> userList = new List<Player>();
         Random r = new Random();
         int randomPositionX, randomPositionY;
+        const string User1 = "Resources/InGame/Player/player_red.png";
+        const string User2 = "Resources/InGame/Player/player_blue.png";
+        const string User3 = "Resources/InGame/Player/player_brown.png";
+        const string User4 = "Resources/InGame/Player/player_yellow.png";
+
+        public int GetRandomPos (float weight, bool FromRight = false)
+        {
+            if (!FromRight)
+                return r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * weight)));
+            return r.Next(Convert.ToInt32(Math.Ceiling(GameScene.pfSize * weight)), GameScene.pfSize);
+        }
+
+        public void GetRandomPosXY (float w1, bool fr1, float w2, bool fr2)
+        {
+            while (true)
+            {
+                randomPositionX = GetRandomPos(w1, fr1);
+                randomPositionY = GetRandomPos(w2, fr2);
+                bool notWater = false;
+                foreach (Field f in GameScene.gameField) // penis wagon.
+                {
+                    if ((int)Math.Floor(f.getCoordinate().x) == randomPositionX && (int)Math.Floor(f.getCoordinate().y) == randomPositionY)
+                    {
+                        if (f.fieldType != Fields.FieldType.Sea)
+                        {
+                            notWater = true;
+                            break;
+                        }
+                    }
+                }
+                if (notWater)
+                    break;
+            }
+        }
 
         public Users(int users)
         {
@@ -24,57 +59,55 @@ namespace SK_Strategygame.Domain.Player
                 {
                     if(i == 0)
                     {
-                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
-                        randomPositionY = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
+                        GetRandomPosXY(0.3f, false, 0.3f, false);
                     }
                     else if(i == 1)
                     {
-                        randomPositionX = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
-                        randomPositionY = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
+                        GetRandomPosXY(0.7f, false, 0.7f, false);
                     }
                 }
                 else if(users == 3)
                 {
                     if (i == 0)
                     {
-                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
-                        randomPositionY = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
+                        GetRandomPosXY(0.3f, false, 0.3f, false);
                     }
                     else if (i == 1)
                     {
-                        randomPositionX = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
-                        randomPositionY = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
+                        GetRandomPosXY(0.7f, true, 0.7f, true);
                     }
                     else if (i == 2)
                     {
-                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
-                        randomPositionY = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
+                        GetRandomPosXY(0.3f, false, 0.7f, true);
                     }
                 }
                 else if (users == 4)
                 {
                     if (i == 0)
                     {
-                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
-                        randomPositionY = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
+                        GetRandomPosXY(0.3f, false, 0.3f, false);
                     }
                     else if (i == 1)
                     {
-                        randomPositionX = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
-                        randomPositionY = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
+                        GetRandomPosXY(0.7f, true, 0.7f, true);
                     }
                     else if (i == 2)
                     {
-                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
-                        randomPositionY = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
+                        GetRandomPosXY(0.3f, false, 0.7f, true);
                     }
                     else if (i == 3)
                     {
-                        randomPositionX = r.Next(Convert.ToInt32((Math.Ceiling(GameScene.pfSize * 0.7))), GameScene.pfSize);
-                        randomPositionY = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
+                        GetRandomPosXY(0.7f, true, 0.3f, false);
                     }
                 }
-                userList.Add(new Player("Resources/InGame/Player/Playfigure_sold.png", new Coordinate(randomPositionX,randomPositionY), (randomPositionX + "" + randomPositionY), 100, 100, 100, 100));
+                if (i == 0) 
+                    userList.Add(new Player(User1, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 1500, 1050, 1500, 1500));
+                else if (i == 1)
+                    userList.Add(new Player(User2, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 1500, 1050, 1050, 1500));
+                else if (i == 2)
+                    userList.Add(new Player(User3, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 1050, 1500, 1050, 1050));
+                else if (i == 3)
+                    userList.Add(new Player(User4, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 100, 100, 100, 100));
             }
         }
 
