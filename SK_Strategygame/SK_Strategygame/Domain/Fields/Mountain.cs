@@ -10,11 +10,13 @@ namespace SK_Strategygame.Gameplay.Field_Creation
     {
         int mountainSize;
         int stoneAmount;
+        int moneyAmount;
         public Mountain(string path, Coordinate coordinate, string id) : base(path, coordinate, id)
         {
             Random rd = new Random();
             mountainSize = rd.Next(1, 3);
             stoneAmount = rd.Next(10, 100) * mountainSize;
+            moneyAmount = rd.Next(10, 100) * mountainSize;
         }
 
         public Boolean harvestStone(int amount) //Function to harvest Food

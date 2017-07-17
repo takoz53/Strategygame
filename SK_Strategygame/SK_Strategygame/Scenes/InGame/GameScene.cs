@@ -47,7 +47,7 @@ namespace SK_Strategygame.Scenes.InGame
             cursor_dm = new DrawManager();
             cursor_dm.w = Program.ScreenHeight;
             cursor_dm.h = Program.ScreenHeight;
-            PlayField pf = new Gameplay.Field_Creation.PlayField(10);
+            PlayField pf = new Gameplay.Field_Creation.PlayField(40);
             pfSize = pf.getSize();
             Users users = new Users(4);
             cursor = new bCursor();
