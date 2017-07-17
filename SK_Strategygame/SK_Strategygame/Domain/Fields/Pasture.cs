@@ -30,5 +30,13 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                 return false;
             }
         }
+        public int getPastureSize()
+        {
+            return pastureSize;
+        }
+        public void setPastureSize(int pastureSize)
+        {
+            this.pastureSize = pastureSize;
+        }
     }
 }

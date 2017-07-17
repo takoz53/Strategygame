@@ -29,5 +29,13 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                 return false;
             }
         }
+        public int getMountainSize()
+        {
+            return mountainSize;
+        }
+        public void setMountainSize(int mountainSize) //When resources get below for example 200 -> Go to size 2 -> change picture
+        {
+            this.mountainSize = mountainSize;
+        }
     }
 }

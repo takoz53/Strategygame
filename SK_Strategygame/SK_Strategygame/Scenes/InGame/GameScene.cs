@@ -36,8 +36,8 @@ namespace SK_Strategygame.Scenes.InGame
         int TurnID = 1;
 
         private const int TileSize = 250;
-        private const int ScrollingEdgeSize = 50;       // x pixels at the edge of each side.
-        private const float ScrollSpeedPerFrame = 10;   // in pixels.
+        private const int ScrollingEdgeSize = 80;       // x pixels at the edge of each side.
+        private const float ScrollSpeedPerFrame = 15;   // in pixels.
 
         public GameScene()
         {
