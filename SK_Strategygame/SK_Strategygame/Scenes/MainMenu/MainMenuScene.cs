@@ -20,6 +20,8 @@ namespace SK_Strategygame.Scenes
             // init code
             Console.WriteLine("Initializing MainMenuScene");
             dm = new DrawManager();
+            dm.w = Program.ScreenWidth;
+            dm.h = Program.ScreenHeight; // this needs done with every scene now >_<
             
             borderSprite = new Sprite("Resources/MainMenu/border.png", 0,0);
             borderSprite.x = 1680 / 2 - borderSprite.w / 2;

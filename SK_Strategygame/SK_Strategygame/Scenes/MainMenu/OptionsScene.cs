@@ -11,7 +11,7 @@ namespace SK_Strategygame.Scenes.MainMenu
 
         public OptionsScene()
         {
-
+            // lmao
         }
         public override void Draw(GameWindow gw)
         {

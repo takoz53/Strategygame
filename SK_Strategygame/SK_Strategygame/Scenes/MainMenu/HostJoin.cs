@@ -22,6 +22,8 @@ namespace SK_Strategygame.Scenes.MainMenu
         {
             //Create Objects
             dm = new DrawManager();
+            dm.w = Program.ScreenWidth;
+            dm.h = Program.ScreenHeight; // Variable access stuff :(
             BackgroundSprite = new Sprite("Resources/MainMenu/background.png", 0, 0);
             borderSprite = new Sprite("Resources/MainMenu/border.png", 0, 180);
             hostButton = new bButton("Resources/MainMenu/nohover/host.png", "Resources/MainMenu/hover/host.png");
