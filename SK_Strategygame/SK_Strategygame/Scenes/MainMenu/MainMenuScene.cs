@@ -21,7 +21,7 @@ namespace SK_Strategygame.Scenes
             Console.WriteLine("Initializing MainMenuScene");
             dm = new DrawManager();
             dm.w = Program.ScreenWidth;
-            dm.h = Program.ScreenHeight; // this needs done with every scene now >_<
+            dm.h = Program.ScreenHeight;
             
             borderSprite = new Sprite("Resources/MainMenu/border.png", 0,0);
             borderSprite.x = 1680 / 2 - borderSprite.w / 2;
@@ -84,9 +84,9 @@ namespace SK_Strategygame.Scenes
                 exitButton.isHovered()
             );
             if (hoveringOnAButton)
-                cursor.SetCursor("Resources/Cursors/Cursor_Main_Hover.png");
+                cursor.SetCursor(bCursor.cursortype.mainHover);
             else
-                cursor.SetCursor("Resources/Cursors/Cursor_Main.png");
+                cursor.SetCursor(bCursor.cursortype.main);
         }
         public override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs key)
         {

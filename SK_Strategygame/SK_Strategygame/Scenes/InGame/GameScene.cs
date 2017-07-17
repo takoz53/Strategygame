@@ -17,7 +17,7 @@ namespace SK_Strategygame.Scenes.InGame
 {
     class GameScene : Scene
     {
-        DrawManager dm; // Don't mind me, just looking around :3
+        DrawManager dm;
         DrawManager cursor_dm;
         bCursor cursor;
         List<Field> gameField;
@@ -27,7 +27,7 @@ namespace SK_Strategygame.Scenes.InGame
         bool preprocessingComplete = false; // For assignment and calculations.
         float MouseOriginX = 0; // Record the position of the mouse when the click starts.
         float MouseOriginY = 0;
-        float PlayerOriginX = 0; // Gotta keep track of this for offsets.
+        float PlayerOriginX = 0; //keep track of this for offsets.
         float PlayerOriginY = 0;
         float scrollX = 0;
         float scrollY = 0;
@@ -36,9 +36,8 @@ namespace SK_Strategygame.Scenes.InGame
         int TurnID = 1;
 
         private const int TileSize = 250;
-        private const int ScrollingEdgeSize = 50; // 10 pixels at the edge of each side.
-        private const float ScrollSpeedPerFrame = 4; // in pixels.
-        // That's why I'm making consts, so you can change it whenever. Of course!~
+        private const int ScrollingEdgeSize = 50; // x pixels at the edge of each side.
+        private const float ScrollSpeedPerFrame = 10; // in pixels.
 
         public GameScene()
         {
@@ -48,7 +47,7 @@ namespace SK_Strategygame.Scenes.InGame
             cursor_dm = new DrawManager();
             cursor_dm.w = Program.ScreenHeight;
             cursor_dm.h = Program.ScreenHeight;
-            PlayField pf = new Gameplay.Field_Creation.PlayField(10); // I was like: Where?
+            PlayField pf = new Gameplay.Field_Creation.PlayField(10);
             pfSize = pf.getSize();
             Users users = new Users(4);
             cursor = new bCursor();
@@ -103,21 +102,20 @@ namespace SK_Strategygame.Scenes.InGame
         {
             if (!preprocessingComplete)
             {
-                int index = 0; // Cuz you guys use an array.
+                int index = 0;
                 userIDHeld = -1;
                 foreach (Player p in user)
                 {
-                    // Collision processing with mouse to make sure whether or not the user intends to drag the player.
-                    // We use the simple formula of a.x>=b.x && a.x<=b.x+b.w etc. to figure this out.
+                    // Collision processing with mouse to make sure whether or not the user intends to drag the player
                     bool CheckX = ((MouseOriginX >= p.x) && (MouseOriginX <= p.x+p.w));
                     bool CheckY = ((MouseOriginY >= p.y) && (MouseOriginY <= p.y + p.h));
-                    bool IsColliding = (CheckX && CheckY); // oh right. That one guy did some weird shit. So I wanted to make it clear how to do this xD.
+                    bool IsColliding = (CheckX && CheckY);
 
                     if (IsColliding)
                     {
-                        if (index == CalculateUserTurn() - 1) // index of 0.
+                        if (index == CalculateUserTurn() - 1)
                         {
-                            Console.WriteLine("User " + index + " being held!"); // I've been practicing ruby lately xD
+                            Console.WriteLine("User " + index + " being held!");
                             userIDHeld = index;
                             PlayerOriginX = p.x;
                             PlayerOriginY = p.y;
@@ -128,36 +126,24 @@ namespace SK_Strategygame.Scenes.InGame
                 }
                 preprocessingComplete = true;
             }
-            // I don't know anymore. xD moving on.
-            // Same, doped on medication right now.
             if (userIDHeld >= 0)
             {
-                // the world is so fuzzy right now to me.
-                // OKAY, SO we keep track of the dude that's grabbed so we can make adjustments on This dude.
-                // AHA! Just figured out how to do scrolling. \o/ Gotta make use of the draw manager's x and y.
-                // ^ <- if I forget.
-                DisableScrolling = true; // Disable it while moving player??? This way no annoyances.
-                // Also, why are you using mouse to move a player?
-                // Turns?
+                DisableScrolling = true; // Disable´camera movement while moving player.
 
                 int PlayerTileXOriginal = (int)Math.Floor(PlayerOriginX / 250); // Rounds down always 0.5 = 0
                 int PlayerTileYOriginal = (int)Math.Floor(PlayerOriginY / 250); // This calculates current Tile Position of player.
 
-                int MinX = PlayerTileXOriginal * 250 - 250; // You can move left and right.
-                int MaxX = PlayerTileXOriginal * 250 + 250; // OH okay! :D
+                int MinX = PlayerTileXOriginal * 250 - 250;
+                int MaxX = PlayerTileXOriginal * 250 + 250;
                 int MinY = PlayerTileYOriginal * 250 - 250;
                 int MaxY = PlayerTileYOriginal * 250 + 250;
-                // I always mess that up xD
 
-                float PlayerOffsetX = (UserMouse.getX()+scrollX-MouseOriginX); // This is how far the user intends to move. Hmm... tile snapping?
-                float PlayerOffsetY = (UserMouse.getY()+scrollY-MouseOriginY); // tanks
-                // Mouse X is absolute position on the screen, when you scroll, our calculations also need to scroll.
+                float PlayerOffsetX = (UserMouse.getX()+scrollX-MouseOriginX);
+                float PlayerOffsetY = (UserMouse.getY()+scrollY-MouseOriginY);
+                
                 int DestinationX = (int)(PlayerOriginX + PlayerOffsetX);
-                int DestinationY = (int)(PlayerOriginY + PlayerOffsetY); // Hmmm.... I'm using destinations and a grid snap atm.
+                int DestinationY = (int)(PlayerOriginY + PlayerOffsetY);
                 int DestinationTileX = (int)Math.Floor(DestinationX / 250f);
-                // It means we're doing it based on Tile X and Tile Y, not absolute mouse position.
-                // So you can be on tile 1, or tile 2. Not 230x or 480x.
-                // Oh right :D yeah, sure. That's what I be doing
 
                 int DestinationTileY = (int)Math.Floor(DestinationY / 250f);
 
@@ -165,10 +151,10 @@ namespace SK_Strategygame.Scenes.InGame
                     || Math.Abs(DestinationTileY-PlayerTileYOriginal) > 1
                     || Math.Abs(DestinationTileX-PlayerTileXOriginal) > 1) // No diagonal movement.
                 {
-                    // Invalid move. Ignore!
+                    // Invalid move. Set back position of player!
                     user[userIDHeld].x = PlayerOriginX;
                     user[userIDHeld].y = PlayerOriginY;
-                } else // So if only one value changes, it allows.
+                } else // So if only one value changes, allow movement.
                 {
                     float NewPlayerX = PlayerOriginX + PlayerOffsetX;
                     float NewPlayerY = PlayerOriginY + PlayerOffsetY;
@@ -191,26 +177,27 @@ namespace SK_Strategygame.Scenes.InGame
 
         private void ScrollingProcessor ()
         {
+            cursor.SetCursor(bCursor.cursortype.scroll);
             float MouseX = UserMouse.getX();
             float MouseY = UserMouse.getY();
-            bool CheckA = (MouseX >= 0 && MouseX <= ScrollingEdgeSize); // Left
-            bool CheckB = (MouseY >= 0 && MouseY <= ScrollingEdgeSize); // Top
-            bool CheckC = (MouseX >= Program.ScreenWidth - ScrollingEdgeSize); // Right
-            bool CheckD = (MouseY >= Program.ScreenHeight - ScrollingEdgeSize); // Bottom
+            bool CheckLeft = (MouseX >= 0 && MouseX <= ScrollingEdgeSize);
+            bool CheckTop = (MouseY >= 0 && MouseY <= ScrollingEdgeSize);
+            bool CheckRight = (MouseX >= Program.ScreenWidth - ScrollingEdgeSize);
+            bool CheckBottom = (MouseY >= Program.ScreenHeight - ScrollingEdgeSize);
 
-            if (CheckA && scrollX > 0)
-                scrollX = Math.Max(0,scrollX-ScrollSpeedPerFrame); // So you do go into negatives with scroll.
+            if (CheckLeft && scrollX > 0)
+                scrollX = Math.Max(0,scrollX-ScrollSpeedPerFrame);
 
-            if (CheckB && scrollY > 0) // gg :3
+            if (CheckTop && scrollY > 0)
                 scrollY = Math.Max(0, scrollY - ScrollSpeedPerFrame);
 
-            if (CheckC && scrollX < GetTilemapWidth() - Program.ScreenWidth)
+            if (CheckRight && scrollX < GetTilemapWidth() - Program.ScreenWidth)
                 scrollX = Math.Min(GetTilemapWidth() - Program.ScreenWidth, scrollX + ScrollSpeedPerFrame);
 
-            if (CheckD && scrollY < GetTilemapHeight() - Program.ScreenHeight)
+            if (CheckBottom && scrollY < GetTilemapHeight() - Program.ScreenHeight)
                 scrollY = Math.Min(GetTilemapHeight() - Program.ScreenHeight, scrollY + ScrollSpeedPerFrame);
 
-            if (CheckA || CheckB || CheckC || CheckD)
+            if (CheckLeft || CheckTop || CheckRight || CheckBottom)
             {
                 dm.x = -scrollX;
                 dm.y = -scrollY;
@@ -246,7 +233,7 @@ namespace SK_Strategygame.Scenes.InGame
         }
 
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
-        public override void OnMouseDown(MouseButtonEventArgs button) // lmao.
+        public override void OnMouseDown(MouseButtonEventArgs button)
         {
             isBeingHeld = true;
             MouseOriginX = UserMouse.getX()+scrollX;
@@ -254,7 +241,7 @@ namespace SK_Strategygame.Scenes.InGame
         }
         public override void OnMouseUp(MouseButtonEventArgs button)
         {
-            TurnID++;
+            TurnID++; //Debug
             isBeingHeld = false;
             preprocessingComplete = false;
         }

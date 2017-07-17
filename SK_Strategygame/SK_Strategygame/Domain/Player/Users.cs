@@ -10,23 +10,21 @@ using SK_Strategygame.Scenes.InGame;
 
 namespace SK_Strategygame.Domain.Player
 {
-    class Users : Drawable // this isn't a drawable...., tis fine. I don't have the time to be cleaning up / optimizing when it's so late for you.
+    class Users
     {
         List<Player> userList = new List<Player>();
-        DrawManager dm;
         Random r = new Random();
         int randomPositionX, randomPositionY;
 
         public Users(int users)
         {
-            dm = new DrawManager();
             for (int i = 0; i < users; i++)
             {
                 if(users == 2)
                 {
                     if(i == 0)
                     {
-                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3))); // gg
+                        randomPositionX = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
                         randomPositionY = r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * 0.3)));
                     }
                     else if(i == 1)
@@ -83,31 +81,6 @@ namespace SK_Strategygame.Domain.Player
         public List<Player> getPlayers()
         {
             return userList;
-        }
-
-        public override void Draw(DrawManager parent)
-        {
-
-        }
-
-        public override void OnKeyDown(DrawManager parent, KeyboardKeyEventArgs key)
-        {
-            
-        }
-
-        public override void OnKeyUp(DrawManager parent, KeyboardKeyEventArgs key)
-        {
-
-        }
-
-        public override void OnMouseDown(DrawManager parent, MouseButtonEventArgs button)
-        {
-
-        }
-
-        public override void OnMouseUp(DrawManager parent, MouseButtonEventArgs button)
-        {
-            
         }
     }
 }
