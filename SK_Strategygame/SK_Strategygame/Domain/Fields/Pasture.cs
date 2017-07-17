@@ -29,7 +29,6 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             {
                 return false;
             }
-
         }
     }
 }

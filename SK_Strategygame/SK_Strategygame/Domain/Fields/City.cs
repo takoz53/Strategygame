@@ -9,7 +9,8 @@ namespace SK_Strategygame.Gameplay.Field_Creation
     class City : Field
     {
         int wallPoints;
-        int availableWood, availableMoney, availableStones, availableFood;
+        int availableWood, availableMoney, availableStones, availableFood, availableSoldiers;
+        bool barrackBuilt=false;
         String cityname;
         NotificationBox nb = new NotificationBox();
 
@@ -30,10 +31,22 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             {
                 availableMoney -= 100;
                 availableWood -= 300;
+                barrackBuilt = true;
             }
             else
             {
                 nb.Notify("You don't have enough wood!", "Not enough wood!", NotificationBox.types.OKOnly);
+            }
+        }
+
+        public void moreSoldiers(int amountofSoldiers)
+        {
+            if(barrackBuilt)
+            {
+                if(availableMoney >= 25*amountofSoldiers)//price for one soldier
+                {
+                    availableSoldiers += amountofSoldiers;
+                }
             }
         }
     }
