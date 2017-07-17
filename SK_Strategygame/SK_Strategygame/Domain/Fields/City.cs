@@ -8,7 +8,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
 {
     class City : Field
     {
-        int wallPoints = 0, upgradeLevel = 0, availableWood, availableMoney, availableStones, availableFood, availableSoldiers;
+        int wallPoints, upgradeLevel;
         bool barrackBuilt=false;
         String cityname;
         NotificationBox nb = new NotificationBox();
@@ -17,9 +17,10 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         {
             this.cityname = cityname;
             wallPoints = 0;
+            upgradeLevel = 0;
         }
 
-        public void upgradeWall()
+        /*public void upgradeWall()
         {
             
             if(upgradeLevel == 5)
@@ -28,9 +29,9 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             }
             else
             {
-                if (availableStones >= 100)
+                if (player >= 100)
                 {
-                    availableStones -= 100;
+                    //availableStones -= 100;
                     wallPoints = wallPoints + 50;
                     upgradeLevel++;
                 }
@@ -68,5 +69,6 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                 }
             }
         }
+        */
     }
 }

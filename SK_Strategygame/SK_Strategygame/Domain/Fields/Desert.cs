@@ -31,7 +31,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             }
         }
 
-        public void buy(int amount, products product)
+        /*public void buy(int amount, products product)
         {
             if(bazaarlimit > 0)
             {
@@ -68,9 +68,9 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             }
             else
             {
-                nb.Notify("You must wait a round to be able to buy new Resources!", "Cooldown for one Round", NotificationBox.types.OKOnly);
+                nb.Notify("You must wait a round to be able to buy new Resources!", "Cooldown for one round", NotificationBox.types.OKOnly);
             }
 
-        }
+        }*/
     }
 }
