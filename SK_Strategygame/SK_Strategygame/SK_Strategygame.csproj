@@ -76,10 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\GameLobby\" />
-    <Folder Include="Resources\InGame\Fields\Cities\TeamBlue\" />
-    <Folder Include="Resources\InGame\Fields\Cities\TeamGreen\" />
-    <Folder Include="Resources\InGame\Fields\Cities\TeamRed\" />
-    <Folder Include="Resources\InGame\Fields\Cities\TeamYellow\" />
     <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamBlue\" />
     <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamGreen\" />
     <Folder Include="Resources\InGame\Fields\fertile\Forests\TeamRed\" />
@@ -98,6 +94,15 @@
     <Folder Include="Resources\InGame\Fields\infertile\Mountains\TeamYellow\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\InGame\Fields\Cities\city_large.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\Cities\city_medium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\Fields\Cities\city_small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\InGame\Fields\fertile\Pasture\pasture_large.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -132,7 +137,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\InGame\Player\player_blue.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\InGame\Player\player_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -143,10 +148,6 @@
     <Content Include="Resources\InGame\Player\player_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\InGame\Player\Playfigure_sold.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InGame\Fields\Cities\Stadt.png" />
     <Content Include="Resources\InGame\Fields\fertile\Forests\forest_large.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -412,7 +413,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BerkanGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
+    <ProjectReference Include="..\..\..\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
       <Project>{67ae03c9-dcea-4e9b-86aa-9a30516e210f}</Project>
       <Name>AGFXLib</Name>
     </ProjectReference>

@@ -295,11 +295,17 @@ namespace SK_Strategygame.Scenes.InGame
             int whichUser = CalculateUserTurn() - 1;
             if (currentTile.BarracksBuilt == false)
             {
-                if (PlayerList[whichUser].getCurrentMoney() > 0)
+                if (PlayerList[whichUser].getCurrentWood() >= 200 && PlayerList[whichUser].getCurrentStone() >= 150)
                 {
-                    PlayerList[whichUser].decreaseMoneyAmount(1); // arbitrary
+                    PlayerList[whichUser].decreaseStoneAmount(150);
+                    PlayerList[whichUser].decreaseWoodAmount(200);
                     currentTile.BarracksBuilt = true; // Barracks => Soldier Creation
                     UIRefreshQueued = true;
+                }
+                else
+                {
+                    NotificationBox nb = new NotificationBox();
+                    nb.Notify("Not enough Stones or Wood ;_;", "Not enough Resources!", NotificationBox.types.OKOnly);
                 }
             }
         }
@@ -310,12 +316,17 @@ namespace SK_Strategygame.Scenes.InGame
             int whichUser = CalculateUserTurn() - 1;
             if (currentTile.WallLevel < Field.MaxWallLevel)
             {
-                if (PlayerList[whichUser].getCurrentMoney() > 0)
+                if (PlayerList[whichUser].getCurrentStone() > 200)
                 {
-                    PlayerList[whichUser].decreaseMoneyAmount(1); // arbitrary
+                    PlayerList[whichUser].decreaseStoneAmount(200); // arbitrary
                     currentTile.WallLevel++;
                     currentTile.WallPoints += Field.WallUpgrade;
                     UIRefreshQueued = true;
+                }
+                else
+                {
+                    NotificationBox nb = new NotificationBox();
+                    nb.Notify("Not enough Stones!", "Stones needed!", NotificationBox.types.OKOnly);
                 }
             }
         }
@@ -756,8 +767,9 @@ namespace SK_Strategygame.Scenes.InGame
             {
                 GameTilemap[found].IsCity = true;
                 GameTilemap[found].Team = TeamID;
+                NewTurn = true; // This refreshes the map display. We'll see.????
                 UIRefreshQueued = true;
-                //gameField[found].setTexture("city texture");
+                GameTilemap[found].setTexture("Resources/InGame/Fields/Cities/city_small.png");
             }
         }
 
@@ -905,12 +917,11 @@ namespace SK_Strategygame.Scenes.InGame
                         UIButtons.Add(Button_NextRound);
                     }
                     if (!InBazaar && (PlayerList[WhichUser - 1].getCurrentWood() >= 150 && PlayerList[WhichUser - 1].getCurrentStone() >= 100))
-                    {
                         UIButtons.Add(Button_CreateCity);
-                    }
                     else
                     {
-                        UIButtons.Add(Sprite_DisabledCreateCity);
+                        if (!InBazaar && !(PlayerList[WhichUser - 1].getCurrentWood() >= 150 && PlayerList[WhichUser - 1].getCurrentStone() >= 100))
+                            UIButtons.Add(Sprite_DisabledCreateCity);
                     }
                 } else
                 {
@@ -1084,14 +1095,9 @@ namespace SK_Strategygame.Scenes.InGame
         private int CalculateSoldiers (int TeamID)
         {
             int soldiers = 0;
-            foreach (Field f in GameTilemap)
-            {
-                if (f.OccupiedByTeam == TeamID || f.Team == TeamID)
-                {
-                    if (f.Soldiers > 0)
-                        soldiers += f.Soldiers;
-                }
-            }
+            Field f = GameTilemap[GetTileID(CalculateUserTilePosition(TeamID))];
+            if(f.OccupiedByTeam == TeamID || f.Team == TeamID) // Only reason this wouldn't update... would be very weird.
+                soldiers = f.Soldiers;
             return soldiers;
         }
         private void RefreshResourceBar ()
@@ -1104,7 +1110,7 @@ namespace SK_Strategygame.Scenes.InGame
             Text t_stone = new Text(PlayerList[WhichUser - 1].getCurrentStone().ToString());
             Text t_food = new Text(PlayerList[WhichUser - 1].getCurrentFood().ToString());
             Text t_wood = new Text(PlayerList[WhichUser - 1].getCurrentWood().ToString());
-            Text t_soldier = new Text(CalculateSoldiers(WhichUser).ToString());
+            Text t_soldier = new Text(CalculateSoldiers(WhichUser - 1).ToString());
             t_gold.x = GoldIconPos + TextPaddingLeft;
             t_stone.x = StoneIconPos + TextPaddingLeft;
             t_food.x = FoodIconPos + TextPaddingLeft;
@@ -1186,6 +1192,7 @@ namespace SK_Strategygame.Scenes.InGame
                     PlayerList[UserIDHeld].y = NewPlayerY;
                     FirstMoveCheck = true;
                     UIRefreshQueued = true;
+                    ResourceRefreshQueued = true;
                 }
             }
         }
