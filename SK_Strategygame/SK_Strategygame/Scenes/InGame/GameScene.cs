@@ -71,6 +71,7 @@ namespace SK_Strategygame.Scenes.InGame
         public Sprite Sprite_DisabledBuyStone = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyStone, false, true), ButtonStartPosition, ButtonYStartPosition);
         public Sprite Sprite_DisabledBuyWood = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyWood, false, true), ButtonStartPosition, ButtonYStartPosition + ButtonMarginY * 1);
         public Sprite Sprite_DisabledBuyFood = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyFood, false, true), ButtonStartPosition, ButtonYStartPosition+ButtonMarginY*2);
+        public Sprite Sprite_DisabledCreateCity = new Sprite(ButtonType.GetPath(ButtonType.CreateCity, false, true), ButtonStartPosition, ButtonYStartPosition + ButtonMarginY);
         public bButton Button_HarvestStone = new bButton(ButtonType.GetPath(ButtonType.HarvestStone), ButtonType.GetPath(ButtonType.HarvestStone, true));
         public bButton Button_HarvestWood = new bButton(ButtonType.GetPath(ButtonType.HarvestWood), ButtonType.GetPath(ButtonType.HarvestWood, true));
         public bButton Button_HarvestFood = new bButton(ButtonType.GetPath(ButtonType.HarvestFood), ButtonType.GetPath(ButtonType.HarvestFood, true));
@@ -80,6 +81,7 @@ namespace SK_Strategygame.Scenes.InGame
         public bButton Button_BuyWood = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyWood, false), ButtonType.GetPath(ButtonType.Bazaar_BuyWood, true), ButtonStartPosition, ButtonYStartPosition+ButtonMarginY);
         public bButton Button_BuyFood = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyFood, false), ButtonType.GetPath(ButtonType.Bazaar_BuyFood, true), ButtonStartPosition, ButtonYStartPosition+ButtonMarginY*2);
         public bButton Button_NextRound = new bButton(ButtonType.GetPath(ButtonType.NextRound, false), ButtonType.GetPath(ButtonType.NextRound, true), ButtonStartPosition, NextRoundButtonY);
+        public bButton Button_CreateCity = new bButton(ButtonType.GetPath(ButtonType.CreateCity, false), ButtonType.GetPath(ButtonType.CreateCity, true), ButtonStartPosition, ButtonYStartPosition + ButtonMarginY);
 
         // *** Configuration ***
 
@@ -97,7 +99,7 @@ namespace SK_Strategygame.Scenes.InGame
         // Game Mechanics
         private const int BuyAmount = 100; // So FoodCost / BuyAmount = Price Per Unit
         private const int FoodCost = 100;
-        private const int StoneCost = 100;
+        private const int StoneCost = 150;
         private const int WoodCost = 100;
         private const int NumberOfPlayers = 4;
 
@@ -179,7 +181,7 @@ namespace SK_Strategygame.Scenes.InGame
             ResourceDM.Add(Sprite_WoodIcon);
             ResourceDM.Add(Sprite_StoneIcon);
             ResourceDM.Add(Sprite_FoodIcon);
-
+            
             Button_HarvestStone.x = ButtonStartPosition;
             Button_HarvestStone.y = ButtonYStartPosition;
             Button_HarvestStone.OnClick += HarvestStone;
@@ -207,6 +209,9 @@ namespace SK_Strategygame.Scenes.InGame
             Button_NextRound.x = ButtonStartPosition;
             Button_NextRound.y = NextRoundButtonY;
             Button_NextRound.OnClick += NextRound;
+            Button_CreateCity.OnClick += CreateCity;
+            Button_CreateCity.x = ButtonStartPosition;
+            Button_CreateCity.y = ButtonYStartPosition + ButtonMarginY;
 
             CursorDM.Add(Cursor);
             RefreshTurn();
@@ -418,6 +423,23 @@ namespace SK_Strategygame.Scenes.InGame
                 UIRefreshQueued = true;
             }
         }
+
+        /// <summary>
+        /// Callback for create City Button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
+        private void CreateCity(object s, MouseArgs e)
+        {
+            int WhichUser = CalculateUserTurn();
+            Vertex2 Coordinate = CalculateUserTilePosition(WhichUser - 1);
+            MakeCity(Coordinate, WhichUser);
+            ResourceRefreshQueued = true;
+            UIRefreshQueued = true;
+            PlayerList[WhichUser - 1].decreaseWoodAmount(150);
+            PlayerList[WhichUser - 1].decreaseStoneAmount(100);
+        }
+
         private void NextRound(object sender, MouseArgs e)
         {
             TurnID++;
@@ -450,6 +472,7 @@ namespace SK_Strategygame.Scenes.InGame
             }
             return found;
         }
+
         /// <summary>
         /// Grabs the field type.
         /// </summary>
@@ -707,9 +730,19 @@ namespace SK_Strategygame.Scenes.InGame
                         // No buttons.
                         break;
                 }
-                if (InBazaar == false)
+                if (!InBazaar)
                 {
                     UIButtons.Add(Button_NextRound);
+                }
+                if (!InBazaar && !GameTilemap[GetTileID(CalculateUserTilePosition(WhichUser - 1))].IsCity)
+                {
+                    if (PlayerList[WhichUser - 1].getCurrentWood() >= 150 && PlayerList[WhichUser - 1].getCurrentStone() >= 100)
+                        UIButtons.Add(Button_CreateCity);
+                }
+                else
+                {
+                    if (!InBazaar || GameTilemap[GetTileID(CalculateUserTilePosition(WhichUser - 1))].IsCity)
+                        UIButtons.Add(Sprite_DisabledCreateCity);
                 }
                 foreach (Drawable d in UIButtons) // The new buttons are added back.
                 {
