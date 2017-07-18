@@ -16,10 +16,10 @@ namespace SK_Strategygame.Gameplay.Field_Creation
     class Field : Sprite
     {
         private Vertex2 coordinate;
-        private List<Warrior> warriors; // players?
         public FieldType fieldType;
         // Field Data
         public int Team = 0; // Team it belongs to. 0 = none.
+        public int OccupiedByTeam = 0; // Team currently on tile. *Prevents other players moving on the tile.
         public int Food = 0; // Resources
         public int Wood = 0;
         public int Stone = 0;

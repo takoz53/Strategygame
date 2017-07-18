@@ -14,8 +14,8 @@ namespace SK_Strategygame.Domain.Player
         private String id;
         private int availableMoney, availableWood, availableStone, availableFood;
         private Vertex2 coordinate;
-        private int x, y;
-        public Player(string path, Vertex2 coordinate, String id, int startMoney, int startWood, int startStone, int startFood) : base(path, (float)coordinate.x * 250, (float)coordinate.y * 250)
+
+        public Player(string path, Vertex2 coordinate, String id, int startMoney, int startWood, int startStone, int startFood) : base(path, (float)coordinate.x * 250 + 125, (float)coordinate.y * 250 + 125)
         {
             availableFood = startFood;
             availableMoney = startMoney;
@@ -28,21 +28,6 @@ namespace SK_Strategygame.Domain.Player
         public Vertex2 getCoordinate()
         {
             return coordinate;
-        }
-
-        public void move(Vertex2 coordinate, float x, float y)
-        {
-            this.coordinate = coordinate;
-        }
-
-        public int setLocationX(float x)
-        {
-            return this.x;
-        }
-
-        public int setLocationY(float x)
-        {
-            return this.y;
         }
 
         public int getCurrentWood()

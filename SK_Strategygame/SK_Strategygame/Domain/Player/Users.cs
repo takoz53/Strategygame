@@ -24,18 +24,19 @@ namespace SK_Strategygame.Domain.Player
         public int GetRandomPos (float weight, bool FromRight = false)
         {
             if (!FromRight)
-                return r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.pfSize * weight)));
-            return r.Next(Convert.ToInt32(Math.Ceiling(GameScene.pfSize * weight)), GameScene.pfSize);
+                return r.Next(0, Convert.ToInt32(Math.Ceiling(GameScene.TilemapSize * weight)));
+            return r.Next(Convert.ToInt32(Math.Ceiling(GameScene.TilemapSize * weight)), GameScene.TilemapSize);
         }
 
         public void GetRandomPosXY (float w1, bool fr1, float w2, bool fr2)
         {
+            // This will not work properly for small maps beware.
             while (true)
             {
                 randomPositionX = GetRandomPos(w1, fr1);
                 randomPositionY = GetRandomPos(w2, fr2);
                 bool notWater = false;
-                foreach (Field f in GameScene.gameField) // penis wagon.
+                foreach (Field f in GameScene.GameTilemap)
                 {
                     if ((int)Math.Floor(f.getCoordinate().x) == randomPositionX && (int)Math.Floor(f.getCoordinate().y) == randomPositionY)
                     {
