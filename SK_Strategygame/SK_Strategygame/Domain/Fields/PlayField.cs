@@ -39,15 +39,15 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                     {
                         fields.Add(new Field(sealink, new Vertex2(x, y), FieldType.Sea,3));
                     }
-                    if(fieldTypeRandom >= 0.41 && fieldTypeRandom < 0.5 /*0.71*/) //30% Chance for Pasture
+                    if(fieldTypeRandom >= 0.41 && fieldTypeRandom < 0.71) //30% Chance for Pasture
                     {
                         fields.Add(new Field(pasturelink, new Vertex2(x, y), FieldType.Pasture,3));
                     }
-                    if( false /*fieldTypeRandom >= 0.71 && fieldTypeRandom < 0.96*/) //25% Chance for Mountains
+                    if( fieldTypeRandom >= 0.71 && fieldTypeRandom < 0.96) //25% Chance for Mountains
                     {
                         fields.Add(new Field(mountainlink, new Vertex2(x, y), FieldType.Mountain,3));
                     }
-                    if(fieldTypeRandom >= 0.5 && fieldTypeRandom <= 1) //5% Chance for Deserts
+                    if(fieldTypeRandom >= 0.96 && fieldTypeRandom <= 1) //5% Chance for Deserts
                     {
                         fields.Add(new Field(desertlink, new Vertex2(x, y), FieldType.Desert));
                     }

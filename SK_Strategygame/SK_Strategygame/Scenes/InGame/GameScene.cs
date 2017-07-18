@@ -25,164 +25,299 @@ namespace SK_Strategygame.Scenes.InGame
     }
     class GameScene : Scene
     {
-        DrawManager dm, cursor_dm, gameInterface_dm, player_dm;
-        bCursor cursor;
-        public static List<Field> gameField;
-        List<Player> user;
-        public static int pfSize;
-        bool isBeingHeld;
-        bool preprocessingComplete = false; // For assignment and calculations.
-        float MouseOriginX = 0; // Record the position of the mouse when the click starts.
-        float MouseOriginY = 0;
-        float PlayerOriginX = 0; //keep track of this for offsets.
-        float PlayerOriginY = 0;
-        float LastPlayerMoveX = 0;
-        float LastPlayerMoveY = 0;
-        float scrollX = 0;
-        float scrollY = 0;
-        int userIDHeld = -1;
-        bool DisableScrolling = false;
-        bool AlreadyHarvested = false;
-        bool FirstMoveCheck = false; // Fixes a bug.
-        bool PendingRefresh = false;
-        bool newTurn = true;
-        bool inBazaar = false;
-        int TurnID = 1;
+        // Game Handlers
+        public static int TilemapSize; // Size of the play field.
+        public static List<Field> GameTilemap; // Tilemap data.
+        public List<Player> PlayerList; // Player List
+        public DrawManager MainDM, CursorDM, GameInterfaceDM, PlayerDM, ResourceDM;
+        public bCursor Cursor; // Mouse Cursor object.
 
-        public List<Drawable> uiButtons = new List<Drawable>(); // We will only update this per different tile
-        public List<Drawable> uiText = new List<Drawable>();  // We will update this per turn
-        public List<Drawable> mapUI = new List<Drawable>(); // For highlights.
-        public string LastUICheck = "";
-        public int LastTurnCheck = 0;
-        public int BazaarBoughtCount = 0;
+        // Game Mechanics
+        public bool AlreadyHarvested = false; // If the user has already harvested this turn.
+        public int BazaarBoughtCount = 0; // Make sure the user only buys X amount per turn.
+        public int TurnID = 1; // Current Turn
 
-        private const int TileSize = 250;
-        private const int ScrollingEdgeSize = 80;       // x pixels at the edge of each side.
-        private const float ScrollSpeedPerFrame = 15;   // in pixels.
-        private const string TeamHighlight = "Resources/TeamHighlight/team_{0}.png"; // String.Format
+        // U.I. Related
+        public bool NewTurn = true; // U.I. refreshes some elements if it is.
+        public bool InBazaar = false; // Change the button layout of Bazaar if so.
+        public bool UIRefreshQueued = false; // Allows the code to queue a u.i. reload without causing errors.
+        public bool ResourceRefreshQueued = false;
+        public bool UserBeingHeld; // We can use this to determine whether or not to DisableScrolling.
+        public bool PreprocComplete = false; // U.I. refresh calculations.
+        public bool DisableScrolling = false; // To prevent scrolling when player is being moved.
+        public bool FirstMoveCheck = false; // Fixes a bug related to player movement.
+        public float MouseOriginX = 0; // Record the position of the mouse when the click starts.
+        public float MouseOriginY = 0;
+        public float PlayerOriginX = 0; // Allows us to track the current/previous player position to prevent excessive movement.
+        public float PlayerOriginY = 0;
+        public float LastPlayerMoveX = 0; // Allows us keep the current player position if they move invalidly. Makes it display smoother.
+        public float LastPlayerMoveY = 0;
+        public float ScrollX = 0; // The amount the tilemap is scrolled.
+        public float ScrollY = 0;
+        public int UserIDHeld = -1; // The user that's being dragged / moved.
+        public List<Drawable> UIButtons = new List<Drawable>(); // We will only update this per different tile
+        public List<Drawable> UIText = new List<Drawable>();  // We will update this per turn
+        public List<Drawable> MapUI = new List<Drawable>(); // For highlights.
+        public List<Drawable> UITop = new List<Drawable>();
+
+        // Pre-initialized Sprites
+        public Sprite Sprite_GoldIcon = new Sprite(GoldIcon, GoldIconPos, 0);
+        public Sprite Sprite_WoodIcon = new Sprite(WoodIcon, WoodIconPos, 0);
+        public Sprite Sprite_StoneIcon = new Sprite(StoneIcon, StoneIconPos, 0);
+        public Sprite Sprite_FoodIcon = new Sprite(FoodIcon, FoodIconPos, 0);
+        public Sprite Sprite_DisabledStone = new Sprite(ButtonType.GetPath(ButtonType.HarvestStone, false, true), ButtonStartPosition, ButtonYStartPosition);
+        public Sprite Sprite_DisabledWood = new Sprite(ButtonType.GetPath(ButtonType.HarvestWood, false, true), ButtonStartPosition, ButtonYStartPosition);
+        public Sprite Sprite_DisabledFood = new Sprite(ButtonType.GetPath(ButtonType.HarvestFood, false, true), ButtonStartPosition, ButtonYStartPosition);
+        public Sprite Sprite_DisabledBuyStone = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyStone, false, true), ButtonStartPosition, ButtonYStartPosition);
+        public Sprite Sprite_DisabledBuyWood = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyWood, false, true), ButtonStartPosition, ButtonYStartPosition + ButtonMarginY * 1);
+        public Sprite Sprite_DisabledBuyFood = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyFood, false, true), ButtonStartPosition, ButtonYStartPosition+ButtonMarginY*2);
+        public bButton Button_HarvestStone = new bButton(ButtonType.GetPath(ButtonType.HarvestStone), ButtonType.GetPath(ButtonType.HarvestStone, true));
+        public bButton Button_HarvestWood = new bButton(ButtonType.GetPath(ButtonType.HarvestWood), ButtonType.GetPath(ButtonType.HarvestWood, true));
+        public bButton Button_HarvestFood = new bButton(ButtonType.GetPath(ButtonType.HarvestFood), ButtonType.GetPath(ButtonType.HarvestFood, true));
+        public bButton Button_AccessBazaar = new bButton(ButtonType.GetPath(ButtonType.Bazaar_Access, false), ButtonType.GetPath(ButtonType.Bazaar_Access, true));
+        public bButton Button_ExitBazaar = new bButton(ButtonType.GetPath(ButtonType.Bazaar_Exit, false), ButtonType.GetPath(ButtonType.Bazaar_Exit, true));
+        public bButton Button_BuyStone = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyStone, false), ButtonType.GetPath(ButtonType.Bazaar_BuyStone, true), ButtonStartPosition, ButtonYStartPosition);
+        public bButton Button_BuyWood = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyWood, false), ButtonType.GetPath(ButtonType.Bazaar_BuyWood, true), ButtonStartPosition, ButtonYStartPosition+ButtonMarginY);
+        public bButton Button_BuyFood = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyFood, false), ButtonType.GetPath(ButtonType.Bazaar_BuyFood, true), ButtonStartPosition, ButtonYStartPosition+ButtonMarginY*2);
+        public bButton Button_NextRound = new bButton(ButtonType.GetPath(ButtonType.NextRound, false), ButtonType.GetPath(ButtonType.NextRound, true), ButtonStartPosition, NextRoundButtonY);
+
+        // *** Configuration ***
+
+        // Files
+        private const string TeamHighlight = "Resources/TeamHighlight/team_{0}.png";
         private const string CurrentTileHighlight = "Resources/InGame/Highlights/highlight_position.png";
         private const string MoveTileHighlight = "Resources/InGame/Highlights/highlight_move.png";
+        private const string UIContainer = "Resources/InGame/UIBottom/UIContainer.png";
+        private const string GoldIcon = "Resources/InGame/UITop/money_icon.png";
+        private const string WoodIcon = "Resources/InGame/UITop/wood_icon.png";
+        private const string StoneIcon = "Resources/InGame/UITop/stone_icon.png";
+        private const string FoodIcon = "Resources/InGame/UITop/food_icon.png";
+        private const string TopBG = "Resources/InGame/UITop/bg.png";
 
+        // Game Mechanics
+        private const int BuyAmount = 100; // So FoodCost / BuyAmount = Price Per Unit
+        private const int FoodCost = 100;
+        private const int StoneCost = 100;
+        private const int WoodCost = 100;
+        private const int NumberOfPlayers = 4;
+
+        // Map
+        private const int MapSize = 10; // Squared value. Width and Height of the map.
+        private const float TileSize = 250f; // For math.
+
+        // U.I. Top
+        private const int GoldIconPos = 0;
+        private const int WoodIconPos = 1680 / 4;
+        private const int StoneIconPos = 1680 / 4 * 2;
+        private const int FoodIconPos = 1680 / 4 * 3;
+        private const int TextPaddingLeft = 42;
+
+        // U.I.
+        private const int ButtonStartPosition = 800 - 164 - 50; // Container Width - Button Width - 50 (padding)
+        private const int ButtonYStartPosition = 30; // Start at y=40px from Container Height.
+        private const int ButtonMarginY = 35; // Go down 40px for each button.
+        private const int NextRoundButtonY = 100;
+        private const int ScrollingEdgeSize = 50; // x pixels at the edge of each side.
+        private const float ScrollSpeedPerFrame = 15;   // in pixels.
+
+        private const int TextStartPosition = 60;
+        private const int TextStartYPosition = 20;
+        private const int TextMarginY = 25;
+        private const string PlayerTurn = "Player {0}'s ({1}) Turn";
+        private const string TurnNumber = "Turn: {0}";
+        private const string ResourceRemaining = "{0} {1} left in field"; // i.e. 50 Wood left in field.
+
+            // ** We did readonly static to avoid being caught by Expression must be constant.
+        private readonly static string[] NotEnoughMoney = new string[] { "Not enough money!", "Oops" };
+        private readonly static Vertex2 GameInterfaceStartPosition = new Vertex2(440, 850); // X , Y.
+
+        // Initialization constructor.
         public GameScene()
         {
-            dm = new DrawManager();
-            dm.w = Program.ScreenWidth;
-            dm.h = Program.ScreenHeight;
-            player_dm = new DrawManager();
-            player_dm.w = Program.ScreenWidth;
-            player_dm.h = Program.ScreenHeight;
-            cursor_dm = new DrawManager();
-            cursor_dm.w = Program.ScreenHeight;
-            cursor_dm.h = Program.ScreenHeight;
-            gameInterface_dm = new DrawManager();
-            gameInterface_dm.w = Program.ScreenWidth;
-            gameInterface_dm.h = Program.ScreenHeight;
-            gameInterface_dm.x = 440;
-            gameInterface_dm.y = 850;
-            gameInterface_dm.Add(new Sprite("Resources/InGame/UIBottom/UIContainer.png", 0, 0));
-            PlayField pf = new PlayField(10);
-            pfSize = pf.getSize();
-            cursor = new bCursor();
-            gameField = pf.getPlayField();
-            Users users = new Users(4);
+            // Draw Manager Creation and initialization.
+            MainDM = new DrawManager();
+            MainDM.w = Program.ScreenWidth; // We store this value so we can optimize sprite draw calling, i.e. Don't draw sprites Off-screen.
+            MainDM.h = Program.ScreenHeight;
+            PlayerDM = new DrawManager();
+            PlayerDM.w = Program.ScreenWidth;
+            PlayerDM.h = Program.ScreenHeight;
+            CursorDM = new DrawManager();
+            CursorDM.w = Program.ScreenHeight;
+            CursorDM.h = Program.ScreenHeight;
+            GameInterfaceDM = new DrawManager();
+            GameInterfaceDM.w = Program.ScreenWidth;
+            GameInterfaceDM.h = Program.ScreenHeight;
+            GameInterfaceDM.x = (float)GameInterfaceStartPosition.x; // Position all U.I. elements to here.
+            GameInterfaceDM.y = (float)GameInterfaceStartPosition.y;
+            GameInterfaceDM.Add(new Sprite(UIContainer, 0, 0));
+            ResourceDM = new DrawManager();
+            ResourceDM.w = Program.ScreenWidth;
+            ResourceDM.h = Program.ScreenHeight;
+            ResourceDM.Add(new Sprite(TopBG, 0, 0));
+            PlayField pf = new PlayField(MapSize); // Generate the map.
+            TilemapSize = pf.getSize();
+            Cursor = new bCursor(); // Mouse Cursor
+            GameTilemap = pf.getPlayField();
+            Users users = new Users(NumberOfPlayers);
             int Team = 1;
-            foreach (Player p in users.getPlayers())
+            foreach (Player p in users.getPlayers()) // Make the tile the player is sitting on their territory.
             {
-                int TileX = (int)Math.Floor(p.x / 250f);
-                int TileY = (int)Math.Floor(p.y / 250f);
+                int TileX = (int)Math.Floor(p.x / TileSize);
+                int TileY = (int)Math.Floor(p.y / TileSize);
                 Conquer(new Vertex2(TileX, TileY), Team);
+                MakeCity(new Vertex2(TileX, TileY), Team);
                 Team++;
             }
-            user = users.getPlayers();
+            PlayerList = users.getPlayers(); // For external access.
 
-            foreach (Field f in gameField)
-            {
-                dm.Add(f);
-            }
-            foreach (Player p in user)
-            {
-                player_dm.Add(p);
-            }
+            foreach (Field f in GameTilemap)
+                MainDM.Add(f);
+            foreach (Player p in PlayerList)
+                PlayerDM.Add(p);
 
-            cursor_dm.Add(cursor);
+            ResourceDM.Add(Sprite_GoldIcon);
+            ResourceDM.Add(Sprite_WoodIcon);
+            ResourceDM.Add(Sprite_StoneIcon);
+            ResourceDM.Add(Sprite_FoodIcon);
+
+            Button_HarvestStone.x = ButtonStartPosition;
+            Button_HarvestStone.y = ButtonYStartPosition;
+            Button_HarvestStone.OnClick += HarvestStone;
+            Button_HarvestWood.x = ButtonStartPosition;
+            Button_HarvestWood.y = ButtonYStartPosition;
+            Button_HarvestWood.OnClick += HarvestWood;
+            Button_HarvestFood.x = ButtonStartPosition;
+            Button_HarvestFood.y = ButtonYStartPosition;
+            Button_HarvestFood.OnClick += HarvestFood;
+            Button_AccessBazaar.x = ButtonStartPosition;
+            Button_AccessBazaar.y = ButtonYStartPosition;
+            Button_AccessBazaar.OnClick += AccessBazaar;
+            Button_ExitBazaar.x = ButtonStartPosition;
+            Button_ExitBazaar.y = ButtonYStartPosition + ButtonMarginY * 3;
+            Button_ExitBazaar.OnClick += ExitBazaar;
+            Button_BuyStone.x = ButtonStartPosition;
+            Button_BuyStone.y = ButtonYStartPosition;
+            Button_BuyStone.OnClick += BuyStone;
+            Button_BuyWood.x = ButtonStartPosition;
+            Button_BuyWood.y = ButtonYStartPosition + ButtonMarginY;
+            Button_BuyWood.OnClick += BuyWood;
+            Button_BuyFood.x = ButtonStartPosition;
+            Button_BuyFood.y = ButtonYStartPosition + ButtonMarginY * 2;
+            Button_BuyFood.OnClick += BuyFood;
+            Button_NextRound.x = ButtonStartPosition;
+            Button_NextRound.y = NextRoundButtonY;
+            Button_NextRound.OnClick += NextRound;
+
+            CursorDM.Add(Cursor);
             RefreshTurn();
             RefreshUIElements();
+            RefreshResourceBar();
+            RecalculateTilemapOccupancy();
         }
 
+        // Button Callbacks
+        /// <summary>
+        /// Callback for Access Bazaar button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void AccessBazaar(object s, MouseArgs e)
         {
-            inBazaar = true;
-            PendingRefresh = true;
+            InBazaar = true;
+            UIRefreshQueued = true;
         }
-
+        /// <summary>
+        /// Callback for Exit Bazaar button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void ExitBazaar(object s, MouseArgs e)
         {
-            inBazaar = false;
-            PendingRefresh = true;
-            
+            InBazaar = false;
+            UIRefreshQueued = true;
         }
-
+        /// <summary>
+        /// Callback for Buy Wood button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void BuyWood (object s, MouseArgs e)
         {
             
             int WhichUser = CalculateUserTurn();
-            int AmountOfGold = user[WhichUser - 1].getCurrentMoney();
-            if (AmountOfGold >= 100) // arbitrary amount
+            int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
+            if (AmountOfGold >= WoodCost) // arbitrary amount
             {
-                user[WhichUser - 1].decreaseMoneyAmount(100);
-                user[WhichUser - 1].increaseWoodAmount(100);
+                PlayerList[WhichUser - 1].decreaseMoneyAmount(WoodCost);
+                PlayerList[WhichUser - 1].increaseWoodAmount(BuyAmount);
                 BazaarBoughtCount++;
-                PendingRefresh = true;
+                ResourceRefreshQueued = true;
+                UIRefreshQueued = true;
             } else
             {
                 NotificationBox bx = new NotificationBox();
-                bx.Notify("Oops!", "Not enough money.", NotificationBox.types.OKOnly);
+                bx.Notify(NotEnoughMoney[0], NotEnoughMoney[1], NotificationBox.types.OKOnly);
             }
         }
-
+        /// <summary>
+        /// Callback for Buy Stone button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void BuyStone(object s, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
-            int AmountOfGold = user[WhichUser - 1].getCurrentMoney();
-            if (AmountOfGold >= 100) // arbitrary amount
+            int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
+            if (AmountOfGold >= StoneCost) // arbitrary amount
             {
-                user[WhichUser - 1].decreaseMoneyAmount(100);
-                user[WhichUser - 1].increaseStoneAmount(100);
+                PlayerList[WhichUser - 1].decreaseMoneyAmount(StoneCost);
+                PlayerList[WhichUser - 1].increaseStoneAmount(BuyAmount);
                 BazaarBoughtCount++;
-                PendingRefresh = true;
+                ResourceRefreshQueued = true;
+                UIRefreshQueued = true;
             }
             else
             {
                 NotificationBox bx = new NotificationBox();
-                bx.Notify("Oops!", "Not enough money.", NotificationBox.types.OKOnly);
+                bx.Notify(NotEnoughMoney[0], NotEnoughMoney[1], NotificationBox.types.OKOnly);
 
             }
         }
-
+        /// <summary>
+        /// Callback for Buy Food button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void BuyFood(object s, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
-            int AmountOfGold = user[WhichUser - 1].getCurrentMoney();
-            if (AmountOfGold >= 100) // arbitrary amount
+            int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
+            if (AmountOfGold >= FoodCost) // arbitrary amount
             {
-                user[WhichUser - 1].decreaseMoneyAmount(100);
-                user[WhichUser - 1].increaseFoodAmount(100);
+                PlayerList[WhichUser - 1].decreaseMoneyAmount(FoodCost);
+                PlayerList[WhichUser - 1].increaseFoodAmount(BuyAmount);
                 BazaarBoughtCount++;
-                PendingRefresh = true;
+                ResourceRefreshQueued = true;
+                UIRefreshQueued = true;
             }
             else
             {
                 NotificationBox bx = new NotificationBox();
-                bx.Notify("Oops!", "Not enough money.", NotificationBox.types.OKOnly);
+                bx.Notify(NotEnoughMoney[0], NotEnoughMoney[1], NotificationBox.types.OKOnly);
             }
         }
-
+        /// <summary>
+        /// Callback for Harvest Wood button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void HarvestWood(object sender, MouseArgs e)
         {
+            // We calculate the turn so we can get the position of the player.
             int WhichUser = CalculateUserTurn();
             Vertex2 CurrentPosition = CalculateUserTilePosition(WhichUser - 1);
-            Field fieldObj = null;
-            foreach (Field f in gameField)
+            Field fieldObj = null; // Then we search for the tile's data that they're on so we can do math with it.
+            foreach (Field f in GameTilemap)
             {
                 Vertex2 FieldCoord = f.getCoordinate();
                 if (FieldCoord.x == CurrentPosition.x && FieldCoord.y == CurrentPosition.y)
@@ -193,26 +328,33 @@ namespace SK_Strategygame.Scenes.InGame
             }
             if (fieldObj != null)
             {
+                // Game mechanics here.
                 if (fieldObj.Wood <= 50)
                 {
                     int amountGained = fieldObj.Wood;
                     fieldObj.Wood = 0;
-                    user[WhichUser - 1].increaseWoodAmount(amountGained);
+                    PlayerList[WhichUser - 1].increaseWoodAmount(amountGained);
                 } else
                 {
                     fieldObj.Wood -= 50;
-                    user[WhichUser - 1].increaseWoodAmount(50);
+                    PlayerList[WhichUser - 1].increaseWoodAmount(50);
                 }
+                ResourceRefreshQueued = true;
                 AlreadyHarvested = true;
-                PendingRefresh = true;
+                UIRefreshQueued = true; // We refresh the U.I. so it updates the button to disabled mode.
             }
         }
+        /// <summary>
+        /// Callback for Harvest Food button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void HarvestFood(object sender, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
             Vertex2 CurrentPosition = CalculateUserTilePosition(WhichUser - 1);
             Field fieldObj = null;
-            foreach (Field f in gameField)
+            foreach (Field f in GameTilemap)
             {
                 Vertex2 FieldCoord = f.getCoordinate();
                 if (FieldCoord.x == CurrentPosition.x && FieldCoord.y == CurrentPosition.y)
@@ -227,23 +369,29 @@ namespace SK_Strategygame.Scenes.InGame
                 {
                     int amountGained = fieldObj.Food;
                     fieldObj.Food = 0;
-                    user[WhichUser - 1].increaseFoodAmount(amountGained);
+                    PlayerList[WhichUser - 1].increaseFoodAmount(amountGained);
                 }
                 else
                 {
                     fieldObj.Food -= 50;
-                    user[WhichUser - 1].increaseFoodAmount(50);
+                    PlayerList[WhichUser - 1].increaseFoodAmount(50);
                 }
+                ResourceRefreshQueued = true;
                 AlreadyHarvested = true;
-                PendingRefresh = true;
+                UIRefreshQueued = true;
             }
         }
+        /// <summary>
+        /// Callback for Harvest Stone button.
+        /// </summary>
+        /// <param name="s">Sender</param>
+        /// <param name="e">Mouse Parameters</param>
         private void HarvestStone(object sender, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
             Vertex2 CurrentPosition = CalculateUserTilePosition(WhichUser - 1);
             Field fieldObj = null;
-            foreach (Field f in gameField)
+            foreach (Field f in GameTilemap)
             {
                 Vertex2 FieldCoord = f.getCoordinate();
                 if (FieldCoord.x == CurrentPosition.x && FieldCoord.y == CurrentPosition.y)
@@ -258,32 +406,40 @@ namespace SK_Strategygame.Scenes.InGame
                 {
                     int amountGained = fieldObj.Stone;
                     fieldObj.Stone = 0;
-                    user[WhichUser - 1].increaseStoneAmount(amountGained);
+                    PlayerList[WhichUser - 1].increaseStoneAmount(amountGained);
                 }
                 else
                 {
                     fieldObj.Stone -= 50;
-                    user[WhichUser - 1].increaseStoneAmount(50);
+                    PlayerList[WhichUser - 1].increaseStoneAmount(50);
                 }
+                ResourceRefreshQueued = true;
                 AlreadyHarvested = true;
-                PendingRefresh = true;
+                UIRefreshQueued = true;
             }
+        }
+        private void NextRound(object sender, MouseArgs e)
+        {
+            TurnID++;
+            AlreadyHarvested = false;
+            BazaarBoughtCount = 0;
+            ResourceRefreshQueued = true;
+            UIRefreshQueued = true;
+            NewTurn = true;
+            RefreshTurn();
+            FocusOnUser();
         }
 
-        private FieldType GetFieldType (Vertex2 position)
-        {
-            foreach (Field f in gameField)
-            {
-                if ((float)f.getCoordinate().x == position.x && (float)f.getCoordinate().y == position.y)
-                    return f.fieldType;
-            }
-            return FieldType.Sea;
-        }
-        private void Conquer(Vertex2 position, int TeamID)
+        // Helper Functions
+        /// <summary>
+        /// Grabs the ID of the Tile in the List.
+        /// </summary>
+        /// <param name="position">Position of Tile</param>
+        private int GetTileID (Vertex2 position)
         {
             int index = -1;
             int found = -1;
-            foreach (Field f in gameField)
+            foreach (Field f in GameTilemap)
             {
                 index++;
                 if ((float)f.getCoordinate().x == position.x && (float)f.getCoordinate().y == position.y)
@@ -292,27 +448,179 @@ namespace SK_Strategygame.Scenes.InGame
                     break;
                 }
             }
-            if (found != -1)
+            return found;
+        }
+        /// <summary>
+        /// Grabs the field type.
+        /// </summary>
+        /// <param name="position">Position of Tile</param>
+        /// <returns>FieldType</returns>
+        private FieldType GetFieldType (Vertex2 position)
+        {
+            foreach (Field f in GameTilemap)
             {
-                gameField[found].Team = TeamID;
+                if ((float)f.getCoordinate().x == position.x && (float)f.getCoordinate().y == position.y)
+                    return f.fieldType;
+            }
+            return FieldType.Sea;
+        }
+        private int GetFieldOccupancy (Vertex2 position)
+        {
+            foreach (Field f in GameTilemap)
+            {
+                if ((float)f.getCoordinate().x == position.x && (float)f.getCoordinate().y == position.y)
+                    return f.OccupiedByTeam;
+            }
+            return 0;
+        }
+        private float GetTilemapWidth()
+        {
+            return (((float)GameTilemap[GameTilemap.Count - 1].getCoordinate().x + 1) * TileSize);
+        }
+        private float GetTilemapHeight()
+        {
+            return (((float)GameTilemap[GameTilemap.Count - 1].getCoordinate().y + 1) * TileSize);
+        }
+        /// <summary>
+        /// Clamps value into screen border.
+        /// </summary>
+        /// <param name="x">Value</param>
+        /// <returns>Clamped Value</returns>
+        private float ClampScreenX(float x)
+        {
+            if (x <= 0) return 0;
+            return Math.Min(GetTilemapWidth() - Program.ScreenWidth, x);
+        }
+        /// <summary>
+        /// Clamps value into screen border.
+        /// </summary>
+        /// <param name="y">Value</param>
+        /// <returns>Clamped Value</returns>
+        private float ClampScreenY(float y)
+        {
+            if (y <= 0) return 0;
+            return Math.Min(GetTilemapHeight() - Program.ScreenHeight, y);
+        }
+        /// <summary>
+        /// Attempts to center screen on the current user.
+        /// </summary>
+        private void FocusOnUser()
+        {
+            int WhichUser = CalculateUserTurn();
+            float UserX = PlayerList[WhichUser - 1].x;
+            float UserY = PlayerList[WhichUser - 1].y;
+            float _scrollX = UserX - (Program.ScreenWidth / 2);
+            float _scrollY = UserY - (Program.ScreenHeight / 2);
+            float clampX = ClampScreenX(_scrollX);
+            float clampY = ClampScreenY(_scrollY);
+            ScrollX = clampX;
+            ScrollY = clampY;
+            MainDM.x = (-clampX);
+            MainDM.y = (-clampY);
+        }
+        private void RecalculateTilemapOccupancy ()
+        {
+            Dictionary<int, int> OperationsRequested = new Dictionary<int, int>();
+            Dictionary<int, Vertex2> PlayerPositions = new Dictionary<int, Vertex2>();
+            for (int i=0; i<NumberOfPlayers; i++)
+            {
+                PlayerPositions.Add(i, CalculateUserTilePosition(i));
+            }
+            int index = 0;
+            // We precalculate what we need to do before doing so, because if an object is modified while you're iterating through it, it will Error.
+            foreach (Field f in GameTilemap)
+            {
+                if (f.Soldiers > 0 && f.OccupiedByTeam > 0)
+                {
+                    // Ignore this tile. No need to change a tile when it's already fine.
+                } else
+                {
+                    foreach (KeyValuePair<int, Vertex2> playerPosition in PlayerPositions)
+                    {
+                        if (playerPosition.Value.x == f.getCoordinate().x
+                            && playerPosition.Value.y == f.getCoordinate().y) // If a player is on the tile, mark the tile's occupancy.
+                        {
+                            OperationsRequested.Add(index, playerPosition.Key+1);
+                            break;
+                        }
+                    }
+                }
+                index++;
+            }
+            foreach (KeyValuePair<int,int> op in OperationsRequested)
+            {
+                GameTilemap[op.Key].OccupiedByTeam = op.Value;
             }
         }
+        /// <summary>
+        /// Calculates the User's tile position.
+        /// </summary>
+        /// <param name="id">Player ID</param>
+        /// <returns>Vertex2 of their position.</returns>
+        private Vertex2 CalculateUserTilePosition(int id)
+        {
+            return new Vertex2(Math.Floor(PlayerList[id].x / TileSize), Math.Floor(PlayerList[id].y / TileSize));
+        }
+        /// <summary>
+        /// Calculates which user's turn it is.
+        /// </summary>
+        /// <returns>User ID</returns>
+        private int CalculateUserTurn()
+        {
+            return ((TurnID - 1) % PlayerList.Count) + 1;
+        }
+        /// <summary>
+        /// Sets tile territory value.
+        /// </summary>
+        /// <param name="position">Position of Tile</param>
+        /// <param name="TeamID">TeamID</param>
+        private void Conquer(Vertex2 position, int TeamID)
+        {
+            int found = GetTileID(position);
+            if (found != -1)
+            {
+                GameTilemap[found].Team = TeamID;
+            }
+        }
+        /// <summary>
+        /// Changes tile into city.
+        /// </summary>
+        /// <param name="position">Position of Tile</param>
+        /// <param name="TeamID">TeamID</param>
+        private void MakeCity(Vertex2 position, int TeamID)
+        {
+            int found = GetTileID(position);
+            if (found != -1)
+            {
+                GameTilemap[found].IsCity = true;
+                //gameField[found].setTexture("city texture");
+            }
+        }
+
+        // U.I. Processors
+        /// <summary>
+        /// Resets some values for proper operation.
+        /// </summary>
         private void RefreshTurn ()
         {
             int WhichUser = CalculateUserTurn();
-            userIDHeld = WhichUser - 1;
-            PlayerOriginX = user[userIDHeld].x;
-            PlayerOriginY = user[userIDHeld].y;
+            UserIDHeld = WhichUser - 1;
+            PlayerOriginX = PlayerList[UserIDHeld].x;
+            PlayerOriginY = PlayerList[UserIDHeld].y;
             LastPlayerMoveX = PlayerOriginX;
             LastPlayerMoveY = PlayerOriginY;
+            RecalculateTilemapOccupancy();
         }
+        /// <summary>
+        /// Refreshes the U.I.
+        /// </summary>
         private void RefreshUIElements ()
         {
             int WhichUser = CalculateUserTurn();
             Vertex2 CurrentPosition = CalculateUserTilePosition(WhichUser - 1);
             FieldType fieldType = FieldType.Sea;
             Field fieldObj = null;
-            foreach (Field f in gameField)
+            foreach (Field f in GameTilemap)
             {
                 Vertex2 FieldCoord = f.getCoordinate();
                 if (FieldCoord.x == CurrentPosition.x && FieldCoord.y == CurrentPosition.y)
@@ -325,251 +633,235 @@ namespace SK_Strategygame.Scenes.InGame
             if (true)
             {
                 // We need to redo u.i. stuff.
-                foreach (Drawable d in uiButtons)
+                foreach (Drawable d in UIButtons)
                 {
-                    gameInterface_dm.drawables.Remove(d);
+                    GameInterfaceDM.drawables.Remove(d);
                 }
-                uiButtons = new List<Drawable>();
+                UIButtons = new List<Drawable>();
                 switch (fieldType)
                 {
                     case FieldType.Mountain:
                         if (fieldObj.Stone > 0 && !AlreadyHarvested)
                         {
-                            bButton harvestStone = new bButton(ButtonType.GetPath(ButtonType.HarvestStone), ButtonType.GetPath(ButtonType.HarvestStone, true));
-                            harvestStone.x = 800 - 164 - 40;
-                            harvestStone.y = 40; // ui
-                            harvestStone.OnClick += HarvestStone;
-                            uiButtons.Add(harvestStone);
+                            UIButtons.Add(Button_HarvestStone);
                         } else
                         {
-                            Sprite disabledStone = new Sprite(ButtonType.GetPath(ButtonType.HarvestStone, false, true), 800 - 164 - 40, 40);
-                            uiButtons.Add(disabledStone);
+                            UIButtons.Add(Sprite_DisabledStone);
                         }
                         break;
                     case FieldType.Forest:
                         if (fieldObj.Wood > 0 && !AlreadyHarvested)
                         {
-                            bButton harvestWood = new bButton(ButtonType.GetPath(ButtonType.HarvestWood), ButtonType.GetPath(ButtonType.HarvestWood, true));
-                            harvestWood.x = 800 - 164 - 40;
-                            harvestWood.y = 40; // ui
-                            harvestWood.OnClick += HarvestWood;
-                            uiButtons.Add(harvestWood);
+                            UIButtons.Add(Button_HarvestWood);
                         } else
                         {
-                            Sprite disabledWood = new Sprite(ButtonType.GetPath(ButtonType.HarvestWood, false, true), 800 - 164 - 40, 40);
-                            uiButtons.Add(disabledWood);
+                            UIButtons.Add(Sprite_DisabledWood);
                         }
                         break;
                     case FieldType.Pasture:
                         if (fieldObj.Food > 0 && !AlreadyHarvested)
                         {
-                            bButton harvestFood = new bButton(ButtonType.GetPath(ButtonType.HarvestFood), ButtonType.GetPath(ButtonType.HarvestFood, true));
-                            harvestFood.x = 800 - 164 - 40;
-                            harvestFood.y = 40; // ui
-                            harvestFood.OnClick += HarvestFood;
-                            uiButtons.Add(harvestFood);
+                            UIButtons.Add(Button_HarvestFood);
                         } else
                         {
-                            Sprite disabledFood = new Sprite(ButtonType.GetPath(ButtonType.HarvestFood, false, true), 800 - 164 - 40, 40);
-                            uiButtons.Add(disabledFood);
+                            UIButtons.Add(Sprite_DisabledFood);
                         }
                         break;
                     case FieldType.Desert:
-                        if (!inBazaar) {
-                            bButton bazaarAccess = new bButton(ButtonType.GetPath(ButtonType.Bazaar_Access, false), ButtonType.GetPath(ButtonType.Bazaar_Access, true));
-                            bazaarAccess.x = 800 - 164 - 40; // 800 edge of the ui container, 164 is the width of the button to make sure it fits, - 40 = padding.
-                            bazaarAccess.y = 40;
-                            bazaarAccess.OnClick += AccessBazaar;
-                            uiButtons.Add(bazaarAccess);
+                        if (!InBazaar) {
+                            UIButtons.Add(Button_AccessBazaar);
                         } else
                         {
-                            Sprite buyStone;
-                            Sprite buyFood;
-                            Sprite buyWood;
-                            if (BazaarBoughtCount < 2) // bButton extends Clickable. so is also a clickable. polymorphism for convenience.
+                            if (BazaarBoughtCount >= 2)
                             {
-                                buyStone = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyStone, false), ButtonType.GetPath(ButtonType.Bazaar_BuyStone, true),800-164-40,40);
-                                buyFood = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyFood, false), ButtonType.GetPath(ButtonType.Bazaar_BuyFood, true),800-164-40,80);
-                                buyWood = new bButton(ButtonType.GetPath(ButtonType.Bazaar_BuyWood, false), ButtonType.GetPath(ButtonType.Bazaar_BuyWood, true),800-164-40,120);
+                                UIButtons.Add(Sprite_DisabledBuyFood);
+                                UIButtons.Add(Sprite_DisabledBuyStone);
+                                UIButtons.Add(Sprite_DisabledBuyWood);
                             } else
                             {
-                                buyStone = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyStone, false, true),800-164-40,40);
-                                buyFood = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyFood, false, true), 800 - 164 - 40, 80);
-                                buyWood = new Sprite(ButtonType.GetPath(ButtonType.Bazaar_BuyWood, false, true), 800 - 164 - 40, 120);
+                                UIButtons.Add(Button_BuyFood);
+                                UIButtons.Add(Button_BuyStone);
+                                UIButtons.Add(Button_BuyWood);
                             }
+                            UIButtons.Add(Button_ExitBazaar);
                             
-                            bButton exitBazaar = new bButton(ButtonType.GetPath(ButtonType.Bazaar_Exit, false), ButtonType.GetPath(ButtonType.Bazaar_Exit, true));
-                            buyStone.x = 800 - 164 - 40;
-                            buyStone.y = 40;
-                            buyFood.x = 800 - 164 - 40;
-                            buyFood.y = 80;
-                            buyWood.x = 800 - 164 - 40;
-                            buyWood.y = 120;
-                            exitBazaar.x = 800 - 164 - 40;
-                            exitBazaar.y = 160;
-                            exitBazaar.OnClick += ExitBazaar;
-                            buyStone.OnClick += BuyStone;
-                            buyFood.OnClick += BuyFood;
-                            buyWood.OnClick += BuyWood;
-                            uiButtons.Add(exitBazaar);
-                            uiButtons.Add(buyWood);
-                            uiButtons.Add(buyStone);
-                            uiButtons.Add(buyFood);
+                            Text t_bazaarPrice_Wood = new Text("Price of Wood: " + WoodCost + " per " + BuyAmount);
+                            Text t_bazaarPrice_Stone = new Text("Price of Stone: " + StoneCost + " per " + BuyAmount);
+                            Text t_bazaarPrice_Food = new Text("Price of Food: " + FoodCost + " per " + BuyAmount);
+                            t_bazaarPrice_Food.x = TextStartPosition;
+                            t_bazaarPrice_Food.y = TextStartYPosition + TextMarginY * 3;
+                            t_bazaarPrice_Stone.x = TextStartPosition;
+                            t_bazaarPrice_Stone.y = TextStartYPosition + TextMarginY * 4;
+                            t_bazaarPrice_Wood.x = TextStartPosition;
+                            t_bazaarPrice_Wood.y = TextStartYPosition + TextMarginY * 5;
+                            Text t_purchases = new Text("Purchases Remaining: " + (2 - BazaarBoughtCount));
+                            t_purchases.x = TextStartPosition;
+                            t_purchases.y = TextStartYPosition + TextMarginY * 2;
+                            UIButtons.Add(t_bazaarPrice_Food);
+                            UIButtons.Add(t_bazaarPrice_Stone);
+                            UIButtons.Add(t_bazaarPrice_Wood);
+                            UIButtons.Add(t_purchases);
                         }
                         break;
                     default:
                         // No buttons.
                         break;
                 }
-                foreach (Drawable d in uiButtons) // The new buttons are added back.
+                if (InBazaar == false)
                 {
-                    gameInterface_dm.drawables.Add(d);
+                    UIButtons.Add(Button_NextRound);
+                }
+                foreach (Drawable d in UIButtons) // The new buttons are added back.
+                {
+                    GameInterfaceDM.drawables.Add(d);
                 }
             }
             if (true)
             {
-                foreach (Drawable d in uiText)
+                foreach (Drawable d in UIText)
                 {
-                    gameInterface_dm.drawables.Remove(d);
+                    GameInterfaceDM.drawables.Remove(d);
                 }
-                uiText = new List<Drawable>();
-                Text turnNumberText = new Text("Turn: " + TurnID);
-                Text playerTurnText = new Text("Player " + CalculateUserTurn() + "'s (" + ((Team)CalculateUserTurn()).ToString() + ") turn!");
+                UIText = new List<Drawable>();
+                Text turnNumberText = new Text(String.Format(TurnNumber,TurnID));
+                Text playerTurnText = new Text(String.Format(PlayerTurn, CalculateUserTurn(), (Team)CalculateUserTurn()).ToString());
                 Text resourceText = null;
                 switch (fieldType)
                 {
                     case FieldType.Forest:
                         // Wood
                         if (fieldObj != null)
-                            resourceText = new Text(fieldObj.Wood + " wood left in field");
+                            resourceText = new Text(String.Format(ResourceRemaining,fieldObj.Wood,"Wood"));
                         break;
                     case FieldType.Pasture:
                         if (fieldObj != null)
-                            resourceText = new Text(fieldObj.Food + " food left in field");
+                            resourceText = new Text(String.Format(ResourceRemaining, fieldObj.Food, "Food"));
                         break;
                     case FieldType.Mountain:
                         if (fieldObj != null)
-                            resourceText = new Text(fieldObj.Stone + " stone left in field");
+                            resourceText = new Text(String.Format(ResourceRemaining, fieldObj.Stone, "Stone"));
                         break;
                     default:
                         break;
                 }
-                turnNumberText.x = 40;
-                turnNumberText.y = 20;
-                playerTurnText.x = 40;
-                playerTurnText.y = 40;
+                turnNumberText.x = TextStartPosition;
+                turnNumberText.y = TextStartYPosition;
+                playerTurnText.x = TextStartPosition;
+                playerTurnText.y = TextStartYPosition+TextMarginY;
                 if (resourceText != null)
                 {
-                    resourceText.x = 40;
-                    resourceText.y = 60;
+                    resourceText.x = TextStartPosition;
+                    resourceText.y = TextStartYPosition+TextMarginY*2;
                 }
-                uiText.Add(turnNumberText);
-                uiText.Add(playerTurnText);
+                UIText.Add(turnNumberText);
+                UIText.Add(playerTurnText);
                 if (resourceText != null)
-                    uiText.Add(resourceText);
-                foreach (Drawable d in uiText)
+                    UIText.Add(resourceText);
+                foreach (Drawable d in UIText)
                 {
-                    gameInterface_dm.drawables.Add(d);
+                    GameInterfaceDM.drawables.Add(d);
                 }
                 // Map highlights
-                if (newTurn)
+                if (NewTurn)
                 {
-                    foreach (Drawable d in mapUI)
+                    foreach (Drawable d in MapUI)
                     {
-                        dm.drawables.Remove(d);
+                        MainDM.drawables.Remove(d);
                     }
-                    mapUI = new List<Drawable>();
+                    MapUI = new List<Drawable>();
                     bool Up = (CurrentPosition.y > 0);
-                    bool Down = (CurrentPosition.y < pfSize - 1);
+                    bool Down = (CurrentPosition.y < TilemapSize - 1);
                     bool Left = (CurrentPosition.x > 0);
-                    bool Right = (CurrentPosition.x < pfSize - 1);
-                    Vertex2 cpos = new Vertex2(CurrentPosition.x * 250f, CurrentPosition.y * 250f);
-                    Vertex2 up_pos = new Vertex2(cpos.x, cpos.y - 250f);
-                    Vertex2 down_pos = new Vertex2(cpos.x, cpos.y + 250f);
-                    Vertex2 left_pos = new Vertex2(cpos.x - 250f, cpos.y);
-                    Vertex2 right_pos = new Vertex2(cpos.x + 250f, cpos.y);
+                    bool Right = (CurrentPosition.x < TilemapSize - 1);
+                    Vertex2 cpos = new Vertex2(CurrentPosition.x * TileSize, CurrentPosition.y * TileSize);
+                    Vertex2 up_pos = new Vertex2(cpos.x, cpos.y - TileSize);
+                    Vertex2 down_pos = new Vertex2(cpos.x, cpos.y + TileSize);
+                    Vertex2 left_pos = new Vertex2(cpos.x - TileSize, cpos.y);
+                    Vertex2 right_pos = new Vertex2(cpos.x + TileSize, cpos.y);
+                    Vertex2 up_pos_d = new Vertex2((float)Math.Floor(up_pos.x / TileSize), (float)Math.Floor(up_pos.y / TileSize));
+                    Vertex2 down_pos_d = new Vertex2((float)Math.Floor(down_pos.x / TileSize), (float)Math.Floor(down_pos.y / TileSize));
+                    Vertex2 left_pos_d = new Vertex2((float)Math.Floor(left_pos.x / TileSize), (float)Math.Floor(left_pos.y / TileSize));
+                    Vertex2 right_pos_d = new Vertex2((float)Math.Floor(right_pos.x / TileSize), (float)Math.Floor(right_pos.y / TileSize));
+                    FieldType ft_up = GetFieldType(up_pos_d);
+                    FieldType ft_down = GetFieldType(down_pos_d);
+                    FieldType ft_left = GetFieldType(left_pos_d);
+                    FieldType ft_right = GetFieldType(right_pos_d);
+                    int fo_up = GetFieldOccupancy(up_pos_d);
+                    int fo_down = GetFieldOccupancy(down_pos_d);
+                    int fo_left = GetFieldOccupancy(left_pos_d);
+                    int fo_right = GetFieldOccupancy(right_pos_d);
                     Sprite cpos_s = new Sprite(CurrentTileHighlight, (float)cpos.x, (float)cpos.y);
-                    mapUI.Add(cpos_s);
-                    if (Up && GetFieldType(new Vertex2((float)Math.Floor(up_pos.x / 250f), (float)Math.Floor(up_pos.y / 250f))) != FieldType.Sea)
+                    MapUI.Add(cpos_s);
+                    if (Up && ft_up != FieldType.Sea && (fo_up == WhichUser || fo_up == 0))
                     {
                         Sprite UpSprite = new Sprite(MoveTileHighlight, (float)up_pos.x, (float)up_pos.y);
-                        mapUI.Add(UpSprite);
+                        MapUI.Add(UpSprite);
                     }
-                    if (Right && GetFieldType(new Vertex2((float)Math.Floor(right_pos.x / 250f), (float)Math.Floor(right_pos.y / 250f))) != FieldType.Sea)
+                    if (Right && ft_right != FieldType.Sea && (fo_right == WhichUser || fo_right == 0))
                     {
                         Sprite RightSprite = new Sprite(MoveTileHighlight, (float)right_pos.x, (float)right_pos.y);
-                        mapUI.Add(RightSprite);
+                        MapUI.Add(RightSprite);
                     }
-                    if (Left && GetFieldType(new Vertex2((float)Math.Floor(left_pos.x / 250f), (float)Math.Floor(left_pos.y / 250f))) != FieldType.Sea)
+                    if (Left && ft_left != FieldType.Sea && (fo_left == WhichUser || fo_left == 0))
                     {
                         Sprite LeftSprite = new Sprite(MoveTileHighlight, (float)left_pos.x, (float)left_pos.y);
-                        mapUI.Add(LeftSprite);
+                        MapUI.Add(LeftSprite);
                     }
-                    if (Down && GetFieldType(new Vertex2((float)Math.Floor(down_pos.x / 250f), (float)Math.Floor(down_pos.y / 250f))) != FieldType.Sea)
+                    if (Down && ft_down != FieldType.Sea && (fo_down == WhichUser || fo_down == 0))
                     {
                         Sprite DownSprite = new Sprite(MoveTileHighlight, (float)down_pos.x, (float)down_pos.y);
-                        mapUI.Add(DownSprite);
+                        MapUI.Add(DownSprite);
                     }
-                    foreach (Field f in gameField)
+                    foreach (Field f in GameTilemap)
                     {
                         if (f.Team != 0)
                         {
                             Sprite tSpriteColor = new Sprite(String.Format(TeamHighlight, ((Team)f.Team).ToString()), (float)f.x, (float)f.y);
-                            mapUI.Add(tSpriteColor);
+                            MapUI.Add(tSpriteColor);
                         }
                     }
-                    foreach (Drawable d in mapUI)
+                    foreach (Drawable d in MapUI)
                     {
-                        dm.Add(d);
+                        MainDM.Add(d);
                     }
-                    newTurn = false;
+                    NewTurn = false;
                 }
             }
-            LastUICheck = fieldType.ToString();
-            LastTurnCheck = TurnID;
         }
-        private Vertex2 CalculateUserTilePosition (int id)
+        private void RefreshResourceBar ()
         {
-            return new Vertex2(Math.Floor(user[id].x / 250f), Math.Floor(user[id].y / 250f));
-        }
-        private int CalculateUserTurn ()
-        {
-            return ((TurnID-1) % user.Count) + 1;
-        }
-        private float ClampScreenX (float x)
-        {
-            if (x <= 0) return 0;
-            return Math.Min(GetTilemapWidth() - Program.ScreenWidth, x);
-        }
-        private float ClampScreenY (float y)
-        {
-            if (y <= 0) return 0;
-            return Math.Min(GetTilemapHeight() - Program.ScreenHeight, y);
-        }
-        private void FocusOnUser ()
-        {
+            foreach (Drawable d in UITop)
+                ResourceDM.drawables.Remove(d);
+            UITop = new List<Drawable>();
             int WhichUser = CalculateUserTurn();
-            float UserX = user[WhichUser-1].x;
-            float UserY = user[WhichUser-1].y;
-            float _scrollX = UserX - (Program.ScreenWidth / 2);
-            float _scrollY = UserY - (Program.ScreenHeight / 2);
-            float clampX = ClampScreenX(_scrollX);
-            float clampY = ClampScreenY(_scrollY);
-            scrollX = clampX;
-            scrollY = clampY;
-            dm.x = (-clampX);
-            dm.y = (-clampY);
+            Text t_gold = new Text(PlayerList[WhichUser - 1].getCurrentMoney().ToString());
+            Text t_stone = new Text(PlayerList[WhichUser - 1].getCurrentStone().ToString());
+            Text t_food = new Text(PlayerList[WhichUser - 1].getCurrentFood().ToString());
+            Text t_wood = new Text(PlayerList[WhichUser - 1].getCurrentWood().ToString());
+            t_gold.x = GoldIconPos + TextPaddingLeft;
+            t_stone.x = StoneIconPos + TextPaddingLeft;
+            t_food.x = FoodIconPos + TextPaddingLeft;
+            t_wood.x = WoodIconPos + TextPaddingLeft;
+            UITop.Add(t_gold);
+            UITop.Add(t_stone);
+            UITop.Add(t_food);
+            UITop.Add(t_wood);
+            foreach (Drawable d in UITop)
+                ResourceDM.Add(d);
         }
+        /// <summary>
+        /// Allows player movement.
+        /// </summary>
         private void UserDragProcessor ()
         {
-            if (!preprocessingComplete)
+            if (!PreprocComplete)
             {
                 LastPlayerMoveX = 0;
                 LastPlayerMoveY = 0;
-                preprocessingComplete = true;
+                PreprocComplete = true;
                 FirstMoveCheck = false;
             }
-            if (userIDHeld >= 0)
+            if (UserIDHeld >= 0)
             {
                 DisableScrolling = true; // Disable camera movement while moving player.
 
@@ -581,14 +873,14 @@ namespace SK_Strategygame.Scenes.InGame
                 int MinY = PlayerTileYOriginal * 250 - 250;
                 int MaxY = PlayerTileYOriginal * 250 + 250;
 
-                float PlayerOffsetX = (UserMouse.getX()+scrollX-PlayerOriginX);
-                float PlayerOffsetY = (UserMouse.getY()+scrollY-PlayerOriginY);
-                
+                float PlayerOffsetX = (UserMouse.getX() + ScrollX - PlayerOriginX);
+                float PlayerOffsetY = (UserMouse.getY() + ScrollY - PlayerOriginY);
+
                 int DestinationX_Low = (int)(PlayerOriginX + PlayerOffsetX);
                 int DestinationY_Low = (int)(PlayerOriginY + PlayerOffsetY);
 
-                int DestinationX_High = (int)(PlayerOriginX + PlayerOffsetX + user[0].w);
-                int DestinationY_High = (int)(PlayerOriginY + PlayerOffsetY + user[0].h);
+                int DestinationX_High = (int)(PlayerOriginX + PlayerOffsetX + PlayerList[0].w);
+                int DestinationY_High = (int)(PlayerOriginY + PlayerOffsetY + PlayerList[0].h);
 
                 int DestinationTileX = (int)Math.Floor(DestinationX_Low / 250f);
                 int DestinationTileY = (int)Math.Floor(DestinationY_Low / 250f);
@@ -596,18 +888,20 @@ namespace SK_Strategygame.Scenes.InGame
                 int DestinationTileX_High = (int)Math.Floor(DestinationX_High / 250f);
                 int DestinationTileY_High = (int)Math.Floor(DestinationY_High / 250f);
 
-                if ((DestinationTileY-PlayerTileYOriginal != 0 && DestinationTileX-PlayerTileXOriginal != 0)
-                    || (DestinationTileX_High-PlayerTileXOriginal != 0 && (DestinationTileY_High-PlayerTileYOriginal!=0 || DestinationTileY-PlayerTileYOriginal!=0))
-                    || Math.Abs(DestinationTileY-PlayerTileYOriginal) > 1
-                    || Math.Abs(DestinationTileX-PlayerTileXOriginal) > 1
-                    || Math.Abs(DestinationTileY_High-PlayerTileYOriginal) > 1
-                    || Math.Abs(DestinationTileX_High-PlayerTileXOriginal) > 1) // No diagonal movement.
+                if ((DestinationTileY - PlayerTileYOriginal != 0 && DestinationTileX - PlayerTileXOriginal != 0)
+                    || (DestinationTileX_High - PlayerTileXOriginal != 0 && (DestinationTileY_High - PlayerTileYOriginal != 0 || DestinationTileY - PlayerTileYOriginal != 0))
+                    || Math.Abs(DestinationTileY - PlayerTileYOriginal) > 1
+                    || Math.Abs(DestinationTileX - PlayerTileXOriginal) > 1
+                    || Math.Abs(DestinationTileY_High - PlayerTileYOriginal) > 1
+                    || Math.Abs(DestinationTileX_High - PlayerTileXOriginal) > 1
+                    || GetFieldType(new Vertex2(DestinationTileX, DestinationTileY)) == FieldType.Sea
+                    || GetFieldType(new Vertex2(DestinationTileX_High, DestinationTileY_High)) == FieldType.Sea) // No diagonal movement.
                 {
                     // Invalid move. Set back position of player!
                     if (FirstMoveCheck)
                     {
-                        user[userIDHeld].x = LastPlayerMoveX;
-                        user[userIDHeld].y = LastPlayerMoveY;
+                        PlayerList[UserIDHeld].x = LastPlayerMoveX;
+                        PlayerList[UserIDHeld].y = LastPlayerMoveY;
                     }
                 } else // So if only one value changes, allow movement.
                 {
@@ -617,24 +911,18 @@ namespace SK_Strategygame.Scenes.InGame
                     LastPlayerMoveX = NewPlayerX;
                     LastPlayerMoveY = NewPlayerY;
 
-                    user[userIDHeld].x = NewPlayerX;
-                    user[userIDHeld].y = NewPlayerY;
+                    PlayerList[UserIDHeld].x = NewPlayerX;
+                    PlayerList[UserIDHeld].y = NewPlayerY;
                     FirstMoveCheck = true;
-                    PendingRefresh = true;
+                    UIRefreshQueued = true;
                 }
             }
         }
-        private float GetTilemapWidth ()
-        {
-            return (((float)gameField[gameField.Count - 1].getCoordinate().x + 1) * TileSize);
-        }
-        private float GetTilemapHeight ()
-        {
-            return (((float)gameField[gameField.Count - 1].getCoordinate().y + 1) * TileSize);
-        }
+        /// <summary>
+        /// Allows screen to scroll.
+        /// </summary>
         private void ScrollingProcessor ()
         {
-            
             float MouseX = UserMouse.getX();
             float MouseY = UserMouse.getY();
             bool CheckLeft = (MouseX >= 0 && MouseX <= ScrollingEdgeSize);
@@ -642,35 +930,42 @@ namespace SK_Strategygame.Scenes.InGame
             bool CheckRight = (MouseX >= Program.ScreenWidth - ScrollingEdgeSize);
             bool CheckBottom = (MouseY >= Program.ScreenHeight - ScrollingEdgeSize);
 
-            if (CheckLeft && scrollX > 0)
-                scrollX = Math.Max(0,scrollX-ScrollSpeedPerFrame);
+            if (CheckLeft && ScrollX > 0)
+                ScrollX = Math.Max(0,ScrollX-ScrollSpeedPerFrame);
 
-            if (CheckTop && scrollY > 0)
-                scrollY = Math.Max(0, scrollY - ScrollSpeedPerFrame);
+            if (CheckTop && ScrollY > 0)
+                ScrollY = Math.Max(0, ScrollY - ScrollSpeedPerFrame);
 
-            if (CheckRight && scrollX < GetTilemapWidth() - Program.ScreenWidth)
-                scrollX = Math.Min(GetTilemapWidth() - Program.ScreenWidth, scrollX + ScrollSpeedPerFrame);
+            if (CheckRight && ScrollX < GetTilemapWidth() - Program.ScreenWidth)
+                ScrollX = Math.Min(GetTilemapWidth() - Program.ScreenWidth, ScrollX + ScrollSpeedPerFrame);
 
-            if (CheckBottom && scrollY < GetTilemapHeight() - Program.ScreenHeight)
-                scrollY = Math.Min(GetTilemapHeight() - Program.ScreenHeight, scrollY + ScrollSpeedPerFrame);
+            if (CheckBottom && ScrollY < GetTilemapHeight() - Program.ScreenHeight)
+                ScrollY = Math.Min(GetTilemapHeight() - Program.ScreenHeight, ScrollY + ScrollSpeedPerFrame);
 
             if (CheckLeft || CheckTop || CheckRight || CheckBottom)
             {
-                cursor.SetCursor(bCursor.cursortype.scroll);
-                dm.x = -scrollX;
-                dm.y = -scrollY;
+                Cursor.SetCursor(bCursor.cursortype.scroll);
+                MainDM.x = -ScrollX;
+                MainDM.y = -ScrollY;
             } else
             {
-                cursor.SetCursor(bCursor.cursortype.main);
+                Cursor.SetCursor(bCursor.cursortype.main);
             }
         }
 
+        // AlphaGFX Processors
         public override void Draw(GameWindow gw)
         {
-            if (PendingRefresh)
+            if (UIRefreshQueued)
             {
                 RefreshUIElements();
-                PendingRefresh = false;
+                UIRefreshQueued = false;
+            }
+
+            if (ResourceRefreshQueued)
+            {
+                RefreshResourceBar();
+                ResourceRefreshQueued = false;
             }
 
             Program.CalculateFPS();
@@ -679,15 +974,16 @@ namespace SK_Strategygame.Scenes.InGame
                 ScrollingProcessor();
             } else
             {
-                cursor.SetCursor(bCursor.cursortype.main);
+                Cursor.SetCursor(bCursor.cursortype.main);
             }
-            player_dm.x = dm.x;
-            player_dm.y = dm.y;
-            dm.Draw();
-            player_dm.Draw();
-            gameInterface_dm.Draw();
-            cursor_dm.Draw();
-            if (isBeingHeld)
+            PlayerDM.x = MainDM.x;
+            PlayerDM.y = MainDM.y;
+            MainDM.Draw();
+            PlayerDM.Draw();
+            GameInterfaceDM.Draw();
+            ResourceDM.Draw();
+            CursorDM.Draw();
+            if (UserBeingHeld)
             {
                 UserDragProcessor();
                 DisableScrolling = true;
@@ -708,20 +1004,20 @@ namespace SK_Strategygame.Scenes.InGame
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
         public override void OnMouseDown(MouseButtonEventArgs button)
         {
-            gameInterface_dm.OnMouseDown(button);
-            isBeingHeld = true;
-            MouseOriginX = UserMouse.getX()+scrollX;
-            MouseOriginY = UserMouse.getY()+scrollY;
+            GameInterfaceDM.OnMouseDown(button);
+            UserBeingHeld = true;
+            MouseOriginX = UserMouse.getX()+ScrollX;
+            MouseOriginY = UserMouse.getY()+ScrollY;
         }
         public override void OnMouseUp(MouseButtonEventArgs button)
         {
-            gameInterface_dm.OnMouseUp(button);
-            isBeingHeld = false;
-            preprocessingComplete = false;
+            GameInterfaceDM.OnMouseUp(button);
+            UserBeingHeld = false;
+            PreprocComplete = false;
         }
         public override void Update()
         {
-            gameInterface_dm.Update();
+            GameInterfaceDM.Update();
         }
     }
 }
