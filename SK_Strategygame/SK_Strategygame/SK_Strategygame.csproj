@@ -48,17 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Fields\City.cs" />
-    <Compile Include="Domain\Fields\Desert.cs" />
     <Compile Include="Domain\Fields\Field.cs" />
     <Compile Include="Domain\Fields\FieldType.cs" />
-    <Compile Include="Domain\Fields\Forest.cs" />
-    <Compile Include="Domain\Fields\Mountain.cs" />
-    <Compile Include="Domain\Fields\Pasture.cs" />
     <Compile Include="Domain\Fields\PlayField.cs" />
-    <Compile Include="Domain\Fields\Sea.cs" />
     <Compile Include="Domain\Fields\Sizes.cs" />
-    <Compile Include="Domain\Fields\Warrior.cs" />
     <Compile Include="Domain\Player\Player.cs" />
     <Compile Include="Domain\Player\Users.cs" />
     <Compile Include="NotificationBox.cs" />
@@ -205,8 +198,15 @@
     <Content Include="Resources\InGame\UIBottom\Buttons\btn_conquerField_hover.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\InGame\UIBottom\Buttons\btn_createCity.png" />
-    <Content Include="Resources\InGame\UIBottom\Buttons\btn_createCity_hover.png" />
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_createCity.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_createCity_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InGame\UIBottom\Buttons\btn_createCity_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\InGame\UIBottom\Buttons\btn_exitBazaar.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -367,7 +367,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BerkanGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
+    <ProjectReference Include="..\..\..\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
       <Project>{67ae03c9-dcea-4e9b-86aa-9a30516e210f}</Project>
       <Name>AGFXLib</Name>
     </ProjectReference>
