@@ -23,10 +23,16 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         public int Food = 0; // Resources
         public int Wood = 0;
         public int Stone = 0;
+        public int Gold = 0;
         public bool IsCity = false;
         public bool BarracksBuilt = false;
         public int WallPoints = 0;
+        public int WallLevel = 0;
         public int Soldiers = 0;
+
+        public const int MaxWallLevel = 5; // arbitrary value
+        public const int WallUpgrade = 50; // points gained per upgrade
+        public const int SoldierCreationRate = 50;
 
         // What is the ID for?
         public Field(string path, Vertex2 coordinate, FieldType fieldType, int maxSize = 1): base("Resources/InGame/Fields/inpassable/Sea/water_small.png", (float)coordinate.x*250, (float)coordinate.y*250)
@@ -41,13 +47,14 @@ namespace SK_Strategygame.Gameplay.Field_Creation
             switch (fieldType)
             {
                 case FieldType.Forest:
-                    Wood = Program.rd.Next(10, 100) * randSize;
+                    Wood = Program.rd.Next(10, 100) + ((randSize - 1) * 100);
                     break;
                 case FieldType.Pasture:
-                    Food = Program.rd.Next(10, 100) * randSize;
+                    Food = Program.rd.Next(10, 100) + ((randSize - 1) * 100);
                     break;
                 case FieldType.Mountain:
-                    Stone = Program.rd.Next(10, 100) * randSize;
+                    Stone = Program.rd.Next(10, 100) + ((randSize - 1) * 100);
+                    Gold = Program.rd.Next(10, 100) + ((randSize - 1) * 100);
                     break;
             }
         }
