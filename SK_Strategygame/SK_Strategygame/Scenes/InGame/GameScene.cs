@@ -120,10 +120,8 @@ namespace SK_Strategygame.Scenes.InGame
         private const int FoodCost = 100;
         private const int StoneCost = 150;
         private const int WoodCost = 100;
-        private const int NumberOfPlayers = 4;
 
         // Map
-        private const int MapSize = 10; // Squared value. Width and Height of the map.
         private const float TileSize = 250f; // For math.
         public const bool DisableWater = false;
 
@@ -183,11 +181,11 @@ namespace SK_Strategygame.Scenes.InGame
             ResourceDM.w = Program.ScreenWidth;
             ResourceDM.h = Program.ScreenHeight;
             ResourceDM.Add(new Sprite(TopBG, 0, 0));
-            PlayField pf = new PlayField(MapSize); // Generate the map.
+            PlayField pf = new PlayField(UserSettings.MapSize); // Generate the map.
             TilemapSize = pf.getSize();
             Cursor = new bCursor(); // Mouse Cursor
             GameTilemap = pf.getPlayField();
-            Users users = new Users(NumberOfPlayers);
+            Users users = new Users(UserSettings.Players);
             int Team = 1;
             foreach (Player p in users.getPlayers()) // Make the tile the player is sitting on their territory.
             {
@@ -667,6 +665,58 @@ namespace SK_Strategygame.Scenes.InGame
                 GameTilemap[i].Stone += r.Next(0, 10);
                 GameTilemap[i].Wood += r.Next(0, 10);
                 GameTilemap[i].Food += r.Next(0, 10);
+                if (GameTilemap[i].IsCity)
+                {
+                    int TeamID = GameTilemap[i].Team; // <- boop
+                    switch (GameTilemap[i].fieldType)
+                    {
+                        case FieldType.Forest:
+                            if (GameTilemap[i].Wood >= 50)
+                            {
+                                GameTilemap[i].Wood -= 50;
+                                PlayerList[TeamID - 1].increaseWoodAmount(50);
+                            } else
+                            {
+                                PlayerList[TeamID - 1].increaseWoodAmount(GameTilemap[i].Wood);
+                                GameTilemap[i].Wood = 0;
+                            }
+                            break;
+                        case FieldType.Pasture:
+                            if (GameTilemap[i].Food >= 50)
+                            {
+                                GameTilemap[i].Food -= 50;
+                                PlayerList[TeamID - 1].increaseFoodAmount(50);
+                            }
+                            else
+                            {
+                                PlayerList[TeamID - 1].increaseWoodAmount(GameTilemap[i].Food);
+                                GameTilemap[i].Food = 0;
+                            }
+                            break;
+                        case FieldType.Mountain:
+                            if (GameTilemap[i].Gold >= 25) // Gold and Stone auto-harvest = 25 each, just to make it fair
+                            {
+                                GameTilemap[i].Gold -= 25;
+                                PlayerList[TeamID - 1].increaseMoneyAmount(25);
+                            }
+                            else
+                            {
+                                PlayerList[TeamID - 1].increaseMoneyAmount(GameTilemap[i].Gold);
+                                GameTilemap[i].Gold = 0;
+                            }
+                            if (GameTilemap[i].Stone >= 25)
+                            {
+                                GameTilemap[i].Stone -= 25;
+                                PlayerList[TeamID - 1].increaseStoneAmount(25);
+                            }
+                            else
+                            {
+                                PlayerList[TeamID - 1].increaseStoneAmount(GameTilemap[i].Stone);
+                                GameTilemap[i].Stone = 0;
+                            }
+                            break;
+                    }
+                }
             }
         }
 
@@ -798,7 +848,7 @@ namespace SK_Strategygame.Scenes.InGame
         {
             Dictionary<int, int> OperationsRequested = new Dictionary<int, int>();
             Dictionary<int, Vertex2> PlayerPositions = new Dictionary<int, Vertex2>();
-            for (int i=0; i<NumberOfPlayers; i++)
+            for (int i=0; i<UserSettings.Players; i++)
             {
                 PlayerPositions.Add(i, CalculateUserTilePosition(i));
             }

@@ -67,7 +67,7 @@ namespace SK_Strategygame.Scenes
 
         private void Click_ButtonOptions(object s, MouseArgs k)
         {
-            nb.Notify("Options doesn't have a functionality yet", "Coming soon...", NotificationBox.types.OKOnly);
+            Program.aw.scene = new OptionsScene();
         }
 
         private void Click_ButtonNewGame(object s, MouseArgs k)
