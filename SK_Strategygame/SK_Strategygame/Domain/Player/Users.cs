@@ -102,11 +102,11 @@ namespace SK_Strategygame.Domain.Player
                     }
                 }
                 if (i == 0) 
-                    userList.Add(new Player(User1, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 1500, 1050, 1500, 1500));
+                    userList.Add(new Player(User1, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 100, 100, 100, 100));
                 else if (i == 1)
-                    userList.Add(new Player(User2, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 1500, 1050, 1050, 1500));
+                    userList.Add(new Player(User2, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 100, 100, 100, 100));
                 else if (i == 2)
-                    userList.Add(new Player(User3, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 1050, 1500, 1050, 1050));
+                    userList.Add(new Player(User3, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 100, 100, 100, 100));
                 else if (i == 3)
                     userList.Add(new Player(User4, new Vertex2(randomPositionX, randomPositionY), (randomPositionX + "" + randomPositionY), 100, 100, 100, 100));
             }

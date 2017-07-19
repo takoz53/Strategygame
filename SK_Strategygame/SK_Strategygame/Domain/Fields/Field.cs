@@ -26,13 +26,20 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         public int Gold = 0;
         public bool IsCity = false;
         public bool BarracksBuilt = false;
-        public int WallPoints = 0;
+        public int WallPoints = 100; // Spawn cities with 100 HP
         public int WallLevel = 0;
         public int Soldiers = 0;
 
         public const int MaxWallLevel = 5; // arbitrary value
-        public const int WallUpgrade = 50; // points gained per upgrade
-        public const int SoldierCreationRate = 50;
+        public const int WallUpgrade = 100; // We give 100 points for upgrading walls as it is limited. Soldiers can just be created over and over.
+        public const int SoldierCreationRate = 25;
+
+         /* Gold, Wood, Stone, Food */
+        public readonly static int[] Resources_BuildBarracks = new int[] { 0, 50, 50, 50 }; // 3 Turns
+        public readonly static int[] Resources_BuildWall = new int[] { 0, 50, 50, 0 }; // 2 Turns
+        public readonly static int[] Resources_UpgradeWall = new int[] { 0, 50, 100, 0 }; // 3 Turns
+        public readonly static int[] Resources_CreateSoldiers = new int[] { 0, 0, 0, 50 }; // 1 Turn
+
 
         // What is the ID for?
         public Field(string path, Vertex2 coordinate, FieldType fieldType, int maxSize = 1): base("Resources/InGame/Fields/inpassable/Sea/water_small.png", (float)coordinate.x*250, (float)coordinate.y*250)
