@@ -1445,7 +1445,6 @@ namespace SK_Strategygame.Scenes.InGame
         private void TryConquer ()
         {
             RecalculateTilemapOccupancy();
-            Console.WriteLine("Testing Conquer Mode");
             float MouseX = UserMouse.getX();
             float MouseY = UserMouse.getY();
             int tDestinationX = (int)Math.Floor((MouseX + ScrollX) / TileSize);
@@ -1466,6 +1465,8 @@ namespace SK_Strategygame.Scenes.InGame
                     if (f.Team == CalculateUserTurn()) // Why conquer your own things?
                     {
                         Console.WriteLine("[Conquer] Cannot conquer your own territory. (1)");
+                        NotificationBox nb = new NotificationBox();
+                        nb.Notify("[Conquer] Cannot conquer your own territory. (1)", "What are you trying to do??", NotificationBox.types.OKOnly);
                         ConquerMode = false;
                         return;
                     }
@@ -1474,6 +1475,8 @@ namespace SK_Strategygame.Scenes.InGame
                         if (f.Team == 0 && f.OccupiedByTeam == 0) // Unowned
                         {
                             Console.WriteLine("[Conquer] Conquered unowned territory. (2) Set team to: " + (Team)CalculateUserTurn());
+                            NotificationBox nb = new NotificationBox();
+                            nb.Notify("[Conquer] Conquered unowned territory.", "Conquered! Victory!", NotificationBox.types.OKOnly);
                             Conquer(new Vertex2(tDestinationX, tDestinationY), CalculateUserTurn());
                             UIRefreshQueued = true;
                             NewTurn = true;
@@ -1483,6 +1486,8 @@ namespace SK_Strategygame.Scenes.InGame
                         } else if ((f.Team == CalculateUserTurn() || f.Team == 0) && f.OccupiedByTeam == CalculateUserTurn())
                         {
                             Console.WriteLine("[Conquer] Conquered unowned territory. (-1) Set team to: " + (Team)CalculateUserTurn());
+                            NotificationBox nb = new NotificationBox();
+                            nb.Notify("[Conquer] Conquered unowned territory. (-1)", "Conquered! Victory!", NotificationBox.types.OKOnly);
                             Conquer(new Vertex2(tDestinationX, tDestinationY), CalculateUserTurn());
                             UIRefreshQueued = true;
                             NewTurn = true;
@@ -1495,6 +1500,8 @@ namespace SK_Strategygame.Scenes.InGame
                             if (f.Soldiers == 0 && f.IsCity == false)
                             {
                                 Console.WriteLine("[Conquer] Conquered unprotected territory. (4)");
+                                NotificationBox nb = new NotificationBox();
+                                nb.Notify("[Conquer] Conquered unprotected territory. (4)", "Conquered! Victory!", NotificationBox.types.OKOnly);
                                 // If the territory is unprotected, allow the conquer with no struggle.
                                 Conquer(new Vertex2(tDestinationX, tDestinationY), CalculateUserTurn());
                                 UIRefreshQueued = true;
@@ -1512,6 +1519,8 @@ namespace SK_Strategygame.Scenes.InGame
                                 if (HitPoints - fo.Soldiers <= 0) // You should be able to destroy that city in that turn.
                                 {
                                     Console.WriteLine("[Conquer] Conquered city. (5)");
+                                    NotificationBox nb = new NotificationBox();
+                                    nb.Notify("[Conquer] Conquered city. (5)", "Conquered! Victory!", NotificationBox.types.OKOnly);
                                     f.OccupiedByTeam = CalculateUserTurn();
                                     f.Team = CalculateUserTurn();
                                     f.IsCity = false;
@@ -1524,6 +1533,8 @@ namespace SK_Strategygame.Scenes.InGame
                                     ConquerMode = false;
                                 } else
                                 {
+                                    NotificationBox nb = new NotificationBox();
+                                    nb.Notify("[Conquer] Damage taken. (5)", "Utterly defeated.", NotificationBox.types.OKOnly);
                                     Console.WriteLine("[Conquer] Damage taken. (5)");
                                     if (f.Soldiers > Damage)
                                     {
