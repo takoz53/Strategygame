@@ -4,6 +4,7 @@ using AGFXLib.Scenes;
 using AGFXLib.Drawables;
 using SK_Strategygame.UI;
 using SK_Strategygame.Scenes.MainMenu;
+using SK_Strategygame.Scenes.InGame;
 
 namespace SK_Strategygame.Scenes
 {
@@ -18,7 +19,6 @@ namespace SK_Strategygame.Scenes
         public MainMenuScene()
         {
             // init code
-            Console.WriteLine("Initializing MainMenuScene");
             dm = new DrawManager();
             dm.w = Program.ScreenWidth;
             dm.h = Program.ScreenHeight;
@@ -72,7 +72,7 @@ namespace SK_Strategygame.Scenes
 
         private void Click_ButtonNewGame(object s, MouseArgs k)
         {
-            Program.aw.scene = new HostJoin();
+            Program.aw.scene = new GameScene();
         }
 
         public override void Draw(GameWindow gw)
@@ -92,7 +92,7 @@ namespace SK_Strategygame.Scenes
         {
             if(key.Key == OpenTK.Input.Key.N)
             {
-                Program.aw.scene = new HostJoin();
+                Program.aw.scene = new GameScene();
             }
             if(key.Key == OpenTK.Input.Key.O)
             {

@@ -62,7 +62,6 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         {
             return fields;
         }
-
         public int getSize()
         {
             return playfieldsize;

@@ -123,7 +123,7 @@ namespace SK_Strategygame.Scenes.InGame
         private const int NumberOfPlayers = 4;
 
         // Map
-        private const int MapSize = 7; // Squared value. Width and Height of the map.
+        private const int MapSize = 10; // Squared value. Width and Height of the map.
         private const float TileSize = 250f; // For math.
         public const bool DisableWater = false;
 
@@ -151,7 +151,7 @@ namespace SK_Strategygame.Scenes.InGame
         private const string ResourceRemaining = "{0} {1} left in field"; // i.e. 50 Wood left in field.
 
             // ** We did readonly static to avoid being caught by Expression must be constant.
-        private readonly static string[] NotEnoughMoney = new string[] { "Not enough money!", "Oops" };
+        private readonly static string[] NotEnoughMoney = new string[] { "You don't have enough money!", "Not enough money!" };
         private readonly static Vertex2 GameInterfaceStartPosition = new Vertex2(440, 850); // X , Y.
 
         // Initialization constructor.
@@ -329,6 +329,7 @@ namespace SK_Strategygame.Scenes.InGame
                     SubtractResources(Field.Resources_BuildWall);
                     currentTile.WallLevel++;
                     currentTile.WallPoints += Field.WallUpgrade;
+                    currentTile.setTexture("Resources/InGame/Fields/Cities/city_medium.png");
                     UIRefreshQueued = true;
                     ResourceRefreshQueued = true;
                     TurnOver = true;
@@ -353,7 +354,7 @@ namespace SK_Strategygame.Scenes.InGame
                 else
                 {
                     NotificationBox nb = new NotificationBox();
-                    nb.Notify("Not enough Stones or Wood ;_;", "Not enough Resources!", NotificationBox.types.OKOnly);
+                    nb.Notify("Not enough Stones or Wood!", "Not enough Resources!", NotificationBox.types.OKOnly);
                 }
             }
         }
@@ -369,6 +370,7 @@ namespace SK_Strategygame.Scenes.InGame
                     SubtractResources(Field.Resources_UpgradeWall);
                     currentTile.WallLevel++;
                     currentTile.WallPoints += Field.WallUpgrade;
+                    currentTile.setTexture("Resources/InGame/Fields/Cities/city_large.png");
                     UIRefreshQueued = true;
                     ResourceRefreshQueued = true;
                     TurnOver = true;
@@ -411,7 +413,7 @@ namespace SK_Strategygame.Scenes.InGame
             
             int WhichUser = CalculateUserTurn();
             int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
-            if (AmountOfGold >= WoodCost) // arbitrary amount
+            if (AmountOfGold >= WoodCost)
             {
                 PlayerList[WhichUser - 1].decreaseMoneyAmount(WoodCost);
                 PlayerList[WhichUser - 1].increaseWoodAmount(BuyAmount);
@@ -433,7 +435,7 @@ namespace SK_Strategygame.Scenes.InGame
         {
             int WhichUser = CalculateUserTurn();
             int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
-            if (AmountOfGold >= StoneCost) // arbitrary amount
+            if (AmountOfGold >= StoneCost)
             {
                 PlayerList[WhichUser - 1].decreaseMoneyAmount(StoneCost);
                 PlayerList[WhichUser - 1].increaseStoneAmount(BuyAmount);
@@ -457,7 +459,7 @@ namespace SK_Strategygame.Scenes.InGame
         {
             int WhichUser = CalculateUserTurn();
             int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
-            if (AmountOfGold >= FoodCost) // arbitrary amount
+            if (AmountOfGold >= FoodCost)
             {
                 PlayerList[WhichUser - 1].decreaseMoneyAmount(FoodCost);
                 PlayerList[WhichUser - 1].increaseFoodAmount(BuyAmount);
@@ -872,7 +874,7 @@ namespace SK_Strategygame.Scenes.InGame
             {
                 GameTilemap[found].IsCity = true;
                 GameTilemap[found].Team = TeamID;
-                NewTurn = true; // This refreshes the map display. We'll see.????
+                NewTurn = true;
                 UIRefreshQueued = true;
                 GameTilemap[found].setTexture("Resources/InGame/Fields/Cities/city_small.png");
             }
