@@ -92,7 +92,7 @@ namespace SK_Strategygame.Scenes
         {
             if(key.Key == OpenTK.Input.Key.N)
             {
-                Program.aw.scene = new HostJoin();
+                Program.aw.scene = new GameScene();
             }
             if(key.Key == OpenTK.Input.Key.O)
             {

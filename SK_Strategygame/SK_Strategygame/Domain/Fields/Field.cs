@@ -30,7 +30,7 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         public int WallLevel = 0;
         public int Soldiers = 0;
 
-        public const int MaxWallLevel = 5; // arbitrary value
+        public const int MaxWallLevel = 5;
         public const int WallUpgrade = 100; // We give 100 points for upgrading walls as it is limited. Soldiers can just be created over and over.
         public const int SoldierCreationRate = 25;
 
@@ -40,8 +40,6 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         public readonly static int[] Resources_UpgradeWall = new int[] { 0, 50, 100, 0 }; // 3 Turns
         public readonly static int[] Resources_CreateSoldiers = new int[] { 0, 0, 0, 50 }; // 1 Turn
 
-
-        // What is the ID for?
         public Field(string path, Vertex2 coordinate, FieldType fieldType, int maxSize = 1): base("Resources/InGame/Fields/inpassable/Sea/water_small.png", (float)coordinate.x*250, (float)coordinate.y*250)
         {
             this.coordinate = coordinate;

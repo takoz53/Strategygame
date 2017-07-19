@@ -58,14 +58,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\InGame\GameScene.cs" />
-    <Compile Include="Scenes\LBTestScene.cs" />
     <Compile Include="Scenes\MainMenu\MainMenuScene.cs" />
     <Compile Include="Scenes\MainMenu\OptionsScene.cs" />
     <Compile Include="UI\bButton.cs" />
     <Compile Include="UI\bCursor.cs" />
-    <Compile Include="UI\bListbox.cs" />
-    <Compile Include="UI\bListboxEntry.cs" />
-    <Compile Include="UI\bListboxScrollbar.cs" />
     <Compile Include="UI\ButtonType.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -321,18 +317,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\TeamHighlight\team_yellow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cursors\Cursor_Attack.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cursors\Cursor_Attack_Confirm.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cursors\Cursor_Build.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cursors\Cursor_Build_Confirm.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Cursors\Cursor_Main.png">
