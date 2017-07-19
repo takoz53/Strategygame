@@ -31,16 +31,29 @@ namespace SK_Strategygame.Gameplay.Field_Creation
                 {
                     double fieldTypeRandom = r.NextDouble();
 
-                    if (fieldTypeRandom <= 0.30) //30% Chance for Forests 0 - 0.3 incl;
-                        fields.Add(new Field(forestlink, new Vertex2(x, y), FieldType.Forest, 3));
-                    else if(fieldTypeRandom > 0.30 && fieldTypeRandom <= 0.41) //10% Chance for Seas
-                        fields.Add(new Field(sealink, new Vertex2(x, y), FieldType.Sea,3));
-                    else if(fieldTypeRandom > 0.41 && fieldTypeRandom <= 0.71) //30% Chance for Pasture
-                        fields.Add(new Field(pasturelink, new Vertex2(x, y), FieldType.Pasture,3));
-                    else if( fieldTypeRandom > 0.71 && fieldTypeRandom <= 0.96) //25% Chance for Mountains
-                        fields.Add(new Field(mountainlink, new Vertex2(x, y), FieldType.Mountain,3));
-                    else if(fieldTypeRandom > 0.96 && fieldTypeRandom <= 1) //5% Chance for Deserts
-                        fields.Add(new Field(desertlink, new Vertex2(x, y), FieldType.Desert));
+                    if (!Scenes.InGame.GameScene.DisableWater)
+                    {
+                        if (fieldTypeRandom <= 0.30) //30% Chance for Forests 0 - 0.3 incl;
+                            fields.Add(new Field(forestlink, new Vertex2(x, y), FieldType.Forest, 3));
+                        else if (fieldTypeRandom > 0.30 && fieldTypeRandom <= 0.41) //10% Chance for Seas
+                            fields.Add(new Field(sealink, new Vertex2(x, y), FieldType.Sea, 3));
+                        else if (fieldTypeRandom > 0.41 && fieldTypeRandom <= 0.71) //30% Chance for Pasture
+                            fields.Add(new Field(pasturelink, new Vertex2(x, y), FieldType.Pasture, 3));
+                        else if (fieldTypeRandom > 0.71 && fieldTypeRandom <= 0.96) //25% Chance for Mountains
+                            fields.Add(new Field(mountainlink, new Vertex2(x, y), FieldType.Mountain, 3));
+                        else if (fieldTypeRandom > 0.96 && fieldTypeRandom <= 1) //5% Chance for Deserts
+                            fields.Add(new Field(desertlink, new Vertex2(x, y), FieldType.Desert));
+                    } else
+                    {
+                        if (fieldTypeRandom <= 0.41) //30% Chance for Forests 0 - 0.41 incl;
+                            fields.Add(new Field(forestlink, new Vertex2(x, y), FieldType.Forest, 3));
+                        else if (fieldTypeRandom > 0.41 && fieldTypeRandom <= 0.71) //30% Chance for Pasture
+                            fields.Add(new Field(pasturelink, new Vertex2(x, y), FieldType.Pasture, 3));
+                        else if (fieldTypeRandom > 0.71 && fieldTypeRandom <= 0.96) //25% Chance for Mountains
+                            fields.Add(new Field(mountainlink, new Vertex2(x, y), FieldType.Mountain, 3));
+                        else if (fieldTypeRandom > 0.96 && fieldTypeRandom <= 1) //5% Chance for Deserts
+                            fields.Add(new Field(desertlink, new Vertex2(x, y), FieldType.Desert));
+                    }
                 }
             }
         }

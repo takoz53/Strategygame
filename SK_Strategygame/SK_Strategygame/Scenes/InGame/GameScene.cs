@@ -29,12 +29,11 @@ namespace SK_Strategygame.Scenes.InGame
         public static int TilemapSize; // Size of the play field.
         public static List<Field> GameTilemap; // Tilemap data.
         public List<Player> PlayerList; // Player List
-        public DrawManager MainDM, CursorDM, GameInterfaceDM, PlayerDM, ResourceDM;
+        public DrawManager MainDM, CursorDM, GameInterfaceDM, PlayerDM, ResourceDM, MapHighlightDM, SoldierMoveHighlightDM;
         public bCursor Cursor; // Mouse Cursor object.
 
         // Game Mechanics
-        public bool AlreadyHarvested = false; // If the user has already harvested this turn.
-        public bool AlreadyUpgraded = false; // Only allow 1 upgrade per turn for walls
+        public bool TurnOver = false;
         public int BazaarBoughtCount = 0; // Make sure the user only buys X amount per turn.
         public int TurnID = 1; // Current Turn
 
@@ -47,6 +46,10 @@ namespace SK_Strategygame.Scenes.InGame
         public bool PreprocComplete = false; // U.I. refresh calculations.
         public bool DisableScrolling = false; // To prevent scrolling when player is being moved.
         public bool FirstMoveCheck = false; // Fixes a bug related to player movement.
+        public bool SoldierMoveMode = false;
+        public bool ConquerMode = false;
+        public Vertex2 SoldierOriginTile = new Vertex2(0, 0);
+        public Vertex2 SoldierDestinationTile = new Vertex2(0, 0);
         public float MouseOriginX = 0; // Record the position of the mouse when the click starts.
         public float MouseOriginY = 0;
         public float PlayerOriginX = 0; // Allows us to track the current/previous player position to prevent excessive movement.
@@ -60,6 +63,7 @@ namespace SK_Strategygame.Scenes.InGame
         public List<Drawable> UIText = new List<Drawable>();  // We will update this per turn
         public List<Drawable> MapUI = new List<Drawable>(); // For highlights.
         public List<Drawable> UITop = new List<Drawable>();
+        public List<Drawable> SoldierUI = new List<Drawable>(); // Soldier move highlights
 
         // Pre-initialized Sprites
         public Sprite Sprite_GoldIcon = new Sprite(GoldIcon, GoldIconPos, 0);
@@ -67,7 +71,7 @@ namespace SK_Strategygame.Scenes.InGame
         public Sprite Sprite_StoneIcon = new Sprite(StoneIcon, StoneIconPos, 0);
         public Sprite Sprite_FoodIcon = new Sprite(FoodIcon, FoodIconPos, 0);
         public Sprite Sprite_SoldierIcon = new Sprite(SoldierIcon, SoldierIconPos, 0);
-        public Sprite Sprite_DisabledGold = new Sprite(ButtonType.GetPath(ButtonType.HarvestGold, false, true), ButtonStartPosition-184, ButtonYStartPosition);
+        public Sprite Sprite_DisabledGold = new Sprite(ButtonType.GetPath(ButtonType.HarvestGold, false, true), ButtonStartPosition-184, ButtonYStartPosition + ButtonMarginY * 2);
         public Sprite Sprite_DisabledStone = new Sprite(ButtonType.GetPath(ButtonType.HarvestStone, false, true), ButtonStartPosition, ButtonYStartPosition);
         public Sprite Sprite_DisabledWood = new Sprite(ButtonType.GetPath(ButtonType.HarvestWood, false, true), ButtonStartPosition, ButtonYStartPosition);
         public Sprite Sprite_DisabledFood = new Sprite(ButtonType.GetPath(ButtonType.HarvestFood, false, true), ButtonStartPosition, ButtonYStartPosition);
@@ -94,6 +98,9 @@ namespace SK_Strategygame.Scenes.InGame
         public bButton Button_UpgradeWall = new bButton(ButtonType.GetPath(ButtonType.UpgradeWall, false), ButtonType.GetPath(ButtonType.UpgradeWall, true), 0, 0);
         public bButton Button_CreateSoldiers = new bButton(ButtonType.GetPath(ButtonType.CreateSoldiers, false), ButtonType.GetPath(ButtonType.CreateSoldiers, true), 0, 0);
         public bButton Button_MoveSoldiers = new bButton(ButtonType.GetPath(ButtonType.MoveSoldiers, false), ButtonType.GetPath(ButtonType.MoveSoldiers, true), 0, 0);
+        public bButton Button_Conquer = new bButton(ButtonType.GetPath(ButtonType.Conquer, false), ButtonType.GetPath(ButtonType.Conquer, true), 0, 0);
+        public bButton Button_ConquerB = new bButton(ButtonType.GetPath(ButtonType.Conquer, false), ButtonType.GetPath(ButtonType.Conquer, true), 0, 0); // This one is moved down for cities.
+
         // *** Configuration ***
 
         // Files
@@ -116,8 +123,9 @@ namespace SK_Strategygame.Scenes.InGame
         private const int NumberOfPlayers = 4;
 
         // Map
-        private const int MapSize = 10; // Squared value. Width and Height of the map.
+        private const int MapSize = 7; // Squared value. Width and Height of the map.
         private const float TileSize = 250f; // For math.
+        public const bool DisableWater = false;
 
         // U.I. Top
         private const int GoldIconPos = 0;
@@ -159,6 +167,12 @@ namespace SK_Strategygame.Scenes.InGame
             CursorDM = new DrawManager();
             CursorDM.w = Program.ScreenHeight;
             CursorDM.h = Program.ScreenHeight;
+            MapHighlightDM = new DrawManager();
+            MapHighlightDM.w = Program.ScreenWidth;
+            MapHighlightDM.h = Program.ScreenHeight;
+            SoldierMoveHighlightDM = new DrawManager();
+            SoldierMoveHighlightDM.w = Program.ScreenWidth;
+            SoldierMoveHighlightDM.h = Program.ScreenHeight;
             GameInterfaceDM = new DrawManager();
             GameInterfaceDM.w = Program.ScreenWidth;
             GameInterfaceDM.h = Program.ScreenHeight;
@@ -198,52 +212,58 @@ namespace SK_Strategygame.Scenes.InGame
             
             Button_HarvestStone.x = ButtonStartPosition;
             Button_HarvestStone.y = ButtonYStartPosition;
-            Button_HarvestStone.OnClick += HarvestStone;
+            Button_HarvestStone.OnClick += Button_HarvestStone_OnClick;
             Button_HarvestWood.x = ButtonStartPosition;
             Button_HarvestWood.y = ButtonYStartPosition;
-            Button_HarvestWood.OnClick += HarvestWood;
+            Button_HarvestWood.OnClick += Button_HarvestWood_OnClick;
             Button_HarvestFood.x = ButtonStartPosition;
             Button_HarvestFood.y = ButtonYStartPosition;
-            Button_HarvestFood.OnClick += HarvestFood;
+            Button_HarvestFood.OnClick += Button_HarvestFood_OnClick;
             Button_HarvestGold.x = ButtonStartPosition - 184;
-            Button_HarvestGold.y = ButtonYStartPosition;
-            Button_HarvestGold.OnClick += HarvestGold;
+            Button_HarvestGold.y = ButtonYStartPosition + ButtonMarginY * 2;
+            Button_HarvestGold.OnClick += Button_HarvestGold_OnClick;
             Button_AccessBazaar.x = ButtonStartPosition;
             Button_AccessBazaar.y = ButtonYStartPosition;
-            Button_AccessBazaar.OnClick += AccessBazaar;
+            Button_AccessBazaar.OnClick += Button_AccessBazaar_OnClick;
             Button_ExitBazaar.x = ButtonStartPosition;
             Button_ExitBazaar.y = ButtonYStartPosition + ButtonMarginY * 3;
-            Button_ExitBazaar.OnClick += ExitBazaar;
+            Button_ExitBazaar.OnClick += Button_ExitBazaar_OnClick;
             Button_BuyStone.x = ButtonStartPosition;
             Button_BuyStone.y = ButtonYStartPosition;
-            Button_BuyStone.OnClick += BuyStone;
+            Button_BuyStone.OnClick += Button_BuyStone_OnClick;
             Button_BuyWood.x = ButtonStartPosition;
             Button_BuyWood.y = ButtonYStartPosition + ButtonMarginY;
-            Button_BuyWood.OnClick += BuyWood;
+            Button_BuyWood.OnClick += Button_BuyWood_OnClick;
             Button_BuyFood.x = ButtonStartPosition;
             Button_BuyFood.y = ButtonYStartPosition + ButtonMarginY * 2;
-            Button_BuyFood.OnClick += BuyFood;
+            Button_BuyFood.OnClick += Button_BuyFood_OnClick;
             Button_NextRound.x = ButtonStartPosition + 164 - 73;
             Button_NextRound.y = NextRoundButtonY;
-            Button_NextRound.OnClick += NextRound;
-            Button_CreateCity.OnClick += CreateCity;
+            Button_NextRound.OnClick += Button_NextRound_OnClick;
+            Button_CreateCity.OnClick += Button_CreateCity_OnClick;
             Button_CreateCity.x = ButtonStartPosition;
             Button_CreateCity.y = ButtonYStartPosition + ButtonMarginY;
             Button_CreateBarracks.x = ButtonStartPosition;
             Button_CreateBarracks.y = ButtonYStartPosition;
-            Button_CreateBarracks.OnClick += CreateBarracks;
+            Button_CreateBarracks.OnClick += Button_CreateBarracks_OnClick;
             Button_CreateWall.x = ButtonStartPosition - 184;
             Button_CreateWall.y = ButtonYStartPosition;
-            Button_CreateWall.OnClick += CreateWall;
+            Button_CreateWall.OnClick += Button_CreateWall_OnClick;
             Button_UpgradeWall.x = ButtonStartPosition - 184;
             Button_UpgradeWall.y = ButtonYStartPosition; // Same Y as Create because we'll swap buttons.
             Button_UpgradeWall.OnClick += UpgradeWall;
             Button_CreateSoldiers.x = ButtonStartPosition;
             Button_CreateSoldiers.y = ButtonYStartPosition + ButtonMarginY;
-            Button_CreateSoldiers.OnClick += CreateSoldiers;
+            Button_CreateSoldiers.OnClick += Button_CreateSoldiers_OnClick;
             Button_MoveSoldiers.x = ButtonStartPosition - 184;
             Button_MoveSoldiers.y = ButtonYStartPosition + ButtonMarginY;
-
+            Button_MoveSoldiers.OnClick += Button_MoveSoldiers_OnClick;
+            Button_Conquer.x = ButtonStartPosition - 184;
+            Button_Conquer.y = ButtonYStartPosition;
+            Button_Conquer.OnClick += Button_Conquer_OnClick;
+            Button_ConquerB.x = ButtonStartPosition - 184;
+            Button_ConquerB.y = ButtonYStartPosition + ButtonMarginY*2;
+            Button_ConquerB.OnClick += Button_Conquer_OnClick;
             CursorDM.Add(Cursor);
             RefreshTurn();
             RefreshUIElements();
@@ -251,56 +271,84 @@ namespace SK_Strategygame.Scenes.InGame
             RecalculateTilemapOccupancy();
         }
 
-        // Button Callbacks
-        private void MoveSoldiers (object s, MouseArgs e)
+        private bool HasResources (int[] ResourceRequirement)
         {
-
+            Player p = PlayerList[CalculateUserTurn() - 1];
+            return ((p.getCurrentMoney() >= ResourceRequirement[0])
+                && (p.getCurrentWood() >= ResourceRequirement[1])
+                && (p.getCurrentStone() >= ResourceRequirement[2])
+                && (p.getCurrentFood() >= ResourceRequirement[3]));
         }
 
-        private void CreateSoldiers (object s, MouseArgs e)
+        private void SubtractResources (int[] ResourceRequirement)
+        {
+            PlayerList[CalculateUserTurn() - 1].decreaseMoneyAmount(ResourceRequirement[0]);
+            PlayerList[CalculateUserTurn() - 1].decreaseWoodAmount(ResourceRequirement[1]);
+            PlayerList[CalculateUserTurn() - 1].decreaseStoneAmount(ResourceRequirement[2]);
+            PlayerList[CalculateUserTurn() - 1].decreaseFoodAmount(ResourceRequirement[3]);
+        }
+
+        // Button Callbacks
+        private void Button_MoveSoldiers_OnClick (object s, MouseArgs e)
+        {
+            SoldierOriginTile = CalculateUserTilePosition(CalculateUserTurn() - 1);
+            SoldierMoveMode = true;
+        }
+
+        private void Button_Conquer_OnClick (object s, MouseArgs e)
+        {
+            SoldierOriginTile = CalculateUserTilePosition(CalculateUserTurn() - 1);
+            ConquerMode = true;
+        }
+
+        private void Button_CreateSoldiers_OnClick (object s, MouseArgs e)
         {
             Field currentTile = GameTilemap[GetTileID(CalculateUserTilePosition(CalculateUserTurn() - 1))];
             int whichUser = CalculateUserTurn() - 1;
             if (true)
             {
-                if (PlayerList[whichUser].getCurrentMoney() > 0)
+                if (HasResources(Field.Resources_CreateSoldiers))
                 {
-                    PlayerList[whichUser].decreaseMoneyAmount(1); // arbitrary
+                    SubtractResources(Field.Resources_CreateSoldiers);
                     currentTile.Soldiers += Field.SoldierCreationRate;
                     UIRefreshQueued = true;
                     ResourceRefreshQueued = true;
+                    TurnOver = true;
                 }
             }
         }
         
-        private void CreateWall(object s, MouseArgs e)
+        private void Button_CreateWall_OnClick(object s, MouseArgs e)
         {
             Field currentTile = GameTilemap[GetTileID(CalculateUserTilePosition(CalculateUserTurn() - 1))];
             int whichUser = CalculateUserTurn()-1;
             if (currentTile.WallLevel == 0)
             {
-                if (PlayerList[whichUser].getCurrentMoney() > 0)
+                if (HasResources(Field.Resources_BuildWall))
                 {
-                    PlayerList[whichUser].decreaseMoneyAmount(1); // arbitrary
+                    SubtractResources(Field.Resources_BuildWall);
                     currentTile.WallLevel++;
                     currentTile.WallPoints += Field.WallUpgrade;
                     UIRefreshQueued = true;
+                    ResourceRefreshQueued = true;
+                    TurnOver = true;
                 }
             }
         }
 
-        private void CreateBarracks(object s, MouseArgs e)
+        private void Button_CreateBarracks_OnClick(object s, MouseArgs e)
         {
             Field currentTile = GameTilemap[GetTileID(CalculateUserTilePosition(CalculateUserTurn() - 1))];
             int whichUser = CalculateUserTurn() - 1;
             if (currentTile.BarracksBuilt == false)
             {
-                if (PlayerList[whichUser].getCurrentWood() >= 200 && PlayerList[whichUser].getCurrentStone() >= 150)
+                if (HasResources(Field.Resources_BuildBarracks))
                 {
-                    PlayerList[whichUser].decreaseStoneAmount(150);
-                    PlayerList[whichUser].decreaseWoodAmount(200);
+                    SubtractResources(Field.Resources_BuildBarracks);
                     currentTile.BarracksBuilt = true; // Barracks => Soldier Creation
                     UIRefreshQueued = true;
+                    ResourceRefreshQueued = true;
+                    TurnOver = true;
                 }
                 else
                 {
@@ -316,12 +364,14 @@ namespace SK_Strategygame.Scenes.InGame
             int whichUser = CalculateUserTurn() - 1;
             if (currentTile.WallLevel < Field.MaxWallLevel)
             {
-                if (PlayerList[whichUser].getCurrentStone() > 200)
+                if (HasResources(Field.Resources_UpgradeWall))
                 {
-                    PlayerList[whichUser].decreaseStoneAmount(200); // arbitrary
+                    SubtractResources(Field.Resources_UpgradeWall);
                     currentTile.WallLevel++;
                     currentTile.WallPoints += Field.WallUpgrade;
                     UIRefreshQueued = true;
+                    ResourceRefreshQueued = true;
+                    TurnOver = true;
                 }
                 else
                 {
@@ -336,7 +386,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void AccessBazaar(object s, MouseArgs e)
+        private void Button_AccessBazaar_OnClick(object s, MouseArgs e)
         {
             InBazaar = true;
             UIRefreshQueued = true;
@@ -346,7 +396,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void ExitBazaar(object s, MouseArgs e)
+        private void Button_ExitBazaar_OnClick(object s, MouseArgs e)
         {
             InBazaar = false;
             UIRefreshQueued = true;
@@ -356,7 +406,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void BuyWood (object s, MouseArgs e)
+        private void Button_BuyWood_OnClick (object s, MouseArgs e)
         {
             
             int WhichUser = CalculateUserTurn();
@@ -379,7 +429,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void BuyStone(object s, MouseArgs e)
+        private void Button_BuyStone_OnClick(object s, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
             int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
@@ -403,7 +453,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void BuyFood(object s, MouseArgs e)
+        private void Button_BuyFood_OnClick(object s, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
             int AmountOfGold = PlayerList[WhichUser - 1].getCurrentMoney();
@@ -426,7 +476,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void HarvestGold(object sender, MouseArgs e)
+        private void Button_HarvestGold_OnClick(object sender, MouseArgs e)
         {
             // We calculate the turn so we can get the position of the player.
             int WhichUser = CalculateUserTurn();
@@ -456,7 +506,7 @@ namespace SK_Strategygame.Scenes.InGame
                     PlayerList[WhichUser - 1].increaseMoneyAmount(50);
                 }
                 ResourceRefreshQueued = true;
-                AlreadyHarvested = true;
+                TurnOver = true;
                 UIRefreshQueued = true;
             }
         }
@@ -465,7 +515,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void HarvestWood(object sender, MouseArgs e)
+        private void Button_HarvestWood_OnClick(object sender, MouseArgs e)
         {
             // We calculate the turn so we can get the position of the player.
             int WhichUser = CalculateUserTurn();
@@ -494,7 +544,7 @@ namespace SK_Strategygame.Scenes.InGame
                     PlayerList[WhichUser - 1].increaseWoodAmount(50);
                 }
                 ResourceRefreshQueued = true;
-                AlreadyHarvested = true;
+                TurnOver = true;
                 UIRefreshQueued = true; // We refresh the U.I. so it updates the button to disabled mode.
             }
         }
@@ -503,7 +553,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void HarvestFood(object sender, MouseArgs e)
+        private void Button_HarvestFood_OnClick(object sender, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
             Vertex2 CurrentPosition = CalculateUserTilePosition(WhichUser - 1);
@@ -531,7 +581,7 @@ namespace SK_Strategygame.Scenes.InGame
                     PlayerList[WhichUser - 1].increaseFoodAmount(50);
                 }
                 ResourceRefreshQueued = true;
-                AlreadyHarvested = true;
+                TurnOver = true;
                 UIRefreshQueued = true;
             }
         }
@@ -540,7 +590,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void HarvestStone(object sender, MouseArgs e)
+        private void Button_HarvestStone_OnClick(object sender, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
             Vertex2 CurrentPosition = CalculateUserTilePosition(WhichUser - 1);
@@ -568,7 +618,7 @@ namespace SK_Strategygame.Scenes.InGame
                     PlayerList[WhichUser - 1].increaseStoneAmount(50);
                 }
                 ResourceRefreshQueued = true;
-                AlreadyHarvested = true;
+                TurnOver = true;
                 UIRefreshQueued = true;
             }
         }
@@ -578,7 +628,7 @@ namespace SK_Strategygame.Scenes.InGame
         /// </summary>
         /// <param name="s">Sender</param>
         /// <param name="e">Mouse Parameters</param>
-        private void CreateCity(object s, MouseArgs e)
+        private void Button_CreateCity_OnClick(object s, MouseArgs e)
         {
             int WhichUser = CalculateUserTurn();
             Vertex2 Coordinate = CalculateUserTilePosition(WhichUser - 1);
@@ -589,10 +639,61 @@ namespace SK_Strategygame.Scenes.InGame
             PlayerList[WhichUser - 1].decreaseStoneAmount(100);
         }
 
-        private void NextRound(object sender, MouseArgs e)
+        private bool CheckLose ()
         {
-            TurnID++;
-            AlreadyHarvested = false;
+            int TeamID = CalculateUserTurn();
+            int Cities = 0;
+            foreach (Field f in GameTilemap)
+            {
+                if (f.Team == TeamID && f.IsCity)
+                {
+                    Cities++;
+                }
+            }
+            if (Cities == 0)
+                return true;
+            return false;
+        }
+
+        private void ResourceRegeneration ()
+        {
+            Random r = new Random();
+            int sz = GameTilemap.Count;
+            for (int i=0; i<sz; i++)
+            {
+                GameTilemap[i].Gold += r.Next(0, 10);
+                GameTilemap[i].Stone += r.Next(0, 10);
+                GameTilemap[i].Wood += r.Next(0, 10);
+                GameTilemap[i].Food += r.Next(0, 10);
+            }
+        }
+
+        private void Button_NextRound_OnClick(object sender, MouseArgs e)
+        {
+            int TurnsSkipped = 0;
+            bool WonGame = false;
+            while (true)
+            {
+                TurnID++;
+                TurnsSkipped++;
+                if (TurnsSkipped == PlayerList.Count)
+                {
+                    WonGame = true;
+                    break;
+                }
+                bool DeadUser = CheckLose();
+                if (!DeadUser)
+                    break;
+            }
+            if (WonGame)
+            {
+                NotificationBox nb = new NotificationBox();
+                nb.Notify("Congratulations, you won!", "Win", NotificationBox.types.OKOnly);
+                Program.aw.scene = new MainMenuScene();
+                return;
+            }
+            ResourceRegeneration();
+            TurnOver = false;
             BazaarBoughtCount = 0;
             ResourceRefreshQueued = true;
             UIRefreshQueued = true;
@@ -752,7 +853,11 @@ namespace SK_Strategygame.Scenes.InGame
             int found = GetTileID(position);
             if (found != -1)
             {
+                Console.WriteLine("Conquer set for (" + position.x + "," + position.y + ") Team " + (Team)TeamID);
                 GameTilemap[found].Team = TeamID;
+            } else
+            {
+                Console.WriteLine("CONQUER FAILED NO TILE FOUND: " + position.x + " , " + position.y);
             }
         }
         /// <summary>
@@ -839,12 +944,16 @@ namespace SK_Strategygame.Scenes.InGame
                     GameInterfaceDM.drawables.Remove(d);
                 }
                 UIButtons = new List<Drawable>();
-                if (!isCity)
+                if (isCity && GameTilemap[GetTileID(CalculateUserTilePosition(WhichUser - 1))].Team != CalculateUserTurn())
+                {
+                    // No buttons for you!
+                }
+                else if (!isCity)
                 {
                     switch (fieldType)
                     {
                         case FieldType.Mountain:
-                            if (fieldObj.Stone > 0 && !AlreadyHarvested)
+                            if (fieldObj.Stone > 0 && !TurnOver)
                             {
                                 UIButtons.Add(Button_HarvestStone);
                                 UIButtons.Add(Button_HarvestGold);
@@ -855,7 +964,7 @@ namespace SK_Strategygame.Scenes.InGame
                             }
                             break;
                         case FieldType.Forest:
-                            if (fieldObj.Wood > 0 && !AlreadyHarvested)
+                            if (fieldObj.Wood > 0 && !TurnOver)
                             {
                                 UIButtons.Add(Button_HarvestWood);
                             } else
@@ -864,7 +973,7 @@ namespace SK_Strategygame.Scenes.InGame
                             }
                             break;
                         case FieldType.Pasture:
-                            if (fieldObj.Food > 0 && !AlreadyHarvested)
+                            if (fieldObj.Food > 0 && !TurnOver)
                             {
                                 UIButtons.Add(Button_HarvestFood);
                             } else
@@ -916,19 +1025,32 @@ namespace SK_Strategygame.Scenes.InGame
                     {
                         UIButtons.Add(Button_NextRound);
                     }
-                    if (!InBazaar && (PlayerList[WhichUser - 1].getCurrentWood() >= 150 && PlayerList[WhichUser - 1].getCurrentStone() >= 100))
-                        UIButtons.Add(Button_CreateCity);
-                    else
+                    Field f = GameTilemap[GetTileID(CalculateUserTilePosition(CalculateUserTurn() - 1))];
+                    if (f.Team == CalculateUserTurn()) // Allow city creation if you own the tile!
                     {
-                        if (!InBazaar && !(PlayerList[WhichUser - 1].getCurrentWood() >= 150 && PlayerList[WhichUser - 1].getCurrentStone() >= 100))
-                            UIButtons.Add(Sprite_DisabledCreateCity);
+                        if (!InBazaar && (PlayerList[WhichUser - 1].getCurrentWood() >= 150 && PlayerList[WhichUser - 1].getCurrentStone() >= 100))
+                            UIButtons.Add(Button_CreateCity);
+                        else
+                        {
+                            if (!InBazaar && !(PlayerList[WhichUser - 1].getCurrentWood() >= 150 && PlayerList[WhichUser - 1].getCurrentStone() >= 100))
+                                UIButtons.Add(Sprite_DisabledCreateCity);
+                        }
+                    }
+                    
+                    if (!InBazaar && f.Soldiers > 0)
+                    {
+                        if (!TurnOver)
+                        {
+                            UIButtons.Add(Button_Conquer);
+                            UIButtons.Add(Button_MoveSoldiers);
+                        }
                     }
                 } else
                 {
 
                     Field f = GameTilemap[GetTileID(CalculateUserTilePosition(CalculateUserTurn() - 1))];
 
-                    bool CanUpgradeWall = true;
+                    bool CanUpgradeWall = (HasResources(Field.Resources_UpgradeWall) && !TurnOver);
 
                     if (f.WallLevel == 0 && CanUpgradeWall)
                         UIButtons.Add(Button_CreateWall);
@@ -937,14 +1059,14 @@ namespace SK_Strategygame.Scenes.InGame
                     else
                         UIButtons.Add(Sprite_DisabledWallUpgrade);
 
-                    bool HasResourcesForBarracks = true;
+                    bool HasResourcesForBarracks = (HasResources(Field.Resources_BuildBarracks) && !TurnOver);
 
                     if (f.BarracksBuilt == false && HasResourcesForBarracks)
                         UIButtons.Add(Button_CreateBarracks);
                     else
                         UIButtons.Add(Sprite_DisabledBarracks);
 
-                    bool HasResourcesForSoldiers = true;
+                    bool HasResourcesForSoldiers = (HasResources(Field.Resources_CreateSoldiers) && !TurnOver);
                     if (f.BarracksBuilt)
                     {
                         if (HasResourcesForSoldiers)
@@ -956,9 +1078,10 @@ namespace SK_Strategygame.Scenes.InGame
                         }
                     }
 
-                    if (f.Soldiers > 0)
+                    if (f.Soldiers > 0 && !TurnOver)
                     {
                         UIButtons.Add(Button_MoveSoldiers);
+                        UIButtons.Add(Button_ConquerB);
                     }
 
                     UIButtons.Add(Button_NextRound);
@@ -1030,7 +1153,7 @@ namespace SK_Strategygame.Scenes.InGame
                 {
                     foreach (Drawable d in MapUI)
                     {
-                        MainDM.drawables.Remove(d);
+                        MapHighlightDM.drawables.Remove(d);
                     }
                     MapUI = new List<Drawable>();
                     bool Up = (CurrentPosition.y > 0);
@@ -1086,20 +1209,27 @@ namespace SK_Strategygame.Scenes.InGame
                     }
                     foreach (Drawable d in MapUI)
                     {
-                        MainDM.Add(d);
+                        MapHighlightDM.Add(d);
                     }
                     NewTurn = false;
                 }
             }
         }
+
         private int CalculateSoldiers (int TeamID)
         {
             int soldiers = 0;
-            Field f = GameTilemap[GetTileID(CalculateUserTilePosition(TeamID))];
-            if(f.OccupiedByTeam == TeamID || f.Team == TeamID) // Only reason this wouldn't update... would be very weird.
+            Field f = GameTilemap[GetTileID(CalculateUserTilePosition(CalculateUserTurn() - 1))];
+            if (f.OccupiedByTeam == TeamID || f.Team == TeamID)
+            {
                 soldiers = f.Soldiers;
+            } else
+            {
+                Console.WriteLine("[ERROR] Not owned by TeamID.");
+            }
             return soldiers;
         }
+
         private void RefreshResourceBar ()
         {
             foreach (Drawable d in UITop)
@@ -1110,7 +1240,7 @@ namespace SK_Strategygame.Scenes.InGame
             Text t_stone = new Text(PlayerList[WhichUser - 1].getCurrentStone().ToString());
             Text t_food = new Text(PlayerList[WhichUser - 1].getCurrentFood().ToString());
             Text t_wood = new Text(PlayerList[WhichUser - 1].getCurrentWood().ToString());
-            Text t_soldier = new Text(CalculateSoldiers(WhichUser - 1).ToString());
+            Text t_soldier = new Text(CalculateSoldiers(WhichUser).ToString());
             t_gold.x = GoldIconPos + TextPaddingLeft;
             t_stone.x = StoneIconPos + TextPaddingLeft;
             t_food.x = FoodIconPos + TextPaddingLeft;
@@ -1233,17 +1363,179 @@ namespace SK_Strategygame.Scenes.InGame
             }
         }
 
+        private void TryMoveSoldier ()
+        {
+            float MouseX = UserMouse.getX();
+            float MouseY = UserMouse.getY();
+            int tDestinationX = (int)Math.Floor((MouseX + ScrollX) / TileSize);
+            int tDestinationY = (int)Math.Floor((MouseY + ScrollY) / TileSize);
+            int Distance = Math.Abs(tDestinationX - (int)Math.Floor(SoldierOriginTile.x)) 
+                + Math.Abs(tDestinationY - (int)Math.Floor(SoldierOriginTile.y));
+            if (Distance == 0) // i.e. no diagonal movement.
+            {
+                SoldierMoveMode = false; // Cancel movement.
+            } else if (Distance == 1)
+            {
+                bool ValidTile = (GetTileID(new Vertex2(tDestinationX, tDestinationY)) != -1);
+                if (!ValidTile)
+                    return;
+                Field fo = GameTilemap[GetTileID(SoldierOriginTile)];
+                Field f = GameTilemap[GetTileID(new Vertex2(tDestinationX, tDestinationY))];
+                if (f.fieldType != FieldType.Sea && (f.Team == CalculateUserTurn() || f.Team == 0) && (f.OccupiedByTeam == 0 || f.OccupiedByTeam == CalculateUserTurn()))
+                {
+                    TurnOver = true;
+                    MoveSoldiers(SoldierOriginTile, new Vertex2(tDestinationX, tDestinationY), fo.Soldiers);
+                    SoldierMoveMode = false;
+                }
+            }
+        }
+
+        private void TryConquer ()
+        {
+            RecalculateTilemapOccupancy();
+            Console.WriteLine("Testing Conquer Mode");
+            float MouseX = UserMouse.getX();
+            float MouseY = UserMouse.getY();
+            int tDestinationX = (int)Math.Floor((MouseX + ScrollX) / TileSize);
+            int tDestinationY = (int)Math.Floor((MouseY + ScrollY) / TileSize);
+            int Distance = Math.Abs(tDestinationX - (int)Math.Floor(SoldierOriginTile.x))
+                + Math.Abs(tDestinationY - (int)Math.Floor(SoldierOriginTile.y));
+            if (Distance <= 1)
+            {
+                Console.WriteLine("[Conquer] Tile is in valid range.");
+                bool ValidTile = (GetTileID(new Vertex2(tDestinationX, tDestinationY)) != -1); // Off-screen tile check
+                if (!ValidTile)
+                    return;
+                Field fo = GameTilemap[GetTileID(SoldierOriginTile)];
+                Field f = GameTilemap[GetTileID(new Vertex2(tDestinationX, tDestinationY))];
+                if (f.fieldType != FieldType.Sea)
+                {
+                    Console.WriteLine("[Conquer] Tile is not sea.");
+                    if (f.Team == CalculateUserTurn()) // Why conquer your own things?
+                    {
+                        Console.WriteLine("[Conquer] Cannot conquer your own territory. (1)");
+                        ConquerMode = false;
+                        return;
+                    }
+                    if (f.Team != CalculateUserTurn())
+                    {
+                        if (f.Team == 0 && f.OccupiedByTeam == 0) // Unowned
+                        {
+                            Console.WriteLine("[Conquer] Conquered unowned territory. (2) Set team to: " + (Team)CalculateUserTurn());
+                            Conquer(new Vertex2(tDestinationX, tDestinationY), CalculateUserTurn());
+                            UIRefreshQueued = true;
+                            NewTurn = true;
+                            TurnOver = true;
+                            MoveSoldiers(SoldierOriginTile, new Vertex2(tDestinationX, tDestinationY), fo.Soldiers);
+                            ConquerMode = false;
+                        } else if ((f.Team == CalculateUserTurn() || f.Team == 0) && f.OccupiedByTeam == CalculateUserTurn())
+                        {
+                            Console.WriteLine("[Conquer] Conquered unowned territory. (-1) Set team to: " + (Team)CalculateUserTurn());
+                            Conquer(new Vertex2(tDestinationX, tDestinationY), CalculateUserTurn());
+                            UIRefreshQueued = true;
+                            NewTurn = true;
+                            TurnOver = true;
+                            MoveSoldiers(SoldierOriginTile, new Vertex2(tDestinationX, tDestinationY), fo.Soldiers);
+                            ConquerMode = false;
+                        } else if (f.Team != CalculateUserTurn() && f.Team != 0) // Is owned by a different team.
+                        {
+                            // Someone else's territory.
+                            if (f.Soldiers == 0 && f.IsCity == false)
+                            {
+                                Console.WriteLine("[Conquer] Conquered unprotected territory. (4)");
+                                // If the territory is unprotected, allow the conquer with no struggle.
+                                Conquer(new Vertex2(tDestinationX, tDestinationY), CalculateUserTurn());
+                                UIRefreshQueued = true;
+                                NewTurn = true;
+                                TurnOver = true;
+                                MoveSoldiers(SoldierOriginTile, new Vertex2(tDestinationX, tDestinationY), fo.Soldiers);
+                                ConquerMode = false;
+                            } else if (f.IsCity)
+                            {
+                                Console.WriteLine("[Conquer] Attacking city! (5)");
+                                // City attack mode.
+                                int HitPoints = f.WallPoints + f.Soldiers;
+                                int Damage = fo.Soldiers;
+
+                                if (HitPoints - fo.Soldiers <= 0) // You should be able to destroy that city in that turn.
+                                {
+                                    Console.WriteLine("[Conquer] Conquered city. (5)");
+                                    f.OccupiedByTeam = CalculateUserTurn();
+                                    f.Team = CalculateUserTurn();
+                                    f.IsCity = false;
+                                    f.WallPoints = 100; // reset default value for new cities.
+                                    f.Soldiers = fo.Soldiers - HitPoints;
+                                    fo.Soldiers = 0; // Move all soldiers into the city.
+                                    UIRefreshQueued = true;
+                                    NewTurn = true;
+                                    TurnOver = true;
+                                    ConquerMode = false;
+                                } else
+                                {
+                                    Console.WriteLine("[Conquer] Damage taken. (5)");
+                                    if (f.Soldiers > Damage)
+                                    {
+                                        f.Soldiers -= Damage;
+                                    } else
+                                    {
+                                        Damage -= f.Soldiers;
+                                        f.Soldiers = 0;
+
+                                        if (f.WallPoints > Damage)
+                                        {
+                                            f.WallPoints -= Damage;
+                                        }
+                                    }
+                                    fo.Soldiers = 0;
+                                    UIRefreshQueued = true;
+                                    NewTurn = true;
+                                    TurnOver = true;
+                                    ConquerMode = false;
+                                }
+                            }
+                        } else if (f.OccupiedByTeam != CalculateUserTurn() && f.OccupiedByTeam != 0) // Enemy soldiers are there.
+                        {
+                            Console.WriteLine("[Conquer] Attacking enemy soldiers. (6)");
+                            int HP = f.Soldiers;
+                            int Damage = fo.Soldiers;
+                            if (HP < Damage)
+                            {
+                                Console.WriteLine("[Conquer] Defeated enemy soldiers. (6)");
+                                f.Soldiers = fo.Soldiers - HP;
+                                Conquer(new Vertex2(tDestinationX, tDestinationY), CalculateUserTurn());
+                                UIRefreshQueued = true;
+                                NewTurn = true;
+                                TurnOver = true;
+                                ConquerMode = false;
+                            } else
+                            {
+                                Console.WriteLine("[Conquer] Damage taken. (6)");
+                                f.Soldiers -= Damage;
+                                fo.Soldiers = 0;
+                                UIRefreshQueued = true;
+                                NewTurn = true;
+                                TurnOver = true;
+                                ConquerMode = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // AlphaGFX Processors
         public override void Draw(GameWindow gw)
         {
             if (UIRefreshQueued)
             {
+                Console.WriteLine("[U.I.] Refreshed Main U.I.");
                 RefreshUIElements();
                 UIRefreshQueued = false;
             }
 
             if (ResourceRefreshQueued)
             {
+                Console.WriteLine("[U.I.] Refreshed Resource U.I.");
                 RefreshResourceBar();
                 ResourceRefreshQueued = false;
             }
@@ -1258,9 +1550,17 @@ namespace SK_Strategygame.Scenes.InGame
             }
             PlayerDM.x = MainDM.x;
             PlayerDM.y = MainDM.y;
+            MapHighlightDM.x = MainDM.x;
+            MapHighlightDM.y = MainDM.y;
             MainDM.Draw();
+            MapHighlightDM.Draw();
             PlayerDM.Draw();
-            GameInterfaceDM.Draw();
+            if (!SoldierMoveMode && !ConquerMode)
+            {
+                GameInterfaceDM.Draw();
+            } else
+            {
+            }
             ResourceDM.Draw();
             CursorDM.Draw();
             if (UserBeingHeld)
@@ -1284,14 +1584,24 @@ namespace SK_Strategygame.Scenes.InGame
         public override void OnKeyUp(KeyboardKeyEventArgs key) { }
         public override void OnMouseDown(MouseButtonEventArgs button)
         {
-            GameInterfaceDM.OnMouseDown(button);
+            if (!SoldierMoveMode && !ConquerMode)
+                GameInterfaceDM.OnMouseDown(button);
             UserBeingHeld = true;
             MouseOriginX = UserMouse.getX()+ScrollX;
             MouseOriginY = UserMouse.getY()+ScrollY;
         }
         public override void OnMouseUp(MouseButtonEventArgs button)
         {
-            GameInterfaceDM.OnMouseUp(button);
+            if (!SoldierMoveMode && !ConquerMode)
+                GameInterfaceDM.OnMouseUp(button);
+            else
+            {
+                if (SoldierMoveMode)
+                    TryMoveSoldier();
+
+                if (ConquerMode)
+                    TryConquer();
+            }
             UserBeingHeld = false;
             PreprocComplete = false;
         }

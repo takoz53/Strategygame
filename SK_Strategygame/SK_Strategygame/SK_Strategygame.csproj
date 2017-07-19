@@ -413,7 +413,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OpenTK-AlphaGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
+    <ProjectReference Include="..\..\..\BerkanGFX\AlphaGFX\AGFXLib\AGFXLib.csproj">
       <Project>{67ae03c9-dcea-4e9b-86aa-9a30516e210f}</Project>
       <Name>AGFXLib</Name>
     </ProjectReference>
