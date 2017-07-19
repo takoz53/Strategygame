@@ -329,6 +329,7 @@ namespace SK_Strategygame.Scenes.InGame
                     SubtractResources(Field.Resources_BuildWall);
                     currentTile.WallLevel++;
                     currentTile.WallPoints += Field.WallUpgrade;
+                    currentTile.setTexture("Resources/InGame/Fields/Cities/city_medium.png");
                     UIRefreshQueued = true;
                     ResourceRefreshQueued = true;
                     TurnOver = true;
@@ -369,6 +370,7 @@ namespace SK_Strategygame.Scenes.InGame
                     SubtractResources(Field.Resources_UpgradeWall);
                     currentTile.WallLevel++;
                     currentTile.WallPoints += Field.WallUpgrade;
+                    currentTile.setTexture("Resources/InGame/Fields/Cities/city_large.png");
                     UIRefreshQueued = true;
                     ResourceRefreshQueued = true;
                     TurnOver = true;

@@ -35,17 +35,16 @@ namespace SK_Strategygame.Gameplay.Field_Creation
         public const int SoldierCreationRate = 25;
 
          /* Gold, Wood, Stone, Food */
-        public readonly static int[] Resources_BuildBarracks = new int[] { 0, 50, 50, 50 }; // 3 Turns
-        public readonly static int[] Resources_BuildWall = new int[] { 0, 50, 50, 0 }; // 2 Turns
-        public readonly static int[] Resources_UpgradeWall = new int[] { 0, 50, 100, 0 }; // 3 Turns
-        public readonly static int[] Resources_CreateSoldiers = new int[] { 0, 0, 0, 50 }; // 1 Turn
+        public readonly static int[] Resources_BuildBarracks = new int[] { 0, 50, 50, 0 }; // 3 Turns
+        public readonly static int[] Resources_BuildWall = new int[] { 0, 50, 0, 0 }; // 2 Turns
+        public readonly static int[] Resources_UpgradeWall = new int[] { 0, 100, 100, 0 }; // 3 Turns
+        public readonly static int[] Resources_CreateSoldiers = new int[] { 10, 0, 0, 50 }; // 1 Turn
 
         public Field(string path, Vertex2 coordinate, FieldType fieldType, int maxSize = 1): base("Resources/InGame/Fields/inpassable/Sea/water_small.png", (float)coordinate.x*250, (float)coordinate.y*250)
         {
             this.coordinate = coordinate;
             
             int randSize = Program.rd.Next(1, maxSize);
-            Console.WriteLine(((FieldSize)randSize).ToString() + " was chosen for whatever.");
             string tFilename = path + ((FieldSize)randSize).ToString() + ".png";
             setTexture(tFilename);
             this.fieldType = fieldType;
